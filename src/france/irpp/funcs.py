@@ -26,79 +26,103 @@ from numpy import ( maximum as max_, minimum as min_, logical_xor as xor_,
                     logical_not as not_, round, zeros, ones)
 from Utils import BarmMar
 
-from france.data import QUIFOY
-year = 2010
+from france.data import QUIFOY, year
 
 VOUS = QUIFOY['vous']
 CONJ = QUIFOY['conj']
+PAC1 = QUIFOY['pac1']
+PAC2 = QUIFOY['pac2']
+PAC3 = QUIFOY['pac3']
 ALL = []
 for qui in QUIFOY:
     ALL.append(qui[1])
         
-#self.nbadult = 2*self.marpac + 1*(self.celdiv | self.veuf)
+#nbadult = 2*marpac + 1*(celdiv | veuf)
 #
-#self.zglof = self.Glo(table)
-#self.zetrf = zeros(self.taille)
-#self.jveuf = zeros(self.taille, dtype = bool)
-#self.jourXYZ = 360*ones(self.taille)
-
+#zglof = Glo(table)
+#zetrf = zeros(taille)
+#jveuf = zeros(taille, dtype = bool)
+#jourXYZ = 360*ones(taille)
         
-def marpac(statmarit):
+def _marpac(statmarit):
     '''
     Marié ou Pacsé
+    'foy'
     '''
     return (statmarit == 1) | (statmarit == 5)
 
-def celdiv(statmarit):
+def _celdiv(statmarit):
     '''
     Célibataire ou divorcé
+    'foy'
     '''
     return (statmarit == 2) | (statmarit == 3)
 
-def veuf(statmarit):
+def _veuf(statmarit):
     '''
     Veuf
+    'foy'
     '''
     return statmarit == 4
 
-def jveuf(statmarit):
+def _jveuf(statmarit):
     '''
     Jeune Veuf
+    'foy'
     '''
     return statmarit == 6
 
-def rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
+def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
     '''
     Revenu brut global (Total 17)
     '''
     # sans les revenus au quotient
     return max_(0, alloc + rev_cat + f6gh - deficit_ante)
 
-def csg_deduc(rbg, f6de):
+def _csg_deduc(rbg, f6de):
     '''
     CSG déductible
     '''
     return min_(f6de, max_(rbg, 0))
 
-def rng(rbg, csg_deduc, charges_deduc):
+def _rng(rbg, csg_deduc, charges_deduc):
     '''
     Revenu net global
     '''
     ## Total 20 - Revenu net global
     return max_(0, rbg - csg_deduc - charges_deduc)
 
-def rni(rng, abat_spe):
+def _rni(rng, abat_spe):
     return rng - abat_spe
 
-def ir_brut(nbptr, rni, _P):
+def _ir_brut(nbptr, rni, _P):
     '''
     Impot sur le revenu avant non imposabilité et plafonnement du quotien
+    'foy'
     '''
     P = _P.ir.bareme
     return nbptr*BarmMar(rni/nbptr, P.bareme) # TODO : partir d'ici, petite différence avec Matlab
 
 
-def IR(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_spe, nat_imp, _P):
+def _ip_net(ir_plaf_qf, nat_imp, decote):
+    '''
+    irpp après décote et prise en compte de la non imposabilité
+    '''
+    return nat_imp*max_(0, ir_plaf_qf - decote)
+
+def _rfr(rni, alloc):
+    '''
+    revenu fiscal de reference
+    '''
+    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + VA + VG
+
+def _thab():
+    '''
+    Taxe d'habitation
+    '''
+
+
+def _ir(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_spe, nat_imp, _P):
     '''
     suite du calcul de l'ir
     '''
@@ -118,37 +142,16 @@ def IR(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_sp
     GB = table.get('f7gb', 'foy', 'vous', table = 'declar')
     GC = table.get('f7gc', 'foy', 'vous', table = 'declar')
 
-    
-    # Impôt après plafonnement du QF et réductions post-plafond
-    IP = self.PlafQf(P)
 
-    ## Droit simple sur les revenus au quotient
-    mnirqu = zeros(self.taille); # TODO :
-    # self.mnirqu = (self.IP1-self.IP0)*4; # TODO
-    # self.IP = self.IP0 + self.mnirqu
-
-    ## Décote
-    decote = self.Decote(IP, P.decote)
-    IPnet  = nat_imp*max_(0, IP - decote)
-    
-#        t = (1 - P.tspr.abatpro.taux)
-#        ## Revenus de l'étranger pour le revenu fiscal de référence
-#        rfr_ertf = self.f8by + self.f8cy + t*self.f1dy  + max_(self.f8ti, t*(self.f1lz + self.f1mz))
-    
-    ## Revenu fiscal de référence
-    # les allocations familiales ne sont pas prises en compte pour le revenu fiscal de référence si elles sont imposables
-    self.rfr = (max_(0, rni - alloc) + self.rfr_cd + self.rfr_rvcm + rev_cap_lib + f3vi + self.rpns_exo + self.rpns_pvce + VA + VG)
-#        self.rfr = (self.f8fv==0)*(max_(0, rni - alloc) + self.rfr_cd + rfr_ertf + self.rfr_rvcm + self.rfr_glof + self.rpns_exo + self.rpns_pvce + VA + VG)
-    tehr = self.Tehr(self.rfr, self.nbadult, P.tehr)
     ## Réduction d'impôt
-    reductions = self.Reductions(IPnet, P.reductions_impots)
+    reductions = Reductions(IPnet, P.reductions_impots)
  
     # impot après imputation des réductions d'impôt
     iaidrdi  = IPnet - reductions
 
     ## 9. Impôt à payer 
     # Impôt sur les plus values à taux forfaitaires (16%, 22.5%, 30%, 40%)
-    mnirvp = self.Plus_values(P.plus_values)
+    mnirvp = Plus_values(P.plus_values)
 
     # TODO : contribution sur les revenus locatifs
     P.loyf_taux = 0.025
@@ -158,10 +161,10 @@ def IR(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_sp
     zimployf = mnclcn
 
     # Taxe exceptionelle sur l'indemnité compensatrice des agents d'assurance
-    #     H90_a1 = 0*max_(0,min_(self.f5qm,23000));
+    #     H90_a1 = 0*max_(0,min_(f5qm,23000));
     H90_a2 = .04*max_(0,min_(QM-23000,107000));
     H90_a3 = .026*max_(0,QM-107000);
-    #     H90_b1 = 0*max_(0,min_(self.f5rm,23000));
+    #     H90_b1 = 0*max_(0,min_(f5rm,23000));
     H90_b2 = .04*max_(0,min_(RM-23000,107000));
     H90_b3 = .026*max_(0,RM-107000);
     
@@ -171,45 +174,34 @@ def IR(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_sp
     iai = iaidrdi + mnirvp + G90 + H90
     
     # Reprise du crédit d'impôt en faveur des jeunes, des accomptes et des versements mensues de prime pour l'emploi
-    reprise = zeros(self.taille) # TODO : self.reprise=J80;
+    reprise = zeros(taille) # TODO : reprise=J80;
 
     Pcredit = P.credits_impots
     if hasattr(P.reductions_impots,'saldom'): Pcredit.saldom =  P.reductions_impots.saldom
-    credits_impot = self.Credits(Pcredit, table)
+    credits_impot = Credits(Pcredit, table)
     
     # Montant avant seuil de recouvrement
     IMP = iai - credits_impot + tehr
                         
-    ## Crédit d'impôt revenu de l'étranger
-#        abaetr = round(min_(max_(P.tspr.abatpro.taux*self.f8tk, P.tspr.abatpro.min),P.tspr.abatpro.max))
-#        saletr = self.f8tk - abaetr
-#        div = rni + (rni == 0)
-#        credimp_etranger = max_(0,saletr/div)*iaidrdi
-            
-    # Les variables d'impôts directs 
+
     # impôt sur le revenu
     mcirra = -((IMP<=-8)*IMP)
     mciria = max_(0,(IMP>=0)*IMP - zimployf)
-#        mciria = max_(0,(IMP>=0)*IMP - credimp_etranger - zimployf - ( self.f8to + self.f8tb + self.f8tc ))
+#        mciria = max_(0,(IMP>=0)*IMP - credimp_etranger - zimployf - ( f8to + f8tb + f8tc ))
     
     # Dans l'ERFS, les prelevement libératoire sur les montants non déclarés
     # sont intégrés. Pas possible de le recalculer.
     
-    table.openWriteMode()
-
 
     # impot sur le revenu du foyer (hors prélèvement libératoire, revenus au quotient)
-    irpp   = -(mciria + self.ppetot - mcirra - mnirvp - mnirqu)
-    table.setColl('irpp', irpp, table = 'output')
+    irpp   = -(mciria + ppetot - mcirra - mnirvp - mnirqu)
+
 
     impforf = mnirvp + mnirqu
     
-    # TODO: La taxe d'habitation
-    thab = - zeros(self.taille)
-    table.setColl('thab', thab, table = 'output')
     
     zdivf = VC + VE + VG - VH + VL + VM \
-          + self.rpns_pvce + self.rpns_pvct - self.rpns_mvct - self.rpns_mvlt
+          + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
     
     table.setColl('div', zdivf, table = 'output')
 
@@ -217,43 +209,43 @@ def IR(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_sp
     
     table.setColl('div_rmi', zdiv_rmi, table = 'output')
 
-    revColl = rto_net + rev_cap_lib + rev_cap_bar + self.zetrf*0.9 + self.zfonf + zdivf + self.zglof - self.zalvf - GA - GB - GC - abat_spe
+    revColl = rto_net + rev_cap_lib + rev_cap_bar + zetrf*0.9 + zfonf + zdivf + zglof - zalvf - GA - GB - GC - abat_spe
     table.setColl('revColl', revColl, table = 'output')
     
     # pour le calcul de l'allocation de soutien familial     
-    asf_elig = 1*(self.caseT | self.caseL)
-    table.set('asf_elig', asf_elig, 'foy', 'vous', table = 'output')
-    
-    table.set('al_nbinv', self.nbR, 'foy', 'vous', table = 'output')
-    
-    table.close_()
+    asf_elig = 1*(caseT | caseL)
 
-def tehr(self, rfr, nb_adult, P):
+    
+    al_nbinv = nbR
+
+def _tehr(rfr, nb_adult, P):
     '''
     Taxe exceptionnelle sur les hauts revenus
+    'foy'
     '''
     return BarmMar(rfr/nb_adult, P)*nb_adult
 
-def glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
+def _glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
     '''
-    Gains de levée d'option : glo
+    Gains de levée d'option
+    'foy'
     '''
     return f1tv + f1tw + f1tx + f1uv + f1uw + f1ux + f3vf + f3vi + f3vj + f3vk                   
 
-def alloc(af, _P):
+def _alloc(af, _P):
     '''
     ALLOCATION FAMILLIALE IMPOSABLE
     '''
     P = _P.ir.autre
     return af*P.alloc_imp
 
-def rev_sal(sal):
+def _rev_sal(sal):
     '''
     Revenu imposé comme des salaires (salaires, mais aussi 3vj, 3vk)
     '''
     return sal
 
-def sal_net(rev_sal, choCheckBox, fra, _P):
+def _sal_net(rev_sal, choCheckBox, fra, _P):
     '''
     Salaires après abattements
     '''
@@ -263,13 +255,13 @@ def sal_net(rev_sal, choCheckBox, fra, _P):
     return (fra > abatfor)*(rev_sal - fra) \
          + (fra <= abatfor)*max_(0,rev_sal - abatfor)
 
-def rev_pen(alr, rst):
+def _rev_pen(alr, rst):
     '''
     Revenu imposé comme des pensions (retraites, pensions alimentaires, etc.)
     '''
     return alr + rst
 
-def pen_net(rev_pen, _P):
+def _pen_net(rev_pen, _P):
     '''
     Pensions après abattements
     '''
@@ -282,13 +274,13 @@ def pen_net(rev_pen, _P):
 
     return max_(0, rev_pen - round(max_(P.taux*rev_pen , P.min)))
 
-def rto(f1aw, f1bw, f1cw, f1dw):
+def _rto(f1aw, f1bw, f1cw, f1dw):
     '''
     Rentes viagères à titre onéreux
     '''
     return f1aw + f1bw + f1cw + f1dw
 
-def rto_net(f1aw, f1bw, f1cw, f1dw, _P):
+def _rto_net(f1aw, f1bw, f1cw, f1dw, _P):
     '''
     Rentes viagères après abatements
     '''
@@ -299,13 +291,13 @@ def rto_net(f1aw, f1bw, f1cw, f1dw, _P):
                  P.taux4*f1dw )
 
 
-def tspr(sal_net, pen_net):
+def _tspr(sal_net, pen_net):
     '''
     Traitemens salaires pensions et rentes individuelles
     '''
     return sal_net + pen_net
 
-def rev_cat_tspr(tspr, rto_net, _option = {'tspr': ALL}):
+def _rev_cat_tspr(tspr, rto_net, _option = {'tspr': ALL}):
     '''
     TRAITEMENTS SALAIRES PENSIONS ET RENTES
     '''
@@ -317,10 +309,10 @@ def rev_cat_tspr(tspr, rto_net, _option = {'tspr': ALL}):
     
     return out
 
-def deficit_rcm(f2aa, f2al, f2am, f2an):
+def _deficit_rcm(f2aa, f2al, f2am, f2an):
     return f2aa + f2al + f2am + f2an
 
-def rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, _P):
+def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, _P):
     '''
     REVENUS DES VALEURS ET CAPITAUX MOBILIERS
     '''
@@ -360,19 +352,19 @@ def rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, 
 
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
     
-def rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
+def _rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
     '''
     revenus du capital imposés au barème
     '''
     return f2dc + f2gr + f2ch + f2ts + f2go + f2tr + f2fu - avf
 
-def avf(f2ab):
+def _avf(f2ab):
     # a.(ii) Avoir fiscal et crédits d'impôt (zavff)
     return f2ab
     # a.(iii) Les revenus de valeurs mobilières soumis au prélèvement
     # libératoire (zvalf)
 
-def rev_cap_lib(f2da, f2dh, f2ee):
+def _rev_cap_lib(f2da, f2dh, f2ee):
     '''
     Revenu du capital imposé au prélèvement libératoire
     '''
@@ -381,7 +373,7 @@ def rev_cap_lib(f2da, f2dh, f2ee):
     else: out = f2da + f2dh + f2ee
     return out
     
-def imp_lib(f2da, f2dh, f2ee, _P):
+def _imp_lib(f2da, f2dh, f2ee, _P):
     '''
     Prelèvement libératoire sur les revenus du capital
     '''
@@ -393,20 +385,20 @@ def imp_lib(f2da, f2dh, f2ee, _P):
         out = - (P.action*f2da + P.assvie*f2dh + P.autre*f2ee )
     return out
 
-def rfon_rmi(f4ba, f4be):
+def _rfon_rmi(f4ba, f4be):
     '''
     Revenus fonciers pour la base ressource du rmi/rsa
     '''
     return f4ba + f4be
 
 
-def fon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
+def _fon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     ## Calcul des totaux        
     P = _P.ir.microfoncier
     fon = f4ba - f4bb - f4bc + round(f4be*(1-P.taux))  
     return fon
 
-def rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
+def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     '''
     REVENUS FONCIERS
     '''    
@@ -422,10 +414,10 @@ def rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     out  = (c13>=0)*(g13 + e13*(e13<0)) - (c13<0)*d13
     return out
 
-def rev_cat_rpns(sal):
+def _rev_cat_rpns(sal):
     return 0*sal
 
-def Rpns_full(self, P, table):
+def _rpns_full(self, P, table):
     '''
     REVENUS DES PROFESSIONS NON SALARIEES
     partie 5 de la déclaration complémentaire
@@ -770,14 +762,14 @@ def Rpns_full(self, P, table):
 
     return RPNS
 
-def rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
+def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
     '''
     Revenus Categoriels
     '''
 #    self.AUTRE = TSPR + RVCM + RFON
     return rev_cat_tspr + rev_cat_rvcm + rev_cat_rfon + rev_cat_rpns
 
-def deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
+def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
     '''
     Déficits antérieurs
     '''
@@ -802,7 +794,7 @@ def deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
 #    table.setColl('alv', -self.zalvf, table = 'output')
 #    table.close_()
 
-def abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
+def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
     '''
     Abattements spéciaux 
     - pour personnes âges ou invalides : Si vous êtes âgé(e) de plus de 65 ans
@@ -833,7 +825,7 @@ def abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
 
     return min_(rng, as_inv + as_enf)
 
-def non_imp(rni, nbptr, _P):
+def _non_imp(rni, nbptr, _P):
     '''
     Renvoie 1 si le foyer est imposable, 0 sinon
     '''
@@ -841,7 +833,7 @@ def non_imp(rni, nbptr, _P):
     seuil = P.seuil + (nbptr - 1)*P.supp
     return rni >= seuil
 
-def nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, caseW, caseG, caseE, caseK, caseN, caseF, caseS, caseL, caseT, _P):
+def _nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, caseW, caseG, caseE, caseK, caseN, caseF, caseS, caseL, caseT, _P):
     '''
     nombre de parts du foyer
     note 1 enfants et résidence alternée (formulaire 2041 GV page 10)
@@ -915,9 +907,9 @@ def nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, case
     
     return (marpac | jveuf)*m + (veuf & not_(jveuf))*v + celdiv*c
     
-def plaf_qf1(ir_brut, rni, nb_adult, nbptr, veuf, jveuf, celdiv, caseT, caseN, caseK, caseE, caseH, nb_pac, _P):
+def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
     '''
-    Plafonnement du quotient familial - 1ère partie
+    Impôt après plafonnement du quotient familial et réduction complémentaire
     '''
     P = _P.ir
     I = ir_brut
@@ -946,46 +938,43 @@ def plaf_qf1(ir_brut, rni, nb_adult, nbptr, veuf, jveuf, celdiv, caseT, caseN, c
     IP0 = I*(I>=C) + C*(I<C);
     return IP0
 
-#def PlafQf2(ir_brut, revimp, nbadult, nbptr, P):
-#    '''
-#    Plafonnement du quotient familial - 1ère partie
-#    '''
-#    # 6.2 réduction d'impôt pratiquée sur l'impot après plafonnement et le cas particulier des DOM
-#    # pas de réduction complémentaire
-#    condition62a = (I>=C);
-#    # réduction complémentaire
-#    condition62b = (I<C);
-#    # celdiv veuf
-#    condition62caa0 = (celdiv | (veuf & not_(jveuf)))
-#    condition62caa1 = (nbPAC==0)&(caseP | caseG | caseF | caseW)
-#    condition62caa2 = caseP & ((nbF-nbG>0)|(nbH - nbI>0))
-#    condition62caa3 = not_(caseN) & (caseE | caseK )  & (caseH>=1981)
-#    condition62caa  = condition62caa0 & (condition62caa1 | condition62caa2 | condition62caa3)
-#    # marié pacs
-#    condition62cab = (marpac | jveuf) & caseS & not_(caseP | caseF)
-#    condition62ca =    (condition62caa | condition62cab);
-#
-#    # plus de 590 euros si on a des plus de
-#    condition62cb = ((nbG+nbR+nbI)>0) | caseP | caseF
-#    D = P.plafond_qf.reduc_postplafond*(condition62ca + ~condition62ca*condition62cb*( 1*caseP + 1*caseF + nbG + nbR + nbI/2 ))
-#
-#    E = max_(0,A-I-B)
-#    Fo = D*(D<=E) + E*(E<D)
-#    IP1=IP0-Fo
-#
-#    # TODO :6.3 Cas particulier: Contribuables domiciliés dans les DOM.    
-#    # conditionGuadMarReu =
-#    # conditionGuyane=
-#    # conitionDOM = conditionGuadMarReu | conditionGuyane;
-#    # postplafGuadMarReu = 5100;
-#    # postplafGuyane = 6700;
-#    # IP2 = IP1 - conditionGuadMarReu*min( postplafGuadMarReu,.3*IP1)  - conditionGuyane*min(postplafGuyane,.4*IP1);
+    # 6.2 réduction d'impôt pratiquée sur l'impot après plafonnement et le cas particulier des DOM
+    # pas de réduction complémentaire
+    condition62a = (I>=C);
+    # réduction complémentaire
+    condition62b = (I<C);
+    # celdiv veuf
+    condition62caa0 = (celdiv | (veuf & not_(jveuf)))
+    condition62caa1 = (nb_pac==0)&(caseP | caseG | caseF | caseW)
+    condition62caa2 = caseP & ((nbF-nbG>0)|(nbH - nbI>0))
+    condition62caa3 = not_(caseN) & (caseE | caseK )  & (caseH>=1981)
+    condition62caa  = condition62caa0 & (condition62caa1 | condition62caa2 | condition62caa3)
+    # marié pacs
+    condition62cab = (marpac | jveuf) & caseS & not_(caseP | caseF)
+    condition62ca =    (condition62caa | condition62cab);
+
+    # plus de 590 euros si on a des plus de
+    condition62cb = ((nbG+nbR+nbI)>0) | caseP | caseF
+    D = P.plafond_qf.reduc_postplafond*(condition62ca + ~condition62ca*condition62cb*( 1*caseP + 1*caseF + nbG + nbR + nbI/2 ))
+
+    E = max_(0,A-I-B)
+    Fo = D*(D<=E) + E*(E<D)
+    out = IP0-Fo
+
+    return out
+    # TODO :6.3 Cas particulier: Contribuables domiciliés dans les DOM.    
+    # conditionGuadMarReu =
+    # conditionGuyane=
+    # conitionDOM = conditionGuadMarReu | conditionGuyane;
+    # postplafGuadMarReu = 5100;
+    # postplafGuyane = 6700;
+    # IP2 = IP1 - conditionGuadMarReu*min( postplafGuadMarReu,.3*IP1)  - conditionGuyane*min(postplafGuyane,.4*IP1);
 #
 #
 #    # Récapitulatif
 #    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
 
-def decote(self, IP, P):
+def _decote(self, IP, P):
     return (IP < P.seuil)*(P.seuil - IP)*0.5
 
 #def Reductions(self, IPnet, P, table):
@@ -1001,7 +990,7 @@ def decote(self, IP, P):
 #    table.close_()
 #    return min_(reducs, IPnet)
 
-def plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
+def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
     P = _P.ir.plus_values
         # revenus taxés à un taux proportionnel
     rdp = max_(0,f3vg - f3vh) + f3vl + rpns_pvce + f3vm + f3vi + f3vf
@@ -1032,137 +1021,102 @@ def plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
 #    ppe = Ppe(P.ppe)
 #
 #    return reducs + ppe
+
+def _ppe_coef(jour_xyz):
+    '''
+    ppe: coefficient de conversion en cas de changement en cours d'année
+    'foy'
+    '''    
+    nbJour = (jour_xyz==0) + jour_xyz
+    return 360/nbJour
+
+def _ppe_elig(rfr, ppe_coef, marpac, veuf, celdiv, nbptr, _P):
+    '''
+    eligibilité à la ppe, returns a bool
+    'foy'
+    '''
+    P = _P.ir.ppe
+    seuil = (veuf|celdiv)*(P.eligi1 + 2*max_(nbptr-1,0)*P.eligi3) \
+            + marpac*(P.eligi2 + 2*max_(nbptr-2,0)*P.eligi3)
+    out = (rfr*ppe_coef) <= seuil
+    return out
+
+def _ppe_rev(sal, hsup, rpns, _P):
+    '''
+    base ressource de la ppe
+    'ind'
+    '''
+    P = _P.ir.ppe
+    # Revenu d'activité salarié
+    rev_sa = sal + hsup #+ TV + TW + TX + AQ + LZ + VJ
+    # Revenu d'activité non salarié
+    rev_ns = min_(0,rpns)/P.abatns + max_(0,rpns)*P.abatns
+    return rev_sa + rev_ns
+
+def _ppe_coeff_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
+    P = _P.ir.ppe
+    frac_sa = ppeHeure/P.TP_nbh
+    frac_ns = ppeJours/P.TP_nbj
+    # TODO: changer ppeCheckBox en ppe_tp_sa
+    tp = (ppeCheckBox == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
+    return tp + not_(tp)*(frac_sa + frac_ns) 
     
-def ppe(self,P):
+def _ppe_base(ppe_rev, ppe_coeff_tp, ppe_coef):
+    out = ppe_rev/(ppe_coeff_tp + (ppe_coeff_tp==0))*ppe_coef
+    return out
+
+def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
+    '''
+    eligibilité individuelle à la ppe
+    '''
+    P = _P.ir.ppe
+    return (ppe_rev >= P.seuil1)&(_ppe_coeff_tp!=0)
+
+def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'ppe_rev': ALL}):
     '''
     Prime pour l'emploi
     '''
-    table = self.population
-    table.openReadMode()
-    AJ, BJ, CJ, DJ, EJ = table.get('sal', 'foy', self.people)
-    AX, BX, CX, DX, QX = table.get('ppeCheckBox', 'foy', self.people)
-    AV, BV, CV, DV, QV = table.get('ppeHeure', 'foy', self.people)
-    AU, BU, CU, DU, EU = table.get('hsup', 'foy', self.people)
-    TV = table.get('f1tv', 'foy', 'vous', table = 'declar') 
-    UV = table.get('f1uv', 'foy', 'vous', table = 'declar') 
-    TW = table.get('f1tw', 'foy', 'vous', table = 'declar') 
-    UW = table.get('f1uw', 'foy', 'vous', table = 'declar') 
-    TX = table.get('f1tx', 'foy', 'vous', table = 'declar') 
-    UX = table.get('f1ux', 'foy', 'vous', table = 'declar') 
-    AQ = table.get('f1aq', 'foy', 'vous', table = 'declar') 
-    BQ = table.get('f1bq', 'foy', 'vous', table = 'declar') 
-    LZ = table.get('f1lz', 'foy', 'vous', table = 'declar') 
-    MZ = table.get('f1mz', 'foy', 'vous', table = 'declar') 
-    VJ = table.get('f3vj', 'foy', 'vous', table = 'declar')
-    VK = table.get('f3vk', 'foy', 'vous', table = 'declar') 
-    NV = table.get('f5nv', 'foy', 'vous', table = 'declar') 
-    OV = table.get('f5ov', 'foy', 'vous', table = 'declar') 
-    PV = table.get('f5pv', 'foy', 'vous', table = 'declar') 
-    NW = table.get('f5nw', 'foy', 'vous', table = 'declar') 
-    OW = table.get('f5ow', 'foy', 'vous', table = 'declar') 
-    PW = table.get('f5pw', 'foy', 'vous', table = 'declar') 
-    table.close_()
-
-    # coefficient de conversion en cas de changement de situation en cours
-    # d'année
-    nbJour = (self.jourXYZ==0) + self.jourXYZ;
-    coef_conv = 360/nbJour
+    P = _P.ir.ppe
+#    f1tv, f1uv, f1tw, f1uw, f1tx, f1ux, f1aq, f1bq, f1lz, f1mz, f3vj, f3vk, f5nv, f5ov, f5pv, f5nw, f5ow, f5pw
+    eliv, elic, eli1, eli2, eli3 = _ppe_elig_i[VOUS], _ppe_elig_i[CONJ], _ppe_elig_i[PAC1], _ppe_elig_i[PAC2], _ppe_elig_i[PAC3], 
+    basevi, baseci = ppe_rev[VOUS], ppe_rev[CONJ]
+    basev, basec, base1, base2, base3  = ppe_base[VOUS], ppe_base[CONJ], ppe_base[PAC1], ppe_base[PAC2], ppe_base[PAC1]
     
-    # Conditions d'éligibilité
-    eligib = (self.rfr*coef_conv) <= (\
-        ((self.veuf==1)|(self.celdiv==1))*(P.eligi1 + 2*max_(self.nbptr-1,0)*P.eligi3) \
-        + self.marpac*(P.eligi2 + 2*max_(self.nbptr-2,0)*P.eligi3))
-
-    # Revenu d'Activité Salariée (RAS)
-    RASv = AJ + AU + TV + TW + TX + AQ + LZ + VJ
-    RASc = BJ + BU + UV + UW + UX + BQ + MZ + VK
-    RAS1 = CJ + CU
-    RAS2 = DJ + DU
-    RAS3 = EJ + EU
-    
-    # Revenu d'Activité Non Salariée (RANS)
-    RANSv = min_(0,self.rpnsv)/P.abatns + max_(0,self.rpnsv)*P.abatns;
-    RANSc = min_(0,self.rpnsc)/P.abatns + max_(0,self.rpnsc)*P.abatns;
-    RANS1 = min_(0,self.rpnsp)/P.abatns + max_(0,self.rpnsp)*P.abatns;
-    
-    # Base
-    basevi = RASv + RANSv;
-    baseci = RASc + RANSc;
-    base1i = RAS1 + RANS1; # Pb: même enfant à charge cumule les 2 activités?
-    base2i = RAS2 ; # Pb: même enfant à charge cumule les 2 activités?
-    base3i = RAS3 ; # Pb: même enfant à charge cumule les 2 activités?
-    
-    
-    # TODO : regarder comment sont pris en compte les 6 qui ont remplit les
-    # av et ax.
-    fracv_sa = AV/P.TP_nbh
-    fracv_ns = NV/P.TP_nbj
-    fracc_sa = BV/P.TP_nbh
-    fracc_ns = OV/P.TP_nbj
-    frac1_sa = CV/P.TP_nbh
-    frac1_ns = PV/P.TP_nbj
-    frac2_sa = DV/P.TP_nbh
-    frac3_sa = QV/P.TP_nbh
-    
-    TPv = (AX == 1)|(NW == 1)|(fracv_sa + fracv_ns >= 1) |((fracv_ns == 0)&(RANSv   > 0));# > RASv));
-    TPc = (BX == 1)|(OW == 1)|(fracc_sa + fracc_ns >= 1) |((fracc_ns == 0)&(RANSc   > 0));# > RASc));
-    TP1 = (CX == 1)|(PW == 1)|(frac1_sa + frac1_ns >= 1) |((frac1_ns == 0)&(RANS1   > 0));# > RAS1));
-    TP2 = (DX == 1)|(frac2_sa >= 1);
-    TP3 = (QX == 1)|(frac3_sa >= 1);
-            
-    coeff_TPv = TPv + ~TPv*(fracv_sa + fracv_ns) ;
-    coeff_TPc = TPc + ~TPc*(fracc_sa + fracc_ns);
-    coeff_TP1 = TP1 + ~TP1*(frac1_sa + frac1_ns);
-    coeff_TP2 = TP2 + ~TP2*frac2_sa ;
-    coeff_TP3 = TP3 + ~TP3*frac3_sa;
-    
-    basev = basevi/(coeff_TPv + (coeff_TPv==0))*coef_conv;
-    basec = baseci/(coeff_TPc + (coeff_TPc==0))*coef_conv;
-    base1 = base1i/(coeff_TP1 + (coeff_TP1==0))*coef_conv;
-    base2 = base2i/(coeff_TP2 + (coeff_TP2==0))*coef_conv;
-    base3 = base3i/(coeff_TP3 + (coeff_TP3==0))*coef_conv;
-            
-    eliv = (basevi >= P.seuil1)&(coeff_TPv!=0);
-    elic = (baseci >= P.seuil1)&(coeff_TPc!=0);
-    eli1 = (base1i >= P.seuil1)&(coeff_TP1!=0);
-    eli2 = (base2i >= P.seuil1)&(coeff_TP2!=0);
-    eli3 = (base3i >= P.seuil1)&(coeff_TP3!=0);
-    
-    nbPAC_ppe = max_(0,self.nbPAC - eli1 - eli2 -eli3  );
+    nbPAC_ppe = max_(0,nb_pac - eli1 - eli2 -eli3  );
     
     #condition sur Revenu fiscal de référence
     
-    ligne2 = self.marpac & xor_(basevi >= P.seuil1,baseci >= P.seuil1);
-    ligne3 = (self.celdiv | self.veuf) & self.caseT & not_(self.veuf & self.caseT & self.caseL)
+    ligne2 = marpac & xor_(basevi >= P.seuil1, baseci >= P.seuil1);
+    ligne3 = (celdiv | veuf) & caseT & not_(veuf & caseT & caseL)
     ligne1 = not_(ligne2) & not_(ligne3)
     
     base_monact = ligne2*(eliv*basev + elic*basec);
     base_monacti = ligne2*(eliv*basevi + elic*baseci);
     
     # calcul des primes individuelles.
-    ppev = eliv/coef_conv*(\
+    ppev = eliv/ppe_coef*(\
         ((ligne1 |ligne3) & (basev <= P.seuil2))*(basev)*P.taux1 + \
         ((ligne1 |ligne3) & (basev> P.seuil2) & (basev <= P.seuil3))*(P.seuil3 - basev)*P.taux2 + \
         (ligne2 & (basev <= P.seuil2))*(basev*P.taux1 ) +\
         (ligne2 & (basev >  P.seuil2) & (basev <= P.seuil3))*((P.seuil3 - basev)*P.taux2)+ \
         (ligne2 & (basev> P.seuil4) & (basev <= P.seuil5))*(P.seuil5 - basev)*P.taux3);
     
-    ppec =  elic/coef_conv*(\
+    ppec =  elic/ppe_coef*(\
         ((ligne1 |ligne3) & (basec <= P.seuil2))*(basec)*P.taux1 + \
         ((ligne1 |ligne3) & (basec> P.seuil2) & (basec <= P.seuil3))*(P.seuil3 - basec)*P.taux2 + \
         (ligne2 &  (basec <= P.seuil2))*(basec*P.taux1 ) +\
         (ligne2 & (basec> P.seuil2) & (basec <= P.seuil3))*((P.seuil3 - basec)*P.taux2)+ \
         (ligne2 & (basec> P.seuil4) & (basec <= P.seuil5))*(P.seuil5 - basec)*P.taux3);
     
-    ppe1 =  eli1/coef_conv*(\
+    ppe1 =  eli1/ppe_coef*(\
         (base1 <= P.seuil2)*(base1)*P.taux1 + \
         ((base1> P.seuil2) & (base1 <= P.seuil3))*(P.seuil3 - base1)*P.taux2 );
     
-    ppe2 =  eli2/coef_conv*(\
+    ppe2 =  eli2/ppe_coef*(\
         (base2 <= P.seuil2)*(base2)*P.taux1 + \
         ((base2> P.seuil2) & (base2 <= P.seuil3))*(P.seuil3 - base2)*P.taux2 );
     
-    ppe3 =  eli3/coef_conv*(\
+    ppe3 =  eli3/ppe_coef*(\
         (base3 <= P.seuil2)*(base3)*P.taux1 + \
         ((base3> P.seuil2) & (base3 <= P.seuil3))*(P.seuil3 - base3)*P.taux2 );
     
@@ -1170,35 +1124,32 @@ def ppe(self,P):
     ppe_monact_vous = (eliv & ligne2 & (basevi>=P.seuil1) & (basev <= P.seuil4))*P.monact ;
     ppe_monact_conj = (elic & ligne2 & (baseci>=P.seuil1) & (basec <= P.seuil4))*P.monact ;
     
-    maj_pac = eligib*(eliv|elic)*(\
-        (ligne1 & self.marpac & ((ppev+ppec)!=0) & (min_(basev,basec)<= P.seuil3))*P.pac*(nbPAC_ppe + self.nbH*0.5) + \
-        (ligne1 & (self.celdiv | self.veuf) & eliv & (basev<=P.seuil3))*P.pac*(nbPAC_ppe + self.nbH*0.5) + \
-        (ligne2 & (base_monacti >= P.seuil1) & (base_monact <= P.seuil3))*P.pac*(nbPAC_ppe + self.nbH*0.5) + \
-        (ligne2 & (base_monact > P.seuil3) & (base_monact <= P.seuil5))*P.pac*((nbPAC_ppe!=0) + 0.5*((nbPAC_ppe==0) & (self.nbH!=0))) + \
-        (ligne3 & (basevi >=P.seuil1) & (basev <= P.seuil3))*((min_(nbPAC_ppe,1)*2*P.pac + max_(nbPAC_ppe-1,0)*P.pac) + (nbPAC_ppe==0)*(min_(self.nbH,2)*P.pac + max_(self.nbH-2,0)*P.pac*0.5)) + \
-        (ligne3 & (basev  > P.seuil3) & (basev <= P.seuil5))*P.pac*((nbPAC_ppe!=0)*2 +((nbPAC_ppe==0) & (self.nbH!=0)))) 
+    maj_pac = ppe_eligib*(eliv|elic)*(\
+        (ligne1 & marpac & ((ppev+ppec)!=0) & (min_(basev,basec)<= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
+        (ligne1 & (celdiv | veuf) & eliv & (basev<=P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
+        (ligne2 & (base_monacti >= P.seuil1) & (base_monact <= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
+        (ligne2 & (base_monact > P.seuil3) & (base_monact <= P.seuil5))*P.pac*((nbPAC_ppe!=0) + 0.5*((nbPAC_ppe==0) & (nbH!=0))) + \
+        (ligne3 & (basevi >=P.seuil1) & (basev <= P.seuil3))*((min_(nbPAC_ppe,1)*2*P.pac + max_(nbPAC_ppe-1,0)*P.pac) + (nbPAC_ppe==0)*(min_(nbH,2)*P.pac + max_(nbH-2,0)*P.pac*0.5)) + \
+        (ligne3 & (basev  > P.seuil3) & (basev <= P.seuil5))*P.pac*((nbPAC_ppe!=0)*2 +((nbPAC_ppe==0) & (nbH!=0)))) 
     
-    PPE_vous = eligib*(ppev*((coeff_TPv<=0.5)*coeff_TPv*1.45 + (coeff_TPv>0.5)*(0.55*coeff_TPv + 0.45))+ppe_monact_vous)
-    PPE_conj = eligib*(ppec*((coeff_TPc<=0.5)*coeff_TPc*1.45 + (coeff_TPc>0.5)*(0.55*coeff_TPc + 0.45))+ppe_monact_conj)
-    PPE_pac1 = eligib*ppe1*((coeff_TP1<=0.5)*coeff_TP1*1.45 + (coeff_TP1>0.5)*(0.55*coeff_TP1 + 0.45))
-    PPE_pac2 = eligib*ppe2*((coeff_TP2<=0.5)*coeff_TP2*1.45 + (coeff_TP2>0.5)*(0.55*coeff_TP2 + 0.45))
-    PPE_pac3 = eligib*ppe3*((coeff_TP3<=0.5)*coeff_TP3*1.45 + (coeff_TP3>0.5)*(0.55*coeff_TP3 + 0.45))
+    PPE_vous = ppe_elig*(ppev*((coeff_TPv<=0.5)*coeff_TPv*1.45 + (coeff_TPv>0.5)*(0.55*coeff_TPv + 0.45))+ppe_monact_vous)
+    PPE_conj = ppe_elig*(ppec*((coeff_TPc<=0.5)*coeff_TPc*1.45 + (coeff_TPc>0.5)*(0.55*coeff_TPc + 0.45))+ppe_monact_conj)
+    PPE_pac1 = ppe_elig*ppe1*((coeff_TP1<=0.5)*coeff_TP1*1.45 + (coeff_TP1>0.5)*(0.55*coeff_TP1 + 0.45))
+    PPE_pac2 = ppe_elig*ppe2*((coeff_TP2<=0.5)*coeff_TP2*1.45 + (coeff_TP2>0.5)*(0.55*coeff_TP2 + 0.45))
+    PPE_pac3 = ppe_elig*ppe3*((coeff_TP3<=0.5)*coeff_TP3*1.45 + (coeff_TP3>0.5)*(0.55*coeff_TP3 + 0.45))
     
     PPE_tot = PPE_vous + PPE_conj + PPE_pac1 + PPE_pac2 + PPE_pac3 +  maj_pac
     
     PPE_tot = (PPE_tot!=0)*max_(P.versmin,PPE_vous + PPE_conj + PPE_pac1 + PPE_pac2 + PPE_pac3 + maj_pac)
             
-    self.mnrbvo = PPE_vous
-    self.mnrbcj = PPE_conj
-    self.mnrbpc = PPE_pac1 + PPE_pac2 + PPE_pac3
-    self.mnrbmf = maj_pac
-    self.mnrbtp = PPE_tot
-    self.ppetot = PPE_tot
-    self.zppef  = PPE_tot
+    mnrbvo = PPE_vous
+    mnrbcj = PPE_conj
+    mnrbpc = PPE_pac1 + PPE_pac2 + PPE_pac3
+    mnrbmf = maj_pac
+    mnrbtp = PPE_tot
+    ppetot = PPE_tot
+    zppef  = PPE_tot
     
-    table.openWriteMode()
-    table.setColl('ppe',self.zppef, table= 'output')
-    table.close_()
     return PPE_tot
 
 

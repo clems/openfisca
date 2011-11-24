@@ -46,7 +46,8 @@ if __name__ == '__main__':
     ir.set_inputs(inputs)
 
     ir.calculate('rni')
-
+    print inputs.sal.get_value()
+    print ir.rni.get_value()
     
 
     
