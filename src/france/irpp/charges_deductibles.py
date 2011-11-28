@@ -23,8 +23,8 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import minimum as min_, maximum as max_
+from france.data import year
 
-year = 2010
 def niches(year):
     '''
     Renvoie la liste des charges déductibles à intégrer en fonction de l'année
