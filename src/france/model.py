@@ -71,6 +71,20 @@ class Model(SystemSf):
     rev_coll = Prestation(ir._rev_coll, 'foy')
 #    alv = Prestation(ir._alv)
     glo = Prestation(ir._glo, 'foy')
+    rag  = Prestation(ir._rag)
+    ric  = Prestation(ir._ric)
+    rac  = Prestation(ir._rac)
+    rnc  = Prestation(ir._rnc)
+    rpns = Prestation(ir._rpns)
+    div  = Prestation(ir._div, 'foy')
+    fon  = Prestation(ir._fon, 'foy')
+    rpns_mvct = Prestation(ir._rpns_mvct)
+    rpns_pvct = Prestation(ir._rpns_pvct)
+    rpns_mvlt = Prestation(ir._rpns_mvlt)
+    
+    rev_cap_bar = Prestation(ir._rev_cap_bar, 'foy')
+    rev_cap_lib = Prestation(ir._rev_cap_lib, 'foy')
+    avf = Prestation(ir._avf, 'foy')
 # variables pour les prestations familiales
     etu      = Prestation(pf._etu, label = u"Indicatrice individuelle étudiant")
     biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
@@ -104,3 +118,4 @@ class Model(SystemSf):
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
 
 
+    asf_elig = Prestation(ir._asf_elig, 'foy')

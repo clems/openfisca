@@ -92,6 +92,14 @@ class InputTable(DataTable):
     f1bw = IntCol()
     f1cw = IntCol()
     f1dw = IntCol()
+    
+    f1tv = IntCol()
+    f1uv = IntCol()
+    f1tw = IntCol()
+    f1uw = IntCol()
+    f1tx = IntCol()
+    f1ux = IntCol()
+    
     # RVCM
     f2ch = IntCol()
     f2dc = IntCol()
@@ -105,7 +113,11 @@ class InputTable(DataTable):
     f2al = IntCol()
     f2am = IntCol()
     f2an = IntCol()
-    
+    f2ee = IntCol()
+    f2gr = IntCol()
+    f2ab = IntCol()
+    f2dh = IntCol()
+    f2da = IntCol()
     
     f3vc = IntCol()
     f3vd = IntCol()
@@ -116,6 +128,9 @@ class InputTable(DataTable):
     f3vl = IntCol()
     f3vi = IntCol()
     f3vm = IntCol()
+    
+    f3vj = IntCol()
+    f3vk = IntCol()
     
     # Revenu foncier
     f4ba = IntCol()
@@ -139,6 +154,78 @@ class InputTable(DataTable):
     
     f6gh = IntCol()
     f6de = IntCol()
+
+    f7ga = IntCol()
+    f7gb = IntCol()
+    f7gc = IntCol()
+
+    # Revenus des professions non salariées
+    frag_exon = IntCol() # (f5hn, f5in, f5jn)
+    frag_impo = IntCol() # (f5ho, f5io, f5jo)    
+    arag_exon = IntCol() # (f5hb, f5ib, f5jb)
+    arag_impg = IntCol() # (f5hc, f5ic, f5jc)
+    arag_defi = IntCol() # (f5hf, f5if, f5jf)
+    nrag_exon = IntCol() # (f5hh, f5ih, f5jh)
+    nrag_impg = IntCol() # (f5hi, f5ii, f5ji)
+    nrag_defi = IntCol() # (f5hl, f5il, f5jl)
+    nrag_ajag = IntCol() # (f5hm, f5im, f5jm)
+
+    mbic_exon = IntCol() # (f5kn, f5ln, f5mn)
+    abic_exon = IntCol() # (f5kb, f5lb, f5mb)
+    nbic_exon = IntCol() # (f5kh, f5lh, f5mh)
+    mbic_impv = IntCol() # (f5ko, f5lo, f5mo)
+    mbic_imps = IntCol() # (f5kp, f5lp, f5mp)
+    abic_impn = IntCol() # (f5kc, f5lc, f5mc)
+    abic_imps = IntCol() # (f5kd, f5ld, f5md)
+    nbic_impn = IntCol() # (f5ki, f5li, f5mi)
+    nbic_imps = IntCol() # (f5kj, f5lj, f5mj)
+    abic_defn = IntCol() # (f5kf, f5lf, f5mf)
+    abic_defs = IntCol() # (f5kg, f5lg, f5mg)
+    nbic_defn = IntCol() # (f5kl, f5ll, f5ml)
+    nbic_defs = IntCol() # (f5km, f5lm, f5mm)
+    nbic_apch = IntCol() # (f5ks, f5ls, f5ms)
+
+    macc_exon = IntCol() # (f5nn, f5on, f5pn)
+    aacc_exon = IntCol() # (f5nb, f5ob, f5pb)
+    nacc_exon = IntCol() # (f5nh, f5oh, f5ph)
+    macc_impv = IntCol() # (f5no, f5oo, f5po)
+    macc_imps = IntCol() # (f5np, f5op, f5pp)
+    aacc_impn = IntCol() # (f5nc, f5oc, f5pc)
+    aacc_imps = IntCol() # (f5nd, f5od, f5pd)
+    aacc_defn = IntCol() # (f5nf, f5of, f5pf)
+    aacc_defs = IntCol() # (f5ng, f5og, f5pg)
+    nacc_impn = IntCol() # (f5ni, f5oi, f5pi)
+    nacc_imps = IntCol() # (f5nj, f5oj, f5pj)
+    nacc_defn = IntCol() # (f5nl, f5ol, f5pl)
+    nacc_defs = IntCol() # (f5nm, f5om, f5pm)
+    mncnp_impo = IntCol() # (f5ku, f5lu, f5mu)
+    cncnp_bene = IntCol() # (f5sn, f5ns, f5os)
+    cncnp_defi = IntCol() # (f5sp, f5nu, f5ou, f5sr)
+
+    mbnc_exon = IntCol() # (f5hp, f5ip, f5jp)
+    abnc_exon = IntCol() # (f5qb, f5rb, f5sb)
+    nbnc_exon = IntCol() # (f5qh, f5rh, f5sh)
+    mbnc_impo = IntCol() # (f5hq, f5iq, f5jq)
+    abnc_impo = IntCol() # (f5qc, f5rc, f5sc)
+    abnc_defi = IntCol() # (f5qe, f5re, f5se)
+    nbnc_impo = IntCol() # (f5qi, f5ri, f5si)
+    nbnc_defi = IntCol() # (f5qk, f5rk, f5sk)
+
+    mbic_mvct = IntCol() # (f5hu)
+    macc_mvct = IntCol() # (f5iu)
+    mncn_mvct = IntCol() # (f5ju)
+    mbnc_mvct = IntCol() # (f5kz)
+
+    frag_pvct = IntCol() # (f5hw, f5iw, f5jw)
+    mbic_pvct = IntCol() # (f5kx, f5lx, f5mx)
+    macc_pvct = IntCol() # (f5nx, f5ox, f5px)
+    mbnc_pvct = IntCol() # (f5hv, f5iv, f5jv)
+    mncn_pvct = IntCol() # (f5ky, f5ly, f5my)
+
+    mbic_mvlt = IntCol() # (f5kr, f5lr, f5mr)
+    macc_mvlt = IntCol() # (f5nr, f5or, f5pr)
+    mncn_mvlt = IntCol() # (f5kw, f5lw, f5mw)
+    mbnc_mvlt = IntCol() # (f5hs, f5is, f5js)
 
 # pfam only
     inactif  = BoolCol()
