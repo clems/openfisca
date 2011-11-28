@@ -63,7 +63,9 @@ for qui in QUIFOY:
 #    irpp   = -(mciria + ppetot - mcirra )
     
 
-
+###############################################################################
+## Initialisation de quelques variables utiles pour la suite
+###############################################################################
 
 def _nb_adult(marpac, celdiv, veuf):
     return 2*marpac + 1*(celdiv | veuf)
@@ -99,101 +101,9 @@ def _jveuf(statmarit):
     '''
     return statmarit == 6
 
-def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
-    '''
-    Revenu brut global (Total 17)
-    '''
-    # sans les revenus au quotient
-    return max_(0, alloc + rev_cat + f6gh - deficit_ante)
-
-def _csg_deduc(rbg, f6de):
-    '''
-    CSG déductible
-    '''
-    return min_(f6de, max_(rbg, 0))
-
-def _rng(rbg, csg_deduc, charges_deduc):
-    '''
-    Revenu net global (total 20)
-    '''
-    return max_(0, rbg - csg_deduc - charges_deduc)
-
-def _rni(rng, abat_spe):
-    return rng - abat_spe
-
-def _ir_brut(nbptr, rni, _P):
-    '''
-    Impot sur le revenu avant non imposabilité et plafonnement du quotien
-    'foy'
-    '''
-    P = _P.ir.bareme
-    return nbptr*BarmMar(rni/nbptr, P) # TODO : partir d'ici, petite différence avec Matlab
-
-
-def _ip_net(ir_plaf_qf, nat_imp, decote):
-    '''
-    irpp après décote et prise en compte de la non imposabilité
-    '''
-    return nat_imp*max_(0, ir_plaf_qf - decote)
-
-def _rfr(rni, alloc, f3va, f3vg, f3vi, rpns_exo, rpns_pvce, rev_cap_lib):
-    '''
-    revenu fiscal de reference
-    '''
-    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + f3va + f3vg
- 
-def _iaidrdi(ip_net, reductions):
-    '''
-    impot après imputation des réductions d'impôt
-    '''
-    return   ip_net - reductions
-
-def _cont_rev_loc(f4bl):
-    '''
-    Contribution sur les revenus locatifs
-    '''
-    loyf_taux = 0.025
-    loyf_seuil = 0
-    return round(loyf_taux *(f4bl >= loyf_seuil)*f4bl)
-
-def _teicaa(f5qm, f5rm):
-    '''
-    Taxe exceptionelle sur l'indemnité compensatrice des agents d'assurance
-    '''
-    #     H90_a1 = 0*max_(0,min_(f5qm,23000));
-    H90_a2 = .04*max_(0,min_(f5qm - 23000,107000));
-    H90_a3 = .026*max_(0,f5qm - 107000);
-    #     H90_b1 = 0*max_(0,min_(f5rm,23000));
-    H90_b2 = .04*max_(0,min_(f5qm-23000,107000));
-    H90_b3 = .026*max_(0,f5qm - 107000);
-    
-    return H90_a2 + H90_a3 + H90_b2 + H90_b3;
-
-def _iai(iaidrdi, plus_values, cont_rev_loc, teicaa):
-    '''
-    impôt avant imputation
-    '''
-    return iaidrdi + plus_values + cont_rev_loc + teicaa
-    
-def _irpp(iai, credits_impot, tehr, ppe):
-    '''
-    Montant avant seuil de recouvrement (hors ppe)
-    '''
-    return  iai - credits_impot + ppe + tehr
-
-def _tehr(rfr, nb_adult, P):
-    '''
-    Taxe exceptionnelle sur les hauts revenus
-    'foy'
-    '''
-    return BarmMar(rfr/nb_adult, P)*nb_adult
-
-def _glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
-    '''
-    Gains de levée d'option
-    'foy'
-    '''
-    return f1tv + f1tw + f1tx + f1uv + f1uw + f1ux + f3vf + f3vi + f3vj + f3vk                   
+###############################################################################
+## Revenus catégoriels
+###############################################################################
 
 def _alloc(af, _P):
     '''
@@ -237,12 +147,6 @@ def _pen_net(rev_pen, _P):
 
     return max_(0, rev_pen - round(max_(P.taux*rev_pen , P.min)))
 
-def _rto(f1aw, f1bw, f1cw, f1dw):
-    '''
-    Rentes viagères à titre onéreux
-    '''
-    return f1aw + f1bw + f1cw + f1dw
-
 def _rto_net(f1aw, f1bw, f1cw, f1dw, _P):
     '''
     Rentes viagères après abatements
@@ -271,14 +175,10 @@ def _rev_cat_tspr(tspr, rto_net, _option = {'tspr': ALL}):
     
     return out
 
-def _deficit_rcm(f2aa, f2al, f2am, f2an):
-    return f2aa + f2al + f2am + f2an
-
 def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, _P):
     '''
     REVENUS DES VALEURS ET CAPITAUX MOBILIERS
     '''
-    year = 2010
     P = _P.ir.rvcm
     if year > 2004: f2gr = 0
 
@@ -313,6 +213,227 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr,
     rfr_rvcm = max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
 
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
+
+def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
+    '''
+    REVENUS FONCIERS
+    '''    
+    P = _P.ir.microfoncier
+    ## Calcul du revenu catégoriel
+    a13 = f4ba + f4be - P.taux*f4be*(f4be <= P.max)
+    b13 = f4bb
+    c13 = a13-b13
+    d13 = f4bc
+    e13 = c13- d13*(c13>=0)
+    f13 = f4bd*(e13>=0)
+    g13 = max_(0, e13- f13)
+    out  = (c13>=0)*(g13 + e13*(e13<0)) - (c13<0)*d13
+    return out
+
+def _rev_cat_rpns(sal):
+    return 0*sal
+
+def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
+    '''
+    Revenus Categoriels
+    '''
+#    self.AUTRE = TSPR + RVCM + RFON
+    return rev_cat_tspr + rev_cat_rvcm + rev_cat_rfon + rev_cat_rpns
+
+###############################################################################
+## Déroulé du calcul de l'irpp
+###############################################################################
+
+def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
+    '''
+    Revenu brut global (Total 17)
+    '''
+    # sans les revenus au quotient
+    return max_(0, alloc + rev_cat + f6gh - deficit_ante)
+
+def _csg_deduc(rbg, f6de):
+    '''
+    CSG déductible
+    '''
+    return min_(f6de, max_(rbg, 0))
+
+def _rng(rbg, csg_deduc, charges_deduc):
+    '''
+    Revenu net global (total 20)
+    '''
+    return max_(0, rbg - csg_deduc - charges_deduc)
+
+def _rni(rng, abat_spe):
+    return rng - abat_spe
+
+def _ir_brut(nbptr, rni, _P):
+    '''
+    Impot sur le revenu avant non imposabilité et plafonnement du quotien
+    'foy'
+    '''
+    P = _P.ir.bareme
+    return nbptr*BarmMar(rni/nbptr, P) # TODO : partir d'ici, petite différence avec Matlab
+
+def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
+    '''
+    Impôt après plafonnement du quotient familial et réduction complémentaire
+    '''
+    P = _P.ir
+    I = ir_brut
+    A = BarmMar(rni/nb_adult,P.bareme)
+    A = nb_adult*A    
+
+    aa0 = (nbptr-nb_adult)*2           #nombre de demi part excédant nbadult
+    # on dirait que les impôts font une erreur sur aa1 (je suis obligé de
+    # diviser par 2)
+    aa1 = min_((nbptr-1)*2,2)/2  # deux première demi part excédants une part
+    aa2 = max_((nbptr-2)*2,0)    # nombre de demi part restantes
+    # celdiv parents isolés
+    condition61 = (celdiv==1) & caseT
+    B1 = P.plafond_qf.celib_enf*aa1 + P.plafond_qf.marpac*aa2
+    # tous les autres
+    B2 = P.plafond_qf.marpac*aa0                 #si autre
+    # celdiv, veufs (non jveuf) vivants seuls et autres conditions TODO année codéee en dur
+    # TODO: année en dur... pour caseH
+    condition63 = ((celdiv==1) | ((veuf==1) & not_(jveuf))) & not_(caseN) & (nb_pac==0) & (caseK | caseE) & (caseH<1981)
+    B3 = P.plafond_qf.celib
+
+    B = B1*condition61 + \
+        B2*(not_(condition61 | condition63)) + \
+        B3*(condition63 & not_(condition61))
+    C = max_(0,A-B);
+    # Impôt après plafonnement
+    IP0 = max_(I, C) #I*(I>=C) + C*(I<C);
+
+    # 6.2 réduction d'impôt pratiquée sur l'impot après plafonnement et le cas particulier des DOM
+    # pas de réduction complémentaire
+    condition62a = (I>=C);
+    # réduction complémentaire
+    condition62b = (I<C);
+    # celdiv veuf
+    condition62caa0 = (celdiv | (veuf & not_(jveuf)))
+    condition62caa1 = (nb_pac==0)&(caseP | caseG | caseF | caseW)
+    condition62caa2 = caseP & ((nbF-nbG>0)|(nbH - nbI>0))
+    condition62caa3 = not_(caseN) & (caseE | caseK )  & (caseH>=1981)
+    condition62caa  = condition62caa0 & (condition62caa1 | condition62caa2 | condition62caa3)
+    # marié pacs
+    condition62cab = (marpac | jveuf) & caseS & not_(caseP | caseF)
+    condition62ca =    (condition62caa | condition62cab);
+
+    # plus de 590 euros si on a des plus de
+    condition62cb = ((nbG+nbR+nbI)>0) | caseP | caseF
+    D = P.plafond_qf.reduc_postplafond*(condition62ca + ~condition62ca*condition62cb*( 1*caseP + 1*caseF + nbG + nbR + nbI/2 ))
+
+    E = max_(0,A-I-B)
+    Fo = D*(D<=E) + E*(E<D)
+    out = IP0-Fo
+
+    return out
+    # TODO :6.3 Cas particulier: Contribuables domiciliés dans les DOM.    
+    # conditionGuadMarReu =
+    # conditionGuyane=
+    # conitionDOM = conditionGuadMarReu | conditionGuyane;
+    # postplafGuadMarReu = 5100;
+    # postplafGuyane = 6700;
+    # IP2 = IP1 - conditionGuadMarReu*min( postplafGuadMarReu,.3*IP1)  - conditionGuyane*min(postplafGuyane,.4*IP1);
+#
+#
+#    # Récapitulatif
+#    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
+
+def _decote(ir_plaf_qf, _P):
+    '''
+    Décote
+    '''
+    P = _P.ir.decote
+    return (ir_plaf_qf < P.seuil)*(P.seuil - ir_plaf_qf)*0.5
+
+def _nat_imp(rni, nbptr, _P):
+    '''
+    Renvoie 1 si le foyer est imposable, 0 sinon
+    '''
+    P = _P.ir.non_imposable
+    seuil = P.seuil + (nbptr - 1)*P.supp
+    return rni >= seuil
+
+def _ip_net(ir_plaf_qf, nat_imp, decote):
+    '''
+    irpp après décote et prise en compte de la non imposabilité
+    '''
+    return nat_imp*max_(0, ir_plaf_qf - decote)
+
+def _iaidrdi(ip_net, reductions):
+    '''
+    impot après imputation des réductions d'impôt
+    '''
+    return   ip_net - reductions
+
+def _cont_rev_loc(f4bl):
+    '''
+    Contribution sur les revenus locatifs
+    '''
+    loyf_taux = 0.025
+    loyf_seuil = 0
+    return round(loyf_taux *(f4bl >= loyf_seuil)*f4bl)
+
+def _teicaa(f5qm, f5rm):
+    '''
+    Taxe exceptionelle sur l'indemnité compensatrice des agents d'assurance
+    '''
+    #     H90_a1 = 0*max_(0,min_(f5qm,23000));
+    H90_a2 = .04*max_(0,min_(f5qm - 23000,107000));
+    H90_a3 = .026*max_(0,f5qm - 107000);
+    #     H90_b1 = 0*max_(0,min_(f5rm,23000));
+    H90_b2 = .04*max_(0,min_(f5qm-23000,107000));
+    H90_b3 = .026*max_(0,f5qm - 107000);
+    
+    return H90_a2 + H90_a3 + H90_b2 + H90_b3;
+
+def _iai(iaidrdi, plus_values, cont_rev_loc, teicaa):
+    '''
+    impôt avant imputation
+    '''
+    return iaidrdi + plus_values + cont_rev_loc + teicaa
+
+def _tehr(rfr, nb_adult, P):
+    '''
+    Taxe exceptionnelle sur les hauts revenus
+    'foy'
+    '''
+    return BarmMar(rfr/nb_adult, P)*nb_adult
+    
+def _irpp(iai, credits_impot, tehr, ppe):
+    '''
+    Montant avant seuil de recouvrement (hors ppe)
+    '''
+    return  iai - credits_impot + ppe + tehr
+
+
+###############################################################################
+## Autres totaux utiles pour la suite
+###############################################################################
+
+def _rfr(rni, alloc, f3va, f3vg, f3vi, rpns_exo, rpns_pvce, rev_cap_lib):
+    '''
+    Revenu fiscal de reference
+    '''
+    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + f3va + f3vg
+ 
+def _glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
+    '''
+    Gains de levée d'option
+    'foy'
+    '''
+    return f1tv + f1tw + f1tx + f1uv + f1uw + f1ux + f3vf + f3vi + f3vj + f3vk                   
+
+def _rto(f1aw, f1bw, f1cw, f1dw):
+    '''
+    Rentes viagères à titre onéreux
+    '''
+    return f1aw + f1bw + f1cw + f1dw
+
+def _deficit_rcm(f2aa, f2al, f2am, f2an):
+    return f2aa + f2al + f2am + f2an
     
 def _rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
     '''
@@ -320,26 +441,25 @@ def _rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
     '''
     return f2dc + f2gr + f2ch + f2ts + f2go + f2tr + f2fu - avf
 
+def _rev_cap_lib(f2da, f2dh, f2ee):
+    '''
+    Revenu du capital imposé au prélèvement libératoire
+    '''
+    if year <=2007: out = f2dh + f2ee
+    else: out = f2da + f2dh + f2ee
+    return out
+
 def _avf(f2ab):
     # a.(ii) Avoir fiscal et crédits d'impôt (zavff)
     return f2ab
     # a.(iii) Les revenus de valeurs mobilières soumis au prélèvement
     # libératoire (zvalf)
 
-def _rev_cap_lib(f2da, f2dh, f2ee):
-    '''
-    Revenu du capital imposé au prélèvement libératoire
-    '''
-    year = 2010
-    if year <=2007: out = f2dh + f2ee
-    else: out = f2da + f2dh + f2ee
-    return out
     
 def _imp_lib(f2da, f2dh, f2ee, _P):
     '''
     Prelèvement libératoire sur les revenus du capital
     '''
-    year =  2010
     P = _P.ir.prelevement_liberatoire
     if year <=2007: 
         out = - (P.assvie*f2dh + P.autre*f2ee )
@@ -360,24 +480,6 @@ def _fon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     fon = f4ba - f4bb - f4bc + round(f4be*(1-P.taux))  
     return fon
 
-def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
-    '''
-    REVENUS FONCIERS
-    '''    
-    P = _P.ir.microfoncier
-    ## Calcul du revenu catégoriel
-    a13 = f4ba + f4be - P.taux*f4be*(f4be <= P.max)
-    b13 = f4bb
-    c13 = a13-b13
-    d13 = f4bc
-    e13 = c13- d13*(c13>=0)
-    f13 = f4bd*(e13>=0)
-    g13 = max_(0, e13- f13)
-    out  = (c13>=0)*(g13 + e13*(e13<0)) - (c13<0)*d13
-    return out
-
-def _rev_cat_rpns(sal):
-    return 0*sal
 
 def _rpns_full(self, P, table):
     '''
@@ -724,13 +826,6 @@ def _rpns_full(self, P, table):
 
     return RPNS
 
-def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
-    '''
-    Revenus Categoriels
-    '''
-#    self.AUTRE = TSPR + RVCM + RFON
-    return rev_cat_tspr + rev_cat_rvcm + rev_cat_rfon + rev_cat_rpns
-
 def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
     '''
     Déficits antérieurs
@@ -786,14 +881,6 @@ def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
     as_enf = nbN*P.enf_montant 
 
     return min_(rng, as_inv + as_enf)
-
-def _nat_imp(rni, nbptr, _P):
-    '''
-    Renvoie 1 si le foyer est imposable, 0 sinon
-    '''
-    P = _P.ir.non_imposable
-    seuil = P.seuil + (nbptr - 1)*P.supp
-    return rni >= seuil
 
 def _nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, caseW, caseG, caseE, caseK, caseN, caseF, caseS, caseL, caseT, _P):
     '''
@@ -868,79 +955,6 @@ def _nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, cas
     c = 1 + enf + n2 + n3 + n6 + n7
     return (marpac | jveuf)*m + (veuf & not_(jveuf))*v + celdiv*c
     
-def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
-    '''
-    Impôt après plafonnement du quotient familial et réduction complémentaire
-    '''
-    P = _P.ir
-    I = ir_brut
-    A = BarmMar(rni/nb_adult,P.bareme)
-    A = nb_adult*A    
-
-    aa0 = (nbptr-nb_adult)*2           #nombre de demi part excédant nbadult
-    # on dirait que les impôts font une erreur sur aa1 (je suis obligé de
-    # diviser par 2)
-    aa1 = min_((nbptr-1)*2,2)/2  # deux première demi part excédants une part
-    aa2 = max_((nbptr-2)*2,0)    # nombre de demi part restantes
-    # celdiv parents isolés
-    condition61 = (celdiv==1) & caseT
-    B1 = P.plafond_qf.celib_enf*aa1 + P.plafond_qf.marpac*aa2
-    # tous les autres
-    B2 = P.plafond_qf.marpac*aa0                 #si autre
-    # celdiv, veufs (non jveuf) vivants seuls et autres conditions TODO année codéee en dur
-    # TODO: année en dur... pour caseH
-    condition63 = ((celdiv==1) | ((veuf==1) & not_(jveuf))) & not_(caseN) & (nb_pac==0) & (caseK | caseE) & (caseH<1981)
-    B3 = P.plafond_qf.celib
-
-    B = B1*condition61 + \
-        B2*(not_(condition61 | condition63)) + \
-        B3*(condition63 & not_(condition61))
-    C = max_(0,A-B);
-    # Impôt après plafonnement
-    IP0 = max_(I, C) #I*(I>=C) + C*(I<C);
-
-    # 6.2 réduction d'impôt pratiquée sur l'impot après plafonnement et le cas particulier des DOM
-    # pas de réduction complémentaire
-    condition62a = (I>=C);
-    # réduction complémentaire
-    condition62b = (I<C);
-    # celdiv veuf
-    condition62caa0 = (celdiv | (veuf & not_(jveuf)))
-    condition62caa1 = (nb_pac==0)&(caseP | caseG | caseF | caseW)
-    condition62caa2 = caseP & ((nbF-nbG>0)|(nbH - nbI>0))
-    condition62caa3 = not_(caseN) & (caseE | caseK )  & (caseH>=1981)
-    condition62caa  = condition62caa0 & (condition62caa1 | condition62caa2 | condition62caa3)
-    # marié pacs
-    condition62cab = (marpac | jveuf) & caseS & not_(caseP | caseF)
-    condition62ca =    (condition62caa | condition62cab);
-
-    # plus de 590 euros si on a des plus de
-    condition62cb = ((nbG+nbR+nbI)>0) | caseP | caseF
-    D = P.plafond_qf.reduc_postplafond*(condition62ca + ~condition62ca*condition62cb*( 1*caseP + 1*caseF + nbG + nbR + nbI/2 ))
-
-    E = max_(0,A-I-B)
-    Fo = D*(D<=E) + E*(E<D)
-    out = IP0-Fo
-
-    return out
-    # TODO :6.3 Cas particulier: Contribuables domiciliés dans les DOM.    
-    # conditionGuadMarReu =
-    # conditionGuyane=
-    # conitionDOM = conditionGuadMarReu | conditionGuyane;
-    # postplafGuadMarReu = 5100;
-    # postplafGuyane = 6700;
-    # IP2 = IP1 - conditionGuadMarReu*min( postplafGuadMarReu,.3*IP1)  - conditionGuyane*min(postplafGuyane,.4*IP1);
-#
-#
-#    # Récapitulatif
-#    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
-
-def _decote(ir_plaf_qf, _P):
-    '''
-    Décote
-    '''
-    P = _P.ir.decote
-    return (ir_plaf_qf < P.seuil)*(P.seuil - ir_plaf_qf)*0.5
 
 #def Reductions(self, IPnet, P, table):
 #    ''' 
@@ -972,6 +986,28 @@ def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
         
     return round(out)
 
+def _div(rpns_pvce, rpns_pvct, rpns_mvct, rpns_mvlt, f3vc, f3ve, f3vg, f3vh, f3vl, f3vm):
+    return f3vc + f3ve + f3vg - f3vh + f3vl+ f3vm + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
+    
+
+def _div_rmi(f3vc, f3ve, f3vg, f3vl, f3vm):
+    return f3vc + f3ve + f3vg + f3vl+ f3vm
+    
+def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, alv, glo, fon, f7ga, f7gb, f7gc):
+    '''
+    revenus collectif
+    'foy'
+    '''
+    # TODO: ajouter les revenus de l'étranger etr*0.9
+    return rto_net + rev_cap_lib + rev_cap_bar  + fon + glo - alv - f7ga - f7gb - f7gc - abat_spe
+    
+    # pour le calcul de l'allocation de soutien familial     
+def _asf_elig(caseT, caseL):
+    return caseT | caseL
+
+def al_nbinv(nbR):
+    return nbR
+
 #def Credits(self, P, table):
 #    '''
 #    Imputations (crédits d'impôts)
@@ -986,6 +1022,10 @@ def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
 #    ppe = Ppe(P.ppe)
 #
 #    return reducs + ppe
+
+###############################################################################
+## Calcul de la prime pour l'emploi
+###############################################################################
 
 def _ppe_coef(jour_xyz):
     '''
@@ -1037,7 +1077,7 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
     P = _P.ir.ppe
     return (ppe_rev >= P.seuil1)&(_ppe_coeff_tp!=0)
 
-def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'ppe_rev': ALL}):
+def _ppe(ppe_elig, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''
     Prime pour l'emploi
     '''
@@ -1046,17 +1086,16 @@ def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'p
     eliv, elic, eli1, eli2, eli3 = _ppe_elig_i[VOUS], _ppe_elig_i[CONJ], _ppe_elig_i[PAC1], _ppe_elig_i[PAC2], _ppe_elig_i[PAC3], 
     basevi, baseci = ppe_rev[VOUS], ppe_rev[CONJ]
     basev, basec, base1, base2, base3  = ppe_base[VOUS], ppe_base[CONJ], ppe_base[PAC1], ppe_base[PAC2], ppe_base[PAC1]
+    coef_tpv, coef_tpc, coef_tp1, coef_tp2, coef_tp3  = ppe_coef_tp[VOUS], ppe_coef_tp[CONJ], ppe_coef_tp[PAC1], ppe_coef_tp[PAC2], ppe_coef_tp[PAC1]
     
-    nbPAC_ppe = max_(0,nb_pac - eli1 - eli2 -eli3  );
-    
-    #condition sur Revenu fiscal de référence
-    
-    ligne2 = marpac & xor_(basevi >= P.seuil1, baseci >= P.seuil1);
+    nbPAC_ppe = max_(0,nb_pac - eli1 - eli2 -eli3 )
+        
+    ligne2 = marpac & xor_(basevi >= P.seuil1, baseci >= P.seuil1)
     ligne3 = (celdiv | veuf) & caseT & not_(veuf & caseT & caseL)
     ligne1 = not_(ligne2) & not_(ligne3)
     
-    base_monact = ligne2*(eliv*basev + elic*basec);
-    base_monacti = ligne2*(eliv*basevi + elic*baseci);
+    base_monact = ligne2*(eliv*basev + elic*basec)
+    base_monacti = ligne2*(eliv*basevi + elic*baseci)
 
     def ppe_bar1(base):
         cond1 = ligne1 | ligne3
@@ -1081,19 +1120,19 @@ def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'p
     ppe_monact_vous = (eliv & ligne2 & (basevi>=P.seuil1) & (basev <= P.seuil4))*P.monact
     ppe_monact_conj = (elic & ligne2 & (baseci>=P.seuil1) & (basec <= P.seuil4))*P.monact
     
-    maj_pac = ppe_eligib*(eliv|elic)*(\
-        (ligne1 & marpac & ((ppev+ppec)!=0) & (min_(basev,basec)<= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
-        (ligne1 & (celdiv | veuf) & eliv & (basev<=P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
-        (ligne2 & (base_monacti >= P.seuil1) & (base_monact <= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
-        (ligne2 & (base_monact > P.seuil3) & (base_monact <= P.seuil5))*P.pac*((nbPAC_ppe!=0) + 0.5*((nbPAC_ppe==0) & (nbH!=0))) + \
-        (ligne3 & (basevi >=P.seuil1) & (basev <= P.seuil3))*((min_(nbPAC_ppe,1)*2*P.pac + max_(nbPAC_ppe-1,0)*P.pac) + (nbPAC_ppe==0)*(min_(nbH,2)*P.pac + max_(nbH-2,0)*P.pac*0.5)) + \
-        (ligne3 & (basev  > P.seuil3) & (basev <= P.seuil5))*P.pac*((nbPAC_ppe!=0)*2 +((nbPAC_ppe==0) & (nbH!=0)))) 
+    maj_pac = ppe_elig*(eliv|elic)*(
+        (ligne1 & marpac & ((ppev+ppec)!=0) & (min_(basev,basec)<= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) +
+        (ligne1 & (celdiv | veuf) & eliv & (basev<=P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) +
+        (ligne2 & (base_monacti >= P.seuil1) & (base_monact <= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) +
+        (ligne2 & (base_monact > P.seuil3) & (base_monact <= P.seuil5))*P.pac*((nbPAC_ppe!=0) + 0.5*((nbPAC_ppe==0) & (nbH!=0))) +
+        (ligne3 & (basevi >=P.seuil1) & (basev <= P.seuil3))*((min_(nbPAC_ppe,1)*2*P.pac + max_(nbPAC_ppe-1,0)*P.pac) + (nbPAC_ppe==0)*(min_(nbH,2)*P.pac + max_(nbH-2,0)*P.pac*0.5)) +
+        (ligne3 & (basev  > P.seuil3) & (basev <= P.seuil5))*P.pac*((nbPAC_ppe!=0)*2 +((nbPAC_ppe==0) & (nbH!=0))))
     
-    PPE_vous = ppe_elig*(ppev*((coeff_TPv<=0.5)*coeff_TPv*1.45 + (coeff_TPv>0.5)*(0.55*coeff_TPv + 0.45))+ppe_monact_vous)
-    PPE_conj = ppe_elig*(ppec*((coeff_TPc<=0.5)*coeff_TPc*1.45 + (coeff_TPc>0.5)*(0.55*coeff_TPc + 0.45))+ppe_monact_conj)
-    PPE_pac1 = ppe_elig*ppe1*((coeff_TP1<=0.5)*coeff_TP1*1.45 + (coeff_TP1>0.5)*(0.55*coeff_TP1 + 0.45))
-    PPE_pac2 = ppe_elig*ppe2*((coeff_TP2<=0.5)*coeff_TP2*1.45 + (coeff_TP2>0.5)*(0.55*coeff_TP2 + 0.45))
-    PPE_pac3 = ppe_elig*ppe3*((coeff_TP3<=0.5)*coeff_TP3*1.45 + (coeff_TP3>0.5)*(0.55*coeff_TP3 + 0.45))
+    PPE_vous = ppe_elig*(ppev*((coef_tpv<=0.5)*coef_tpv*1.45 + (coef_tpv>0.5)*(0.55*coef_tpv + 0.45))+ppe_monact_vous)
+    PPE_conj = ppe_elig*(ppec*((coef_tpc<=0.5)*coef_tpc*1.45 + (coef_tpc>0.5)*(0.55*coef_tpc + 0.45))+ppe_monact_conj)
+    PPE_pac1 = ppe_elig*ppe1*((coef_tp1<=0.5)*coef_tp1*1.45 + (coef_tp1>0.5)*(0.55*coef_tp1 + 0.45))
+    PPE_pac2 = ppe_elig*ppe2*((coef_tp2<=0.5)*coef_tp2*1.45 + (coef_tp2>0.5)*(0.55*coef_tp2 + 0.45))
+    PPE_pac3 = ppe_elig*ppe3*((coef_tp3<=0.5)*coef_tp3*1.45 + (coef_tp3>0.5)*(0.55*coef_tp3 + 0.45))
     
     PPE_tot = PPE_vous + PPE_conj + PPE_pac1 + PPE_pac2 + PPE_pac3 +  maj_pac
     
@@ -1116,26 +1155,5 @@ def _thab():
     '''
     pass
 
-def _div(rpns_pvce, rpns_pvct, rpns_mvct, rpns_mvlt, f3vc, f3ve, f3vg, f3vh, f3vl, f3vm):
-    return f3vc + f3ve + f3vg - f3vh + f3vl+ f3vm + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
-    
-
-def _div_rmi(f3vc, f3ve, f3vg, f3vl, f3vm):
-    return f3vc + f3ve + f3vg + f3vl+ f3vm
-    
-def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, alv, glo, fon, f7ga, f7gb, f7gc):
-    '''
-    revenus collectif
-    'foy'
-    '''
-    # TODO: ajouter les revenus de l'étranger etr*0.9
-    return rto_net + rev_cap_lib + rev_cap_bar  + fon + glo - alv - f7ga - f7gb - f7gc - abat_spe
-    
-    # pour le calcul de l'allocation de soutien familial     
-def _asf_elig(caseT, caseL):
-    return caseT | caseL
-
-def al_nbinv(nbR):
-    return nbR
 
 
