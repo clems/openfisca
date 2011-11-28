@@ -50,80 +50,22 @@ CONJ = QUIFOY['conj']
 #        table.openReadMode()
 #        
 #        self.nb_par = 1 + 1*(table.get('quifam', unit = 'fam', qui = 'part')==1)
-#        self.isol = self.nb_par == 1    # si parent isolé
-#        self.coup = self.nb_par == 2    # si couple (marié, pacsé ou non)
-#        # TODO : compléter
-#        self.maries = (table.get('statmarit', 'fam', 'part')==1)
-#
-#        suffixe_enfants = ['%d' % i for i in range(1,self.nbenfmax+1)]
-#        suffixe = ['C', 'P'] + suffixe_enfants
-#        
-#        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
-#        
-#        self.agemC, self.agemP = np.array(table.get('agem', 'fam', qui = ["chef", "part"], default = - 9999))
-#        self.ageC = floor(self.agemC/12)  # TODO mensualiser 
-#        self.ageP = floor(self.agemP/12)
-#
-#        agem_enfants = np.array(table.get('agem', 'fam', qui = enfants, default = - 9999))
-#        self.agems = np.array([m + agem_enfants for m in range(12)])
-#        self.ages  = floor(self.agems/12) 
-#        
-#        people = ['chef', 'part'] + enfants
-#        invs   = table.get('inv', 'fam', people)
-#        for i in range(self.nbenfmax + 2):
-#            suf = suffixe[i]
-#            setattr(self, 'inv'+ suf, invs[i] )
-#            
-#
-#        
-#        
-#        
-#        table.close_()
-#
-#    def getRevEnf(self, P):
-#        '''
-#        Récupère les revenus des enfants et teste s'ils sont plus 
-#        élevés que un pourcentage du smic valant P.af.seuil_rev_taux  
-#        '''
-#        nbh_travaillees = 151.67*12
-#        smic_annuel = P.cotsoc.gen.smic_h_b*nbh_travaillees
-#        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
-#        self.population.openReadMode()   
-#        self.smic55 = (np.array(self.population.get('sal', 'fam', enfants, default = 0)) > P.fam.af.seuil_rev_taux*smic_annuel) 
-#        self.population.close_()    
-#
-#    def getRev(self, P):
-#        '''
-#        Récupère les revenus qui provienne de la déclaration. Cette fonction ne doit être appellée 
-#        qu'après être passé par "Foyer"
-#        '''
-#        table = self.population
-#        table.openReadMode()
-#        # revenus categoriels du chef de famille et de son partenaire
-#        # TODO: ici, beaucoup de variable qui ne servent à rien 
-#        vardict = {'input': ['sal', 'hsup', 'cho', 'rst', 'alr'], 'output':['rto', 'revcap_bar', 'revcap_lib', 'etr', 'tspr', 'rpns', 'rfon', 'revColl', 'asf_elig', 'al_nbinv', 'div_rmi']}
-#        #, 'rag', 'ric', 'rnc', 'rac',       ]
-#
-#        for tbl, varlist in vardict.iteritems():
-#            for cod in varlist:    
-#                temp = table.get(cod, 'fam', ['chef','part'], table = tbl)
-#                if cod in ['tspr', 'rpns', 'sal', 'etr', 'div_rmi', 'hsup']:
-#                    setattr(self, '%sC' % cod, temp[0])
-#                    setattr(self, '%sP' % cod, temp[1])
-#                setattr(self, cod, temp[0] + temp[1])
-#
-#        table.close_()
 
-
-def _nb_par():
+def _nb_par(quifam, _option={'quifam':[PART]}):
     '''
     Nombre d'adultes (parents) dans la famille
     '''
-    return 
+    return 1 + 1*(quifam[PART]==1) 
     
 def _couple(statmarit):
     '''
-    couple = 1 si couple marié sinon 0
+    couple = 1 si couple marié sinon 0 TODO pas tres heureux maries ? 
+    '''
+    return statmarit==1
+
+def _maries(statmarit):
+    '''
+    couple = 1 si couple marié sinon 0 TODO faire un choix avec couple ? 
     '''
     return statmarit==1
 
@@ -132,6 +74,13 @@ def _concub(nb_par):
     concub = 1 si vie en couple TODO pas très heureux  
     '''
     return nb_par==2
+
+def _isol(nb_par):
+    '''
+    Parent (s'il y a lieu) isolé  
+    '''
+    return nb_par==1
+
 
 def _etu(activite):
     '''
@@ -179,8 +128,8 @@ def _nb_enf(ages, smic55, ag1, ag2):
 #        le versement à lieu en début de mois suivant
     res = None
     for key, age in ages.iteritems():
-        if res is None: res = zeros(len(age))
-        if not smic55[key]: res += (ag1 <=age) & (age <=ag2)
+        if res is None: res = zeros(len(age))  
+        res += ((ag1 <=age) & (age <=ag2))*smic55[key]
     return res
 
 def _age_aine(ages, ag1, ag2):
@@ -300,7 +249,7 @@ def _cf(age, br_pf, isol, biact, smic55, _P, _option = {'age': ENFS, 'smic55': E
     Vous avez peut-être droit au Complément Familial à partir du mois 
     suivant les 3 ans du 3ème, 4ème, etc. enfant.
     
-    # TODO: impossibilité de cumul cf avec apem ou apje
+    # TODO: 
     # En théorie, il faut comparer les revenus de l'année n-2 à la bmaf de
     # l'année n-2 pour déterminer l'éligibilité avec le cf_seuil. Il faudrait
     # pouvoir déflater les revenus de l'année courante pour en tenir compte. 
@@ -379,16 +328,11 @@ def _ars(age, smic55, br_pf, _P, _option = {'age': ENFS, 'smic55': ENFS}):
 
     return ars*(ars>=P.ars.seuil_nv)
 
-def _paje(self, Param): # TODO
+def _paje(paje_base, paje_nais, paje_clca, paje_clmg, paje_colca): # TODO
     '''
     Prestation d'accueil du jeune enfant
     '''
-    self.pajeBase(Param)
-    self.CumulPajeCf(Param) # TODO: Cumul avant la paje
-    self.pajeNais(Param)
-    self.pajeClca(Param)
-    self.pajeClmg(Param)
-    self.pajeColca(Param)
+    return paje_base + paje_nais + paje_clca + paje_clmg + paje_colca
 
 def _paje_base(age, br_pf, isol, biact, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     ''' 
@@ -430,7 +374,6 @@ def _paje_nais(agem, age, af_nbenf, br_pf, isol, biact, _P, _option = {'age': EN
     P = _P.fam   
     bmaf = P.af.bmaf
     nais_prime = round(100*P.paje.nais.prime_tx*bmaf)/100
-    
     # Versée au 7e mois de grossesse dans l'année
     # donc les enfants concernés sont les enfants qui ont -2 mois  
     nbnais = 0
@@ -451,7 +394,7 @@ def _paje_nais(agem, age, af_nbenf, br_pf, isol, biact, _P, _option = {'age': EN
     
     return nais_brut  
     
-def _paje_clca(agem, af_nb_enf, paje_base, inactif, partiel1, partiel2, _P, _option = {'agem': ENFS}):
+def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _option = {'agem': ENFS}):
     '''
     Prestation d'accueil du jeune enfant - Complément de libre choix d'activité
     '''
@@ -472,10 +415,10 @@ def _paje_clca(agem, af_nb_enf, paje_base, inactif, partiel1, partiel2, _P, _opt
     
     age_m_benjamin = age_en_mois_benjamin(agem)
 
-    condition1 =(af_nb_enf==1)*(age_m_benjamin>=0)*(age_m_benjamin<6)
+    condition1 =(af_nbenf==1)*(age_m_benjamin>=0)*(age_m_benjamin<6)
     age_benjamin = floor(age_m_benjamin/12)
     condition2 = ( age_benjamin <= (P.paje.base.age-1))            
-    condition = (af_nb_enf>=2)*condition2 + condition1 
+    condition = (af_nbenf>=2)*condition2 + condition1 
     
     # TODO: rajouter ces infos aux parents et mensualiser
     # Temps partiel 1
@@ -593,7 +536,6 @@ def _paje_colca(af_nbenf, agem, opt_colca, paje_brut, _P):
     '''
 
     P = _P.fam
-    
     age_m_benjamin = age_en_mois_benjamin(agem)
     
     condition = (age_m_benjamin < 12*P.paje.colca.age )*(age_m_benjamin >=0)   

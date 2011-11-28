@@ -103,6 +103,7 @@ class Model(SystemSf):
     biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
     concub   = Prestation(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
+    smic55   = Prestation(pf._smic55, 'fam', label = u"Indicatrice d'un salaire supérieur à 55% du smic")
     
     rpns_fam = Prestation(pf._tspr_fam, 'fam', label = u"Traitements, salaires, pensions et rentes de la famille")
     tspr_fam = Prestation(pf._rpns_fam, 'fam', label = u"Revenus des personnes non salariés de la famille")
@@ -119,6 +120,7 @@ class Model(SystemSf):
     br_pf    = Prestation(pf._br_pf, 'fam', label ='Base ressource des prestations familiales')
     cf_temp  = Prestation(pf._cf, 'fam', label = u"Complément familial avant d'éventuels cumuls")
     asf      = Prestation(pf._asf, 'fam', label = u"Allocation de soutien familial")
+
 # TODO mensualisation âge    ars     = Prestation(ARS, 'fam', label = u"Allocation de rentrée scolaire")
     paje_base_temp = Prestation(pf._paje_base, 'fam', label = u"Allocation de base de la PAJE sans tenir compte d'éventuels cumuls")
     paje_base      = Prestation(pf._paje_cumul_cf, 'fam', label = u"Allocation de base de la PAJE")
