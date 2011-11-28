@@ -260,5 +260,5 @@ class InputTable(DataTable):
     rfr_cd = IntCol()
     rfr_rvcm = IntCol()
     isol  = BoolCol(default=True)
-    
+    coloc = BoolCol()
 

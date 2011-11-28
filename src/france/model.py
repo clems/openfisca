@@ -103,7 +103,10 @@ class Model(SystemSf):
     biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
     concub   = Prestation(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
-    
+    smic55   = Prestation(pf._smic55, 'fam', label = u"Indicatrice d'un salaire supérieur à 55% du smic")
+
+
+# TODO consolider les sous totaux et éliminer ceux qui sont superflus    
     rpns_fam = Prestation(pf._tspr_fam, 'fam', label = u"Traitements, salaires, pensions et rentes de la famille")
     tspr_fam = Prestation(pf._rpns_fam, 'fam', label = u"Revenus des personnes non salariés de la famille")
     rst_fam  = Prestation(pf._rst_fam, 'fam', label = u"Retraites au sens strict de la famille")
@@ -119,6 +122,7 @@ class Model(SystemSf):
     br_pf    = Prestation(pf._br_pf, 'fam', label ='Base ressource des prestations familiales')
     cf_temp  = Prestation(pf._cf, 'fam', label = u"Complément familial avant d'éventuels cumuls")
     asf      = Prestation(pf._asf, 'fam', label = u"Allocation de soutien familial")
+
 # TODO mensualisation âge    ars     = Prestation(ARS, 'fam', label = u"Allocation de rentrée scolaire")
     paje_base_temp = Prestation(pf._paje_base, 'fam', label = u"Allocation de base de la PAJE sans tenir compte d'éventuels cumuls")
     paje_base      = Prestation(pf._paje_cumul_cf, 'fam', label = u"Allocation de base de la PAJE")
@@ -129,6 +133,16 @@ class Model(SystemSf):
     paje_clca_taux_partiel      = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel ")
     #paje_clmg        = Prestation(Paje_Clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
-
-
+    
+    
     asf_elig = Prestation(ir._asf_elig, 'foy')
+
+# allocations logements
+    br_al = Prestation(pf._br_al, 'fam', label = u"Base ressource des allocations logement")
+    al_pac = Prestation(pf._al_pac, 'fam', label = u"Nombre de personnes à charge au sens des allocations logement")  
+    al =  Prestation(pf._al, 'fam', label = u"Allocation logement (indifferrenciée)")
+    alf =  Prestation(pf._alf, 'fam', label = u"Allocation logement familiale")
+    als =  Prestation(pf._als, 'fam', label = u"Allocation logement sociale")
+    alset = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
+    
+    
