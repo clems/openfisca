@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import ( maximum as max_, minimum as min_, logical_xor as xor_, 
-                    logical_not as not_, round, zeros, ones)
+                    logical_not as not_, round)
 from Utils import BarmMar
 
 from france.data import QUIFOY, year
@@ -37,12 +37,39 @@ ALL = []
 for qui in QUIFOY:
     ALL.append(qui[1])
         
-#nbadult = 2*marpac + 1*(celdiv | veuf)
-#
-#zglof = Glo(table)
-#zetrf = zeros(taille)
-#jveuf = zeros(taille, dtype = bool)
-#jourXYZ = 360*ones(taille)
+
+# zglof = Glo(table)
+# zetrf = zeros(taille)
+# jveuf = zeros(taille, dtype = bool)
+# jourXYZ = 360*ones(taille)
+# Reprise du crédit d'impôt en faveur des jeunes, des accomptes et des versements mensues de prime pour l'emploi
+# reprise = zeros(taille) # TODO : reprise=J80;
+# Pcredit = P.credits_impots
+# if hasattr(P.reductions_impots,'saldom'): Pcredit.saldom =  P.reductions_impots.saldom
+# credits_impot = Credits(Pcredit, table)
+# Réduction d'impôt
+# reductions = Reductions(IPnet, P.reductions_impots)
+
+#def mcirra():
+#    # impôt sur le revenu
+#    mcirra = -((IMP<=-8)*IMP)
+#    mciria = max_(0,(IMP>=0)*IMP)
+##        mciria = max_(0,(IMP>=0)*IMP - credimp_etranger - cont_rev_loc - ( f8to + f8tb + f8tc ))
+#    
+#    # Dans l'ERFS, les prelevement libératoire sur les montants non déclarés
+#    # sont intégrés. Pas possible de le recalculer.
+#    
+#    # impot sur le revenu du foyer (hors prélèvement libératoire, revenus au quotient)
+#    irpp   = -(mciria + ppetot - mcirra )
+    
+
+
+
+def _nb_adult(marpac, celdiv, veuf):
+    return 2*marpac + 1*(celdiv | veuf)
+
+def _nb_pac(nbF, nbJ, nbR):
+    return nbF + nbJ + nbR
         
 def _marpac(statmarit):
     '''
@@ -87,9 +114,8 @@ def _csg_deduc(rbg, f6de):
 
 def _rng(rbg, csg_deduc, charges_deduc):
     '''
-    Revenu net global
+    Revenu net global (total 20)
     '''
-    ## Total 20 - Revenu net global
     return max_(0, rbg - csg_deduc - charges_deduc)
 
 def _rni(rng, abat_spe):
@@ -101,7 +127,7 @@ def _ir_brut(nbptr, rni, _P):
     'foy'
     '''
     P = _P.ir.bareme
-    return nbptr*BarmMar(rni/nbptr, P.bareme) # TODO : partir d'ici, petite différence avec Matlab
+    return nbptr*BarmMar(rni/nbptr, P) # TODO : partir d'ici, petite différence avec Matlab
 
 
 def _ip_net(ir_plaf_qf, nat_imp, decote):
@@ -110,113 +136,50 @@ def _ip_net(ir_plaf_qf, nat_imp, decote):
     '''
     return nat_imp*max_(0, ir_plaf_qf - decote)
 
-def _rfr(rni, alloc):
+def _rfr(rni, alloc, f3va, f3vg, f3vi, rpns_exo, rpns_pvce, rev_cap_lib):
     '''
     revenu fiscal de reference
     '''
-    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + VA + VG
-
-def _thab():
-    '''
-    Taxe d'habitation
-    '''
-
-
-def _ir(self, table, rni, alloc, rev_cap_lib, f3vi, rto_net, rev_cap_bar, abat_spe, nat_imp, _P):
-    '''
-    suite du calcul de l'ir
-    '''
-    P = _P.ir
-    
-    VA = table.get('f3va', 'foy', 'vous', table = 'declar')
-    VC = table.get('f3vc', 'foy', 'vous', table = 'declar')
-    VE = table.get('f3ve', 'foy', 'vous', table = 'declar')
-    VG = table.get('f3vg', 'foy', 'vous', table = 'declar')
-    VH = table.get('f3vh', 'foy', 'vous', table = 'declar')
-    VL = table.get('f3vl', 'foy', 'vous', table = 'declar')
-    VM = table.get('f3vm', 'foy', 'vous', table = 'declar')
-    BL = table.get('f4bl', 'foy', 'vous', table = 'declar')
-    QM = table.get('f5qm', 'foy', 'vous', table = 'declar')
-    RM = table.get('f5rm', 'foy', 'vous', table = 'declar')
-    GA = table.get('f7ga', 'foy', 'vous', table = 'declar')
-    GB = table.get('f7gb', 'foy', 'vous', table = 'declar')
-    GC = table.get('f7gc', 'foy', 'vous', table = 'declar')
-
-
-    ## Réduction d'impôt
-    reductions = Reductions(IPnet, P.reductions_impots)
+    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + f3va + f3vg
  
-    # impot après imputation des réductions d'impôt
-    iaidrdi  = IPnet - reductions
+def _iaidrdi(ip_net, reductions):
+    '''
+    impot après imputation des réductions d'impôt
+    '''
+    return   ip_net - reductions
 
-    ## 9. Impôt à payer 
-    # Impôt sur les plus values à taux forfaitaires (16%, 22.5%, 30%, 40%)
-    mnirvp = Plus_values(P.plus_values)
+def _cont_rev_loc(f4bl):
+    '''
+    Contribution sur les revenus locatifs
+    '''
+    loyf_taux = 0.025
+    loyf_seuil = 0
+    return round(loyf_taux *(f4bl >= loyf_seuil)*f4bl)
 
-    # TODO : contribution sur les revenus locatifs
-    P.loyf_taux = 0.025
-    P.loyf_seuil = 0
-    G90 = round(P.loyf_taux *(BL >= P.loyf_seuil)*BL)
-    mnclcn = G90 
-    zimployf = mnclcn
-
-    # Taxe exceptionelle sur l'indemnité compensatrice des agents d'assurance
+def _teicaa(f5qm, f5rm):
+    '''
+    Taxe exceptionelle sur l'indemnité compensatrice des agents d'assurance
+    '''
     #     H90_a1 = 0*max_(0,min_(f5qm,23000));
-    H90_a2 = .04*max_(0,min_(QM-23000,107000));
-    H90_a3 = .026*max_(0,QM-107000);
+    H90_a2 = .04*max_(0,min_(f5qm - 23000,107000));
+    H90_a3 = .026*max_(0,f5qm - 107000);
     #     H90_b1 = 0*max_(0,min_(f5rm,23000));
-    H90_b2 = .04*max_(0,min_(RM-23000,107000));
-    H90_b3 = .026*max_(0,RM-107000);
+    H90_b2 = .04*max_(0,min_(f5qm-23000,107000));
+    H90_b3 = .026*max_(0,f5qm - 107000);
     
-    H90 = H90_a2 + H90_a3 + H90_b2 + H90_b3;
+    return H90_a2 + H90_a3 + H90_b2 + H90_b3;
 
-    #  impôt avant imputation     
-    iai = iaidrdi + mnirvp + G90 + H90
+def _iai(iaidrdi, plus_values, cont_rev_loc, teicaa):
+    '''
+    impôt avant imputation
+    '''
+    return iaidrdi + plus_values + cont_rev_loc + teicaa
     
-    # Reprise du crédit d'impôt en faveur des jeunes, des accomptes et des versements mensues de prime pour l'emploi
-    reprise = zeros(taille) # TODO : reprise=J80;
-
-    Pcredit = P.credits_impots
-    if hasattr(P.reductions_impots,'saldom'): Pcredit.saldom =  P.reductions_impots.saldom
-    credits_impot = Credits(Pcredit, table)
-    
-    # Montant avant seuil de recouvrement
-    IMP = iai - credits_impot + tehr
-                        
-
-    # impôt sur le revenu
-    mcirra = -((IMP<=-8)*IMP)
-    mciria = max_(0,(IMP>=0)*IMP - zimployf)
-#        mciria = max_(0,(IMP>=0)*IMP - credimp_etranger - zimployf - ( f8to + f8tb + f8tc ))
-    
-    # Dans l'ERFS, les prelevement libératoire sur les montants non déclarés
-    # sont intégrés. Pas possible de le recalculer.
-    
-
-    # impot sur le revenu du foyer (hors prélèvement libératoire, revenus au quotient)
-    irpp   = -(mciria + ppetot - mcirra - mnirvp - mnirqu)
-
-
-    impforf = mnirvp + mnirqu
-    
-    
-    zdivf = VC + VE + VG - VH + VL + VM \
-          + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
-    
-    table.setColl('div', zdivf, table = 'output')
-
-    zdiv_rmi = VC + VE + VG + VL + VM
-    
-    table.setColl('div_rmi', zdiv_rmi, table = 'output')
-
-    revColl = rto_net + rev_cap_lib + rev_cap_bar + zetrf*0.9 + zfonf + zdivf + zglof - zalvf - GA - GB - GC - abat_spe
-    table.setColl('revColl', revColl, table = 'output')
-    
-    # pour le calcul de l'allocation de soutien familial     
-    asf_elig = 1*(caseT | caseL)
-
-    
-    al_nbinv = nbR
+def _irpp(iai, credits_impot, tehr, ppe):
+    '''
+    Montant avant seuil de recouvrement (hors ppe)
+    '''
+    return  iai - credits_impot + ppe + tehr
 
 def _tehr(rfr, nb_adult, P):
     '''
@@ -289,7 +252,6 @@ def _rto_net(f1aw, f1bw, f1cw, f1dw, _P):
                  P.taux2*f1bw + 
                  P.taux3*f1cw + 
                  P.taux4*f1dw )
-
 
 def _tspr(sal_net, pen_net):
     '''
@@ -825,7 +787,7 @@ def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
 
     return min_(rng, as_inv + as_enf)
 
-def _non_imp(rni, nbptr, _P):
+def _nat_imp(rni, nbptr, _P):
     '''
     Renvoie 1 si le foyer est imposable, 0 sinon
     '''
@@ -904,10 +866,9 @@ def _nbptr(marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, cas
     
     ## celib div
     c = 1 + enf + n2 + n3 + n6 + n7
-    
     return (marpac | jveuf)*m + (veuf & not_(jveuf))*v + celdiv*c
     
-def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
+def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
     '''
     Impôt après plafonnement du quotient familial et réduction complémentaire
     '''
@@ -927,6 +888,7 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, veuf, jveuf, celdiv, case
     # tous les autres
     B2 = P.plafond_qf.marpac*aa0                 #si autre
     # celdiv, veufs (non jveuf) vivants seuls et autres conditions TODO année codéee en dur
+    # TODO: année en dur... pour caseH
     condition63 = ((celdiv==1) | ((veuf==1) & not_(jveuf))) & not_(caseN) & (nb_pac==0) & (caseK | caseE) & (caseH<1981)
     B3 = P.plafond_qf.celib
 
@@ -935,8 +897,7 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, veuf, jveuf, celdiv, case
         B3*(condition63 & not_(condition61))
     C = max_(0,A-B);
     # Impôt après plafonnement
-    IP0 = I*(I>=C) + C*(I<C);
-    return IP0
+    IP0 = max_(I, C) #I*(I>=C) + C*(I<C);
 
     # 6.2 réduction d'impôt pratiquée sur l'impot après plafonnement et le cas particulier des DOM
     # pas de réduction complémentaire
@@ -974,8 +935,12 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, veuf, jveuf, celdiv, case
 #    # Récapitulatif
 #    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
 
-def _decote(self, IP, P):
-    return (IP < P.seuil)*(P.seuil - IP)*0.5
+def _decote(ir_plaf_qf, _P):
+    '''
+    Décote
+    '''
+    P = _P.ir.decote
+    return (ir_plaf_qf < P.seuil)*(P.seuil - ir_plaf_qf)*0.5
 
 #def Reductions(self, IPnet, P, table):
 #    ''' 
@@ -1077,7 +1042,7 @@ def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'p
     Prime pour l'emploi
     '''
     P = _P.ir.ppe
-#    f1tv, f1uv, f1tw, f1uw, f1tx, f1ux, f1aq, f1bq, f1lz, f1mz, f3vj, f3vk, f5nv, f5ov, f5pv, f5nw, f5ow, f5pw
+
     eliv, elic, eli1, eli2, eli3 = _ppe_elig_i[VOUS], _ppe_elig_i[CONJ], _ppe_elig_i[PAC1], _ppe_elig_i[PAC2], _ppe_elig_i[PAC3], 
     basevi, baseci = ppe_rev[VOUS], ppe_rev[CONJ]
     basev, basec, base1, base2, base3  = ppe_base[VOUS], ppe_base[CONJ], ppe_base[PAC1], ppe_base[PAC2], ppe_base[PAC1]
@@ -1092,37 +1057,29 @@ def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'p
     
     base_monact = ligne2*(eliv*basev + elic*basec);
     base_monacti = ligne2*(eliv*basevi + elic*baseci);
-    
+
+    def ppe_bar1(base):
+        cond1 = ligne1 | ligne3
+        cond2 = ligne2
+        return 1/ppe_coef*((cond1 & (base <= P.seuil2))*(base)*P.taux1 +
+                           (cond1 & (base> P.seuil2) & (base <= P.seuil3))*(P.seuil3 - base)*P.taux2 +
+                           (cond2 & (base <= P.seuil2))*(base*P.taux1 ) +
+                           (cond2 & (base >  P.seuil2) & (base <= P.seuil3))*((P.seuil3 - base)*P.taux2) +
+                           (cond2 & (base >  P.seuil4) & (base <= P.seuil5))*(P.seuil5 - base)*P.taux3)
+
+    def ppe_bar2(base):
+        return 1/ppe_coef*((base <= P.seuil2)*(base)*P.taux1 +
+                           ((base> P.seuil2) & (base <= P.seuil3))*(P.seuil3 - base1)*P.taux2 )
+
     # calcul des primes individuelles.
-    ppev = eliv/ppe_coef*(\
-        ((ligne1 |ligne3) & (basev <= P.seuil2))*(basev)*P.taux1 + \
-        ((ligne1 |ligne3) & (basev> P.seuil2) & (basev <= P.seuil3))*(P.seuil3 - basev)*P.taux2 + \
-        (ligne2 & (basev <= P.seuil2))*(basev*P.taux1 ) +\
-        (ligne2 & (basev >  P.seuil2) & (basev <= P.seuil3))*((P.seuil3 - basev)*P.taux2)+ \
-        (ligne2 & (basev> P.seuil4) & (basev <= P.seuil5))*(P.seuil5 - basev)*P.taux3);
+    ppev = eliv*ppe_bar1(basev)
+    ppec = elic*ppe_bar1(basec)
+    ppe1 = eli1*ppe_bar2(base1)
+    ppe2 = eli2*ppe_bar2(base2)
+    ppe3 = eli3*ppe_bar2(base3)
     
-    ppec =  elic/ppe_coef*(\
-        ((ligne1 |ligne3) & (basec <= P.seuil2))*(basec)*P.taux1 + \
-        ((ligne1 |ligne3) & (basec> P.seuil2) & (basec <= P.seuil3))*(P.seuil3 - basec)*P.taux2 + \
-        (ligne2 &  (basec <= P.seuil2))*(basec*P.taux1 ) +\
-        (ligne2 & (basec> P.seuil2) & (basec <= P.seuil3))*((P.seuil3 - basec)*P.taux2)+ \
-        (ligne2 & (basec> P.seuil4) & (basec <= P.seuil5))*(P.seuil5 - basec)*P.taux3);
-    
-    ppe1 =  eli1/ppe_coef*(\
-        (base1 <= P.seuil2)*(base1)*P.taux1 + \
-        ((base1> P.seuil2) & (base1 <= P.seuil3))*(P.seuil3 - base1)*P.taux2 );
-    
-    ppe2 =  eli2/ppe_coef*(\
-        (base2 <= P.seuil2)*(base2)*P.taux1 + \
-        ((base2> P.seuil2) & (base2 <= P.seuil3))*(P.seuil3 - base2)*P.taux2 );
-    
-    ppe3 =  eli3/ppe_coef*(\
-        (base3 <= P.seuil2)*(base3)*P.taux1 + \
-        ((base3> P.seuil2) & (base3 <= P.seuil3))*(P.seuil3 - base3)*P.taux2 );
-    
-    
-    ppe_monact_vous = (eliv & ligne2 & (basevi>=P.seuil1) & (basev <= P.seuil4))*P.monact ;
-    ppe_monact_conj = (elic & ligne2 & (baseci>=P.seuil1) & (basec <= P.seuil4))*P.monact ;
+    ppe_monact_vous = (eliv & ligne2 & (basevi>=P.seuil1) & (basev <= P.seuil4))*P.monact
+    ppe_monact_conj = (elic & ligne2 & (baseci>=P.seuil1) & (basec <= P.seuil4))*P.monact
     
     maj_pac = ppe_eligib*(eliv|elic)*(\
         (ligne1 & marpac & ((ppev+ppec)!=0) & (min_(basev,basec)<= P.seuil3))*P.pac*(nbPAC_ppe + nbH*0.5) + \
@@ -1153,5 +1110,32 @@ def _ppe(ppe_rev, ppe_base, ppe_coef, nb_pac, _P, _option = {'ppe_base': ALL, 'p
     return PPE_tot
 
 
+def _thab():
+    '''
+    Taxe d'habitation
+    '''
+    pass
+
+def _div(rpns_pvce, rpns_pvct, rpns_mvct, rpns_mvlt, f3vc, f3ve, f3vg, f3vh, f3vl, f3vm):
+    return f3vc + f3ve + f3vg - f3vh + f3vl+ f3vm + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
+    
+
+def _div_rmi(f3vc, f3ve, f3vg, f3vl, f3vm):
+    return f3vc + f3ve + f3vg + f3vl+ f3vm
+    
+def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, alv, glo, fon, f7ga, f7gb, f7gc):
+    '''
+    revenus collectif
+    'foy'
+    '''
+    # TODO: ajouter les revenus de l'étranger etr*0.9
+    return rto_net + rev_cap_lib + rev_cap_bar  + fon + glo - alv - f7ga - f7gb - f7gc - abat_spe
+    
+    # pour le calcul de l'allocation de soutien familial     
+def _asf_elig(caseT, caseL):
+    return caseT | caseL
+
+def al_nbinv(nbR):
+    return nbR
 
 

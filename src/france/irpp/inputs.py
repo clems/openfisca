@@ -68,12 +68,13 @@ class InputTable(DataTable):
     nbF = IntCol()
     nbN = IntCol()
     
+    caseE = BoolCol()
+    caseF = BoolCol()
+    caseG = BoolCol()
+    caseH = IntCol()
     caseK = BoolCol()
     caseL = BoolCol()
     caseN = BoolCol()
-    caseE = BoolCol()
-    caseG = BoolCol()
-    caseF = BoolCol()
     caseP = BoolCol()
     caseS = BoolCol()
     caseT = BoolCol()
@@ -97,6 +98,30 @@ class InputTable(DataTable):
     f2al = IntCol()
     f2am = IntCol()
     f2an = IntCol()
+    
+    
+    f3vc = IntCol()
+    f3vd = IntCol()
+    f3ve = IntCol()
+    f3vf = IntCol()
+    f3vg = IntCol()
+    f3vh = IntCol()
+    f3vl = IntCol()
+    f3vi = IntCol()
+    f3vm = IntCol()
+    
+    # Revenu foncier
+    f4ba = IntCol()
+    f4bb = IntCol()
+    f4bc = IntCol()
+    f4bd = IntCol()
+    f4be = IntCol()
+    
+    f4bl = IntCol()
+    
+    f5qm = IntCol()
+    f5rm = IntCol()
+    
     # Deficit Antérieur
     f6fa = IntCol()
     f6fb = IntCol()
@@ -107,16 +132,12 @@ class InputTable(DataTable):
     
     f6gh = IntCol()
     f6de = IntCol()
-    # Revenu foncier
-    f4ba = IntCol()
-    f4bb = IntCol()
-    f4bc = IntCol()
-    f4bd = IntCol()
-    f4be = IntCol()
-    
+
     # from elsewhere
     af = FloatCol()
 
     # to remove
     charges_deduc = IntCol()
+    reductions = IntCol()
+    rpns_pvce = IntCol()
     
