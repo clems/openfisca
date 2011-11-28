@@ -759,7 +759,7 @@ def _afeama(age, smic55, ape, af_nbenf, br_pf, _P, _option = {'age': ENFS, 'smic
 #    self.AlBaseRessource(P)
 #    self.AlFormule(P)
 
-def _al_pac(age, smic55, al_nbinv, _P, _option = {'age': ENFS, 'smic55': ENFS}):
+def _al_pac(age, smic55, nbR, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     Nombre de personne à charge au sens des allocations logement
     '''
@@ -781,10 +781,11 @@ def _al_pac(age, smic55, al_nbinv, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     #     tantes, neveux, nièces).
     # P_AL.D_enfch est une dummy qui vaut 1 si les enfants sont comptés à
     # charge (cas actuel) et zéro sinon.
+    al_nbinv = nbR
     age1 = P.fam.af.age1
     age2 = P.fam.cf.age2
     al_nbenf = _nb_enf(age, smic55, age1, age2)
-    al_pac = P.al.autres.D_enfch*(al_nbenf + al_nbinv) # manque invalides
+    al_pac = P.al.autres.D_enfch*(al_nbenf + al_nbinv) #  manque invalides
     # TODO: il faudrait probablement définir les AL pour un ménage et non 
     # pour une famille
     return al_pac
@@ -844,7 +845,7 @@ def _br_al(etu, rev_pf, rev_coll, biact, _P ,_option = {'etu': [CHEF, PART], 're
 
     return br_al
 
-def _al(concub, br_al, so, loyer, coloc, isol, al_pac, al_zone, _P):
+def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     '''
     Formule des aides aux logements en secteur locatif
     Attention, cette fonction calcul l'aide mensuelle
@@ -855,7 +856,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, al_zone, _P):
     # isol : ménage isolé
     # self.coup: ménage en coup (rq : self.coup = ~isol.
     # self.al_pac : nb de personne à charge du ménage prise en compte pour les AL
-    # self.al_zone
+    # self.zone_apl
     # self.loyer
     # self.BRapl : base ressource des al après abattement.
     # self.coloc (1 si colocation, 0 sinon)
@@ -886,7 +887,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, al_zone, _P):
     Lz2 = ((isol)*(al_pac==0)*z2.L1 + (concub)*(al_pac==0)*z2.L2 + (al_pac>0)*z2.L3 + (al_pac>1)*(al_pac-1)*z2.L4)*lp_taux
     Lz3 = ((isol)*(al_pac==0)*z3.L1 + (concub)*(al_pac==0)*z3.L2 + (al_pac>0)*z3.L3 + (al_pac>1)*(al_pac-1)*z3.L4)*lp_taux
     
-    L2 = Lz1*(al_zone==1) + Lz2*(al_zone==2) + Lz3*(al_zone==3)
+    L2 = Lz1*(zone_apl==1) + Lz2*(zone_apl==2) + Lz3*(zone_apl==3)
     # loyer retenu
     L = min_(L1,L2)
     
@@ -955,14 +956,14 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, al_zone, _P):
 
     return al 
 
-def _alf(al, al_pac, al_zone, _P):
+def _alf(al, al_pac, zone_apl, _P):
     '''
     Allocation logement familiale
     '''    
     alf   = (al_pac>=1)*al 
     return alf
      
-def _als(etu, al, al_pac, al_zone, _P ,_option = {'etu': [CHEF, PART]}):
+def _als(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale
     '''    
@@ -970,7 +971,7 @@ def _als(etu, al, al_pac, al_zone, _P ,_option = {'etu': [CHEF, PART]}):
     return als
      
      
-def _alset(etu, al, al_pac, al_zone, _P ,_option = {'etu': [CHEF, PART]}):
+def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale étudiante
     '''    
