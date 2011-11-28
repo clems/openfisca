@@ -1005,7 +1005,7 @@ def _br_mv(sal, cho, rst, alr, rto, rpns, revcap_bar, revcap_lib, rfon, etr, div
              max_(0,rst[CHEF] + alr[CHEF] + rto[CHEF] + rst[PART] + alr[PART] + rto[PART]) + 
              max_(0,revcap_bar[CHEF] + rpns[CHEF] + revcap_bar[PART] +rpns[PART]) + 
                  max_(0,revcap_lib[CHEF] + revcap_lib[PART]) + max_(0,rfon[CHEF] + rfon[PART]) +
-                 max_(0,etr[CHEF] + etr[PART]) + max_(0,div_rmi[CHEF] + div_rmi[PART]) )
+                 max_(0,etr[CHEF] + etr[PART]) + max_(0,div_rmi[CHEF] + div_rmi[PART]))
     return br_mv
 
 def _mv(aspa_elig, nb_par, br_mv, _P, 
