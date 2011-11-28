@@ -1050,9 +1050,6 @@ def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, glo, fon, f7ga, 
 def _asf_elig(caseT, caseL):
     return caseT | caseL
 
-def al_nbinv(nbR):
-    return nbR
-
 #def Credits(self, P, table):
 #    '''
 #    Imputations (crédits d'impôts)
@@ -1104,6 +1101,10 @@ def _ppe_rev(sal, hsup, rpns, _P):
     return rev_sa + rev_ns
 
 def _ppe_coef_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
+    '''
+    PPE: coefficient de conversion temps partiel
+    'ind'
+    '''
     P = _P.ir.ppe
     frac_sa = ppeHeure/P.TP_nbh
     frac_ns = ppeJours/P.TP_nbj
