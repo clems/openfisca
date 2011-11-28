@@ -227,22 +227,29 @@ class InputTable(DataTable):
     mncn_mvlt = IntCol() # (f5kw, f5lw, f5mw)
     mbnc_mvlt = IntCol() # (f5hs, f5is, f5js)
 
+    frag_pvce = IntCol() # (f5hx, f5ix, f5jx)
+    arag_pvce = IntCol() # (f5he, f5ie, f5je)
+    nrag_pvce = IntCol() # (f5hk, f5ik, f5jk)
+    mbic_pvce = IntCol() # (f5kq, f5lq, f5mq)
+    abic_pvce = IntCol() # (f5ke, f5le, f5me)
+    nbic_pvce = IntCol() # (f5kk, f5lk, f5mk)
+    macc_pvce = IntCol() # (f5nq, f5oq, f5pq)
+    aacc_pvce = IntCol() # (f5ne, f5oe, f5pe)
+    nacc_pvce = IntCol() # (f5nk, f5ok, f5pk)
+    mncn_pvce = IntCol() # (f5kv, f5lv, f5mv)
+    cncn_pvce = IntCol() # (f5so, f5nt, f5ot)
+    mbnc_pvce = IntCol() # (f5hr, f5ir, f5jr)
+    abnc_pvce = IntCol() # (f5qd, f5rd, f5sd)
+    nbnc_pvce = IntCol() # (f5qj, f5rj, f5sj)
+
 # pfam only
     inactif  = BoolCol()
     partiel1 = BoolCol()
     partiel2 = BoolCol() 
     categ_inv = IntCol()
 
-    # from elsewhere
-#    af = FloatCol()
-#    asf_elig = BoolCol(default=True)
-#    tspr  = FloatCol()
-#    rpns  = FloatCol()
-#    rev_coll = FloatCol()
-
     # to remove
     charges_deduc = IntCol()
     reductions = IntCol()
-    rpns_pvce = IntCol()
     isol  = BoolCol(default=True)
 
