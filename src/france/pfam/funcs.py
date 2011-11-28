@@ -22,104 +22,106 @@ This file is part of openFisca.
 """
 
 from __future__ import division
-import numpy as np
-from numpy import (round, sum, zeros, ones, maximum as max_, minimum as min_, 
+from numpy import (round, floor, zeros, maximum as max_, minimum as min_, 
                    ceil, where, logical_not as not_, logical_or as or_)
-from datetime import date
-from france.data import QUIFAM, year
+from france.data import QUIFAM, QUIFOY, year
 
 CHEF = QUIFAM['chef']
 PART = QUIFAM['part']
 ENFS = [QUIFAM['enf1'], QUIFAM['enf2'], QUIFAM['enf3'], QUIFAM['enf4'], QUIFAM['enf5'], QUIFAM['enf6'], QUIFAM['enf7'], QUIFAM['enf8'], QUIFAM['enf9'], ]
+VOUS = QUIFOY['vous']
+CONJ = QUIFOY['conj']
 
-class Famille(object):
 
-    def __init__(self,population):
-        self.datesim = population.datesim
-        super(Famille,self).__init__()
-
-        self.population = population
-        table = self.population        
-        
-        
-        self.datesim = table.datesim
-        self.taille = table.nbFam
-        self.nbenfmax = table.nbenfmax
-
-        table.openReadMode()
-        
-        self.nb_par = 1 + 1*(table.get('quifam', unit = 'fam', qui = 'part')==1)
-        self.isol = self.nb_par == 1    # si parent isolé
-        self.coup = self.nb_par == 2    # si couple (marié, pacsé ou non)
-        # TODO : compléter
-        self.maries = (table.get('statmarit', 'fam', 'part')==1)
-
-        suffixe_enfants = ['%d' % i for i in range(1,self.nbenfmax+1)]
-        suffixe = ['C', 'P'] + suffixe_enfants
-        
-        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
-        
-        self.agemC, self.agemP = np.array(table.get('agem', 'fam', qui = ["chef", "part"], default = - 9999))
-        self.ageC = np.floor(self.agemC/12)  # TODO mensualiser 
-        self.ageP = np.floor(self.agemP/12)
-
-        agem_enfants = np.array(table.get('agem', 'fam', qui = enfants, default = - 9999))
-        self.agems = np.array([m + agem_enfants for m in range(12)])
-        self.ages  = np.floor(self.agems/12) 
-        
-        people = ['chef', 'part'] + enfants
-        invs   = table.get('inv', 'fam', people)
-        for i in range(self.nbenfmax + 2):
-            suf = suffixe[i]
-            setattr(self, 'inv'+ suf, invs[i] )
-            
-
-        
-        
-        
-        table.close_()
-
-    def getRevEnf(self, P):
-        '''
-        Récupère les revenus des enfants et teste s'ils sont plus 
-        élevés que un pourcentage du smic valant P.af.seuil_rev_taux  
-        '''
-        nbh_travaillees = 151.67*12
-        smic_annuel = P.cotsoc.gen.smic_h_b*nbh_travaillees
-        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
-        self.population.openReadMode()   
-        self.smic55 = (np.array(self.population.get('sal', 'fam', enfants, default = 0)) > P.fam.af.seuil_rev_taux*smic_annuel) 
-        self.population.close_()    
-
-    def getRev(self, P):
-        '''
-        Récupère les revenus qui provienne de la déclaration. Cette fonction ne doit être appellée 
-        qu'après être passé par "Foyer"
-        '''
-        table = self.population
-        table.openReadMode()
-        # revenus categoriels du chef de famille et de son partenaire
-        # TODO: ici, beaucoup de variable qui ne servent à rien 
-        vardict = {'input': ['sal', 'hsup', 'cho', 'rst', 'alr'], 'output':['rto', 'revcap_bar', 'revcap_lib', 'etr', 'tspr', 'rpns', 'rfon', 'revColl', 'asf_elig', 'al_nbinv', 'div_rmi']}
-        #, 'rag', 'ric', 'rnc', 'rac',       ]
-
-        for tbl, varlist in vardict.iteritems():
-            for cod in varlist:    
-                temp = table.get(cod, 'fam', ['chef','part'], table = tbl)
-                if cod in ['tspr', 'rpns', 'sal', 'etr', 'div_rmi', 'hsup']:
-                    setattr(self, '%sC' % cod, temp[0])
-                    setattr(self, '%sP' % cod, temp[1])
-                setattr(self, cod, temp[0] + temp[1])
-
-        table.close_()
+#class Famille(object):
+#
+#    def __init__(self,population):
+#        self.datesim = population.datesim
+#        super(Famille,self).__init__()
+#
+#        self.population = population
+#        table = self.population        
+#        
+#        
+#        self.datesim = table.datesim
+#        self.taille = table.nbFam
+#        self.nbenfmax = table.nbenfmax
+#
+#        table.openReadMode()
+#        
+#        self.nb_par = 1 + 1*(table.get('quifam', unit = 'fam', qui = 'part')==1)
+#        self.isol = self.nb_par == 1    # si parent isolé
+#        self.coup = self.nb_par == 2    # si couple (marié, pacsé ou non)
+#        # TODO : compléter
+#        self.maries = (table.get('statmarit', 'fam', 'part')==1)
+#
+#        suffixe_enfants = ['%d' % i for i in range(1,self.nbenfmax+1)]
+#        suffixe = ['C', 'P'] + suffixe_enfants
+#        
+#        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
+#        
+#        self.agemC, self.agemP = np.array(table.get('agem', 'fam', qui = ["chef", "part"], default = - 9999))
+#        self.ageC = floor(self.agemC/12)  # TODO mensualiser 
+#        self.ageP = floor(self.agemP/12)
+#
+#        agem_enfants = np.array(table.get('agem', 'fam', qui = enfants, default = - 9999))
+#        self.agems = np.array([m + agem_enfants for m in range(12)])
+#        self.ages  = floor(self.agems/12) 
+#        
+#        people = ['chef', 'part'] + enfants
+#        invs   = table.get('inv', 'fam', people)
+#        for i in range(self.nbenfmax + 2):
+#            suf = suffixe[i]
+#            setattr(self, 'inv'+ suf, invs[i] )
+#            
+#
+#        
+#        
+#        
+#        table.close_()
+#
+#    def getRevEnf(self, P):
+#        '''
+#        Récupère les revenus des enfants et teste s'ils sont plus 
+#        élevés que un pourcentage du smic valant P.af.seuil_rev_taux  
+#        '''
+#        nbh_travaillees = 151.67*12
+#        smic_annuel = P.cotsoc.gen.smic_h_b*nbh_travaillees
+#        enfants = ['enf%d' % i for i in range(1,self.nbenfmax+1)]
+#        self.population.openReadMode()   
+#        self.smic55 = (np.array(self.population.get('sal', 'fam', enfants, default = 0)) > P.fam.af.seuil_rev_taux*smic_annuel) 
+#        self.population.close_()    
+#
+#    def getRev(self, P):
+#        '''
+#        Récupère les revenus qui provienne de la déclaration. Cette fonction ne doit être appellée 
+#        qu'après être passé par "Foyer"
+#        '''
+#        table = self.population
+#        table.openReadMode()
+#        # revenus categoriels du chef de famille et de son partenaire
+#        # TODO: ici, beaucoup de variable qui ne servent à rien 
+#        vardict = {'input': ['sal', 'hsup', 'cho', 'rst', 'alr'], 'output':['rto', 'revcap_bar', 'revcap_lib', 'etr', 'tspr', 'rpns', 'rfon', 'revColl', 'asf_elig', 'al_nbinv', 'div_rmi']}
+#        #, 'rag', 'ric', 'rnc', 'rac',       ]
+#
+#        for tbl, varlist in vardict.iteritems():
+#            for cod in varlist:    
+#                temp = table.get(cod, 'fam', ['chef','part'], table = tbl)
+#                if cod in ['tspr', 'rpns', 'sal', 'etr', 'div_rmi', 'hsup']:
+#                    setattr(self, '%sC' % cod, temp[0])
+#                    setattr(self, '%sP' % cod, temp[1])
+#                setattr(self, cod, temp[0] + temp[1])
+#
+#        table.close_()
 
 
 def _nb_par():
     '''
     Nombre d'adultes (parents) dans la famille
     '''
+    return 
     
-def _couple(statmarit, _option):
+def _couple(statmarit):
     '''
     couple = 1 si couple marié sinon 0
     '''
@@ -172,7 +174,7 @@ def Nb_Enf(ages, ag1, ag2):
 #        le versement à lieu en début de mois suivant
     res = None
     for age in ages.itervalues():
-        if res is None: res = np.zeros(len(age))
+        if res is None: res = zeros(len(age))
         res += (ag1 <=age) & (age <=ag2)
     # TODO: smic55
     return res
@@ -467,7 +469,7 @@ def _paje_clca(age, agem, paje_base, inactif, partiel1, partiel2, _P, _option = 
     age_m_benjamin = age_en_mois_benjamin(agem)
 
     condition1 =(Nb_Enf(age, P.af.age1,P.af.age2)==1)*(age_m_benjamin>=0)*(age_m_benjamin<6)
-    age_benjamin = np.floor(age_m_benjamin/12)
+    age_benjamin = floor(age_m_benjamin/12)
     condition2 = ( age_benjamin <= (P.paje.base.age-1))            
     condition = (Nb_Enf(age,0,P.af.age2)>=2)*condition2 + condition1 
     
@@ -1111,8 +1113,8 @@ def _rmi_nbp(age, nb_par , _P, _option = {'age': [CHEF, PART]}):
     '''
     return nb_par + Nb_Enf(age, 0, 24)  # TODO limite d'âge dans paramètres
 
-def _br_rmi(af_base, cf, asf, paje, clca, colca, ape, apje,mv, asi, aah, caah, 
-            ra_rsa, ra_rsa, cho_fam, rst_fam, alr_fam, rto_fam, revcap_bar_fam,
+def _br_rmi(af_base, cf, asf, paje, clca, colca, ape, apje, mv, asi, aah, caah, 
+            ra_rsa, cho_fam, rst_fam, alr_fam, rto_fam, revcap_bar_fam,
             revcap_lib_fam, rfon_fam, _P, _option = {'asi': [CHEF, PART], 'ra_rsa': [CHEF, PART]}):
     '''
     Base ressources du Rmi ou du Rsa
@@ -1280,7 +1282,7 @@ def _api(age, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS})
     # Le droit à l'allocation est réétudié tous les 3 mois.
     ## Calcul de l'année et mois de naissance du benjamin 
     
-    condition = (np.floor(benjamin/12) <= P.minim.api.age-1)
+    condition = (floor(benjamin/12) <= P.minim.api.age-1)
     eligib = isol*( (enceinte!=0) | (Nb_Enf(age, 0,P.minim.api.age-1)>0) )*condition;
 
     # moins de 20 ans avant inclusion dans rsa et moins de  25 après

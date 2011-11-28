@@ -25,44 +25,39 @@ from __future__ import division
 from numpy import minimum as min_, maximum as max_
 from france.data import year
 
-def niches(year):
+def niches(penali, acc75a, deddiv, eparet, grorep, ecodev, sofipe, percap, cinema, doment):
     '''
     Renvoie la liste des charges déductibles à intégrer en fonction de l'année
     niches1 : niches avant le rbg_int
     niches2 : niches après le rbg_int
     niches3 : indices des niches à ajouter au revenu fiscal de référence
-
     '''
     if year in (2002, 2003):
-        niches1 = [Penali, Acc75a, Percap, Deddiv, Doment]
-        niches2 = [Sofipe, Cinema ]
+        niches1 = [penali + acc75a + percap + deddiv + doment]
+        niches2 = [sofipe + cinema ]
         ind_rfr = [2, 5, 6] #TODO: check
     elif year in (2004,2005):
-        niches1 = [Penali, Acc75a, Percap, Deddiv, Doment, Eparet]
-        niches2 = [Sofipe, Cinema ]
+        niches1 = [penali + acc75a + percap + deddiv + doment + eparet]
+        niches2 = [sofipe + cinema ]
         ind_rfr = [2, 5, 6, 7]
     elif year == 2006:
-        niches1 = [Penali, Acc75a, Percap, Deddiv, Eparet]
-        niches2 = [Sofipe ]
+        niches1 = [penali + acc75a + percap + deddiv + eparet]
+        niches2 = [sofipe ]
         ind_rfr = [2, 4, 5]
     elif year in (2007, 2008):
-        niches1 = [Penali, Acc75a, Deddiv, Eparet]
-        niches2 = [Ecodev]
+        niches1 = [penali + acc75a + deddiv + eparet]
+        niches2 = [ecodev]
         ind_rfr = [ 3, 4]
     elif year in (2009, 2010):
-        niches1 = [Penali, Acc75a, Deddiv, Eparet, Grorep]
+        niches1 = [penali + acc75a + deddiv + eparet + grorep]
         niches2 = []
         ind_rfr = [3]
-    
     return niches1, niches2, ind_rfr
-
-def Charges_Deductibles(cd1):
-    return cd1
 
 def Cd1(penali, acc75a, deddiv, eparet, groprep):
     return penali + acc75a + deddiv + eparet + groprep
 
-def Penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
+def _penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
     '''
     Pensions alimentaires
     '''
@@ -83,7 +78,7 @@ def Penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
                 min_(f6em, max1) + 
                 f6gp*(1 + taux) + f6gu)
 
-def Acc75a(f6eu, f6ev, _P):
+def _acc75a(f6eu, f6ev, _P):
     '''
     Frais d’accueil sous votre toit d’une personne de plus de 75 ans
     '''
@@ -91,7 +86,7 @@ def Acc75a(f6eu, f6ev, _P):
     amax = P.acc75a.max*max_(1, f6ev)
     return min_(f6eu, amax)
 
-def Percap(f6cb, f6da, marpac, _P):
+def _percap(f6cb, f6da, marpac, _P):
     '''
     Pertes en capital consécutives à la souscription au capital de sociétés 
     nouvelles ou de sociétés en difficulté (cases CB et DA de la déclaration 
@@ -107,13 +102,13 @@ def Percap(f6cb, f6da, marpac, _P):
 
         return min_(min_(f6cb, max_cb) + min_(f6da, max_da), max_da)   
 
-def Deddiv(f6dd):
+def _deddiv(f6dd):
     '''
     Déductions diverses (case DD)
     '''
     return f6dd
 
-def Doment(f6eh):
+def _doment(f6eh):
     '''
     Investissements DOM-TOM dans le cadre d’une entreprise (case EH de la 
     déclaration n° 2042 complémentaire)
@@ -121,7 +116,7 @@ def Doment(f6eh):
     if year <= 2005:
         return f6eh
 
-def Eparet(f6ps, f6rs, f6ss, f6pt, f6rt, f6st, f6pu, f6ru, f6su):
+def _eparet(f6ps, f6rs, f6ss, f6pt, f6rt, f6st, f6pu, f6ru, f6su):
     '''
     Épargne retraite - PERP, PRÉFON, COREM et CGOS
     '''
@@ -137,7 +132,7 @@ def Eparet(f6ps, f6rs, f6ss, f6pt, f6rt, f6st, f6pu, f6ru, f6su):
                 (f6pu==0)*(f6ru + f6su) + 
                 (f6pu!=0)*min_(f6ru + f6su, f6pu))
 
-def Sofipe(f6cc, rbg_int, marpac, _P):
+def _sofipe(f6cc, rbg_int, marpac, _P):
     '''
     Souscriptions au capital des SOFIPÊCHE (case CC de la déclaration 
     complémentaire)
@@ -147,7 +142,7 @@ def Sofipe(f6cc, rbg_int, marpac, _P):
         max1 = min_(P.sofipe.taux*rbg_int, P.sofipe.max*(1+marpac))
         return min_(f6cc, max1)
 
-def Cinema(f6aa, rbg_int, _P):
+def _cinema(f6aa, rbg_int, _P):
     '''
     Souscriptions en faveur du cinéma ou de l’audiovisuel (case AA de la 
     déclaration n° 2042 complémentaire)
@@ -157,7 +152,7 @@ def Cinema(f6aa, rbg_int, _P):
         max1 = min_(P.cinema.taux*rbg_int, P.cinema.max)
         return min_(f6aa, max1)
 
-def Ecodev(f6eh, rbg_int, _P):
+def _ecodev(f6eh, rbg_int, _P):
     '''
     Versements sur un compte épargne codéveloppement (case EH de la déclaration 
     complémentaire)
@@ -169,7 +164,7 @@ def Ecodev(f6eh, rbg_int, _P):
         max1 = min_(P.ecodev.taux*rbg_int, P.ecodev.max)
         return min_(f6eh, max1)
 
-def Grorep(f6cb, f6hj, _P):
+def _grorep(f6cb, f6hj, _P):
     '''
     Dépenses de grosses réparations des nus-propriétaires (case 6CB et 6HJ)
     '''

@@ -21,6 +21,7 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from core.datatable import DataTable, IntCol, EnumCol, BoolCol, FloatCol, AgesCol
 from core.utils import Enum
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
@@ -29,3 +30,132 @@ QUIMEN = Enum(['pref', 'cref', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7',
 CAT    = Enum(['noncadre', 'cadre', 'fonc'])
 
 year = 2010
+
+class InputTable(DataTable):
+    '''
+    Socio-economic data
+    Donnée d'entrée de la simulation à fournir à partir d'une enquète ou 
+    à générer avec un générateur de cas type
+    '''
+    noi = IntCol()
+
+    idmen   = IntCol() # 600001, 600002,
+    idfoy   = IntCol() # idmen + noi du déclarant
+    idfam   = IntCol() # idmen + noi du chef de famille
+
+    quimen  = EnumCol(QUIMEN)
+    quifoy  = EnumCol(QUIFOY)
+    quifam  = EnumCol(QUIFAM)
+    
+    sal = IntCol()
+    cho = IntCol()
+    rst = IntCol()
+    fra = IntCol()
+    alr = IntCol()
+    
+    hsup = IntCol()
+    inv = BoolCol()
+    alt = BoolCol()
+    choCheckBox = BoolCol()
+    ppeCheckBox = BoolCol()
+    ppeHeure = IntCol()
+    age = AgesCol()
+    agem = AgesCol()
+    zone_apl = IntCol()
+    loyer = IntCol()
+    so = IntCol(default = 3)
+    activite = IntCol()
+    statmarit = IntCol(default = 2)
+    
+    nbR = IntCol()
+    nbJ = IntCol()
+    nbI = IntCol()
+    nbH = IntCol()
+    nbG = IntCol()
+    nbF = IntCol()
+    nbN = IntCol()
+    
+    caseE = BoolCol()
+    caseF = BoolCol()
+    caseG = BoolCol()
+    caseH = IntCol()
+    caseK = BoolCol()
+    caseL = BoolCol()
+    caseN = BoolCol()
+    caseP = BoolCol()
+    caseS = BoolCol()
+    caseT = BoolCol()
+    caseW = BoolCol()
+    
+    # Rentes viagères
+    f1aw = IntCol()
+    f1bw = IntCol()
+    f1cw = IntCol()
+    f1dw = IntCol()
+    # RVCM
+    f2ch = IntCol()
+    f2dc = IntCol()
+    f2ts = IntCol()
+    f2ca = IntCol()
+    f2fu = IntCol()
+    f2go = IntCol()
+    f2tr = IntCol()
+    
+    f2aa = IntCol()
+    f2al = IntCol()
+    f2am = IntCol()
+    f2an = IntCol()
+    
+    
+    f3vc = IntCol()
+    f3vd = IntCol()
+    f3ve = IntCol()
+    f3vf = IntCol()
+    f3vg = IntCol()
+    f3vh = IntCol()
+    f3vl = IntCol()
+    f3vi = IntCol()
+    f3vm = IntCol()
+    
+    # Revenu foncier
+    f4ba = IntCol()
+    f4bb = IntCol()
+    f4bc = IntCol()
+    f4bd = IntCol()
+    f4be = IntCol()
+    
+    f4bl = IntCol()
+    
+    f5qm = IntCol()
+    f5rm = IntCol()
+    
+    # Deficit Antérieur
+    f6fa = IntCol()
+    f6fb = IntCol()
+    f6fc = IntCol()
+    f6fd = IntCol()
+    f6fe = IntCol()
+    f6fl = IntCol()
+    
+    f6gh = IntCol()
+    f6de = IntCol()
+
+# pfam only
+    inactif  = BoolCol()
+    partiel1 = BoolCol()
+    partiel2 = BoolCol() 
+    categ_inv = IntCol()
+
+    # from elsewhere
+#    af = FloatCol()
+#    asf_elig = BoolCol(default=True)
+#    tspr  = FloatCol()
+#    rpns  = FloatCol()
+#    rev_coll = FloatCol()
+
+    # to remove
+    charges_deduc = IntCol()
+    reductions = IntCol()
+    rpns_pvce = IntCol()
+    isol  = BoolCol(default=True)
+

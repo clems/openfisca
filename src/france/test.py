@@ -23,17 +23,17 @@ This file is part of openFisca.
 
 from parametres.paramData import XmlReader, Tree2Object
 from Utils import Scenario
-from model import Model
-from inputs import InputTable
+from france.model import Model
+from france.data import InputTable
 
     
 if __name__ == '__main__':
     import datetime
     date = datetime.date(2010,01,01)
-    reader = XmlReader('../../data/param.xml', date)
+    reader = XmlReader('../data/param.xml', date)
     P = Tree2Object(reader.tree)
 
-    f = '../../castypes/2010 - Couple 3 enfants.ofct'
+    f = '../castypes/2010 - Couple 3 enfants.ofct'
     scenario = Scenario()
     scenario.openFile(f)
     
@@ -42,12 +42,11 @@ if __name__ == '__main__':
     inputs.populate_from_scenario(scenario, date)
     inputs.gen_index(['men', 'foy', 'fam'])
 
-    ir = Model(P)
-    ir.set_inputs(inputs)
+    model = Model(P)
+    model.set_inputs(inputs)
 
-    ir.calculate('iai')
-    print inputs.sal.get_value()
-    print ir.iai.get_value()
+    model.calculate('iai')
+    print model.iai.get_value()
     
 
     
