@@ -981,8 +981,10 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
 #T    self.apl   = 12*zeros(self.taille) #TODO: Pour les logements conventionné (surtout des HLM)
 
  
-def _br_mv(sal_fam, cho_fam, rst_fam, alr_fam, rto_fam, rpns_fam, 
-           revcap_bar_fam, revcap_lib_fam, rfon_fam, etr_fam, div_rmi_fam):
+def _br_mv(sal, cho, rst, alr, rto, rpns, revcap_bar, revcap_lib, rfon, etr, div_rmi,
+           _option = {'sal': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART], 'alr': [CHEF, PART], 'rto': [CHEF, PART], 
+                      'rpns': [CHEF, PART], 'revcap_bar': [CHEF, PART], 'revcap_lib': [CHEF, PART], 'rfon': [CHEF, PART], 
+                      'etr': [CHEF, PART], 'div_rmi': [CHEF, PART]}):
     '''
     Base ressource du minimlum vieillesse et assimilés (ASPA)
     '''    
@@ -999,10 +1001,11 @@ def _br_mv(sal_fam, cho_fam, rst_fam, alr_fam, rto_fam, rpns_fam,
     # des pensions attachées aux distinctions honorifiques,
     # de l'aide apportée ou susceptible d'être apportée par les personnes tenues à l'obligation alimentaire.
 
-    br_mv = (max_(0,sal_fam + cho_fam) + max_(0,rst_fam + alr_fam + rto_fam) + 
-                 max_(0,rpns_fam) + max_(0,revcap_bar_fam) + 
-                 max_(0,revcap_lib_fam) + max_(0,rfon_fam) +
-                 max_(0,etr_fam) + max_(0,div_rmi_fam) )
+    br_mv = (max_(0,sal[CHEF] + cho[CHEF] + sal[PART] + cho[PART]) + 
+             max_(0,rst[CHEF] + alr[CHEF] + rto[CHEF] + rst[PART] + alr[PART] + rto[PART]) + 
+             max_(0,revcap_bar[CHEF] + rpns[CHEF] + revcap_bar[PART] +rpns[PART]) + 
+                 max_(0,revcap_lib[CHEF] + revcap_lib[PART]) + max_(0,rfon[CHEF] + rfon[PART]) +
+                 max_(0,etr[CHEF] + etr[PART]) + max_(0,div_rmi[CHEF] + div_rmi[PART]) )
     return br_mv
 
 def _mv(aspa_elig, nb_par, br_mv, _P, 
