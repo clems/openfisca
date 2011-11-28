@@ -618,6 +618,7 @@ def _rac(macc_exon, macc_impv, macc_imps,
     f5sv????
     '''
     P = _P.ir.rpns.microentreprise
+    P2 = _P.ir.rpns.specialbnc
 
     zacc = (  macc_exon + macc_impv + macc_imps 
             + aacc_exon + aacc_impn + aacc_imps - aacc_defn - aacc_defs 
@@ -628,8 +629,8 @@ def _rac(macc_exon, macc_impv, macc_imps,
     taux = P.vente_taux*cond + P.servi_taux*not_(cond)
     
     cacc = min_(macc_impv + macc_imps + macc_exon + mncnp_impo, 
-                max_(P.nc_abat_min,
-                     round(macc_impv*P.vente_taux + macc_imps*P.servi_taux + macc_exon*taux + mncnp_impo*P.nc_abat_taux )))
+                max_(P.vente_min,
+                     round(macc_impv*P.vente_taux + macc_imps*P.servi_taux + macc_exon*taux + mncnp_impo*P2.taux )))
     
     rac = zacc - cacc
     
@@ -649,14 +650,14 @@ def _rnc(mbnc_exon, mbnc_impo, abnc_exon, nbnc_exon, abnc_impo, nbnc_impo, abnc_
     nbnc_defi (f5qk, f5rk, f5sk)
     f5ql, f5qm????
     '''
-    P = _P.ir.rpns.microentreprise
+    P = _P.ir.rpns.specialbnc
 
     zbnc = (  mbnc_exon + mbnc_impo 
             + abnc_exon + nbnc_exon 
             + abnc_impo + nbnc_impo 
             - abnc_defi - nbnc_defi )
         
-    cbnc = min_(mbnc_exon + mbnc_impo, max_(P.nc_abat_min, round((mbnc_exon + mbnc_impo)*P.nc_abat_taux)))
+    cbnc = min_(mbnc_exon + mbnc_impo, max_(P.min, round((mbnc_exon + mbnc_impo)*P.taux)))
     
     rnc = zbnc - cbnc
     return rnc
@@ -1082,7 +1083,7 @@ def _ppe_elig(rfr, ppe_coef, marpac, veuf, celdiv, nbptr, _P):
     eligibilité à la ppe, returns a bool
     'foy'
     '''
-    P = _P.ir.ppe
+    P = _P.ir.credits_impot.ppe
     seuil = (veuf|celdiv)*(P.eligi1 + 2*max_(nbptr-1,0)*P.eligi3) \
             + marpac*(P.eligi2 + 2*max_(nbptr-2,0)*P.eligi3)
     out = (rfr*ppe_coef) <= seuil
@@ -1093,7 +1094,7 @@ def _ppe_rev(sal, hsup, rpns, _P):
     base ressource de la ppe
     'ind'
     '''
-    P = _P.ir.ppe
+    P = _P.ir.credits_impot.ppe
     # Revenu d'activité salarié
     rev_sa = sal + hsup #+ TV + TW + TX + AQ + LZ + VJ
     # Revenu d'activité non salarié
@@ -1105,7 +1106,7 @@ def _ppe_coef_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
     PPE: coefficient de conversion temps partiel
     'ind'
     '''
-    P = _P.ir.ppe
+    P = _P.ir.credits_impot.ppe
     frac_sa = ppeHeure/P.TP_nbh
     frac_ns = ppeJours/P.TP_nbj
     # TODO: changer ppeCheckBox en ppe_tp_sa
@@ -1120,14 +1121,14 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
     '''
     eligibilité individuelle à la ppe
     '''
-    P = _P.ir.ppe
+    P = _P.ir.credits_impot.ppe
     return (ppe_rev >= P.seuil1)&(_ppe_coef_tp!=0)
 
 def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''
     Prime pour l'emploi
     '''
-    P = _P.ir.ppe
+    P = _P.ir.credits_impot.ppe
 
     eliv, elic, eli1, eli2, eli3 = ppe_elig_i[VOUS], ppe_elig_i[CONJ], ppe_elig_i[PAC1], ppe_elig_i[PAC2], ppe_elig_i[PAC3], 
     basevi, baseci = ppe_rev[VOUS], ppe_rev[CONJ]

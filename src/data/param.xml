@@ -2319,7 +2319,7 @@
 	</CODE>
       </NODE>
     </NODE>
-    <NODE code = "credits_impots" description="Crédits d'impôts">
+    <NODE code = "credits_impot" description="Crédits d'impôt">
       <NODE code = "divide" description="Dividendes">
 	<CODE description="Plafond" code="max" format = 'integer'>
 	  <VALUE valeur="115" deb="2005-01-01" fin="2009-12-31"/>
