@@ -58,7 +58,10 @@ class InputTable(DataTable):
     alt = BoolCol()
     choCheckBox = BoolCol()
     ppeCheckBox = BoolCol()
+    ppe_tp_ns = BoolCol()
     ppeHeure = IntCol()
+    ppeJours = IntCol()
+    jour_xyz = IntCol()
     age = AgesCol()
     agem = AgesCol()
     zone_apl = IntCol()
@@ -131,6 +134,8 @@ class InputTable(DataTable):
     
     f3vj = IntCol()
     f3vk = IntCol()
+    f3va = IntCol()
+    
     
     # Revenu foncier
     f4ba = IntCol()
@@ -251,5 +256,9 @@ class InputTable(DataTable):
     # to remove
     charges_deduc = IntCol()
     reductions = IntCol()
+    credits_impot = IntCol()
+    rfr_cd = IntCol()
+    rfr_rvcm = IntCol()
     isol  = BoolCol(default=True)
+    
 

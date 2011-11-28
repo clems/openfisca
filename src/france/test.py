@@ -45,8 +45,8 @@ if __name__ == '__main__':
     model = Model(P)
     model.set_inputs(inputs)
 
-    model.calculate('iai')
-    print model.iai.get_value()
+    model.calculate('irpp')
+    print model.irpp.get_value()
     
 
     

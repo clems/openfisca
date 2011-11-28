@@ -395,11 +395,12 @@ def _iai(iaidrdi, plus_values, cont_rev_loc, teicaa):
     '''
     return iaidrdi + plus_values + cont_rev_loc + teicaa
 
-def _tehr(rfr, nb_adult, P):
+def _tehr(rfr, nb_adult, _P):
     '''
     Taxe exceptionnelle sur les hauts revenus
     'foy'
     '''
+    P = _P.ir.tehr
     return BarmMar(rfr/nb_adult, P)*nb_adult
     
 def _irpp(iai, credits_impot, tehr, ppe):
@@ -413,11 +414,11 @@ def _irpp(iai, credits_impot, tehr, ppe):
 ## Autres totaux utiles pour la suite
 ###############################################################################
 
-def _rfr(rni, alloc, f3va, f3vg, f3vi, rfr_cd, rfr_rvcm, rpns_exo, rpns_pvce, rev_cap_lib):
+def _rfr(rni, alloc, f3va, f3vg, f3vi, rfr_cd, rfr_rvcm, rpns_exon, rpns_pvce, rev_cap_lib):
     '''
     Revenu fiscal de reference
     '''
-    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exo + rpns_pvce + f3va + f3vg
+    return max_(0, rni - alloc) + rfr_cd + rfr_rvcm + rev_cap_lib + f3vi + rpns_exon + rpns_pvce + f3va + f3vg
  
 def _glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
     '''
@@ -450,11 +451,10 @@ def _rev_cap_lib(f2da, f2dh, f2ee):
     return out
 
 def _avf(f2ab):
-    # a.(ii) Avoir fiscal et crédits d'impôt (zavff)
+    '''
+    Avoir fiscal et crédits d'impôt (zavff)
+    '''
     return f2ab
-    # a.(iii) Les revenus de valeurs mobilières soumis au prélèvement
-    # libératoire (zvalf)
-
     
 def _imp_lib(f2da, f2dh, f2ee, _P):
     '''
@@ -1103,7 +1103,7 @@ def _ppe_rev(sal, hsup, rpns, _P):
     rev_ns = min_(0,rpns)/P.abatns + max_(0,rpns)*P.abatns
     return rev_sa + rev_ns
 
-def _ppe_coeff_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
+def _ppe_coef_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
     P = _P.ir.ppe
     frac_sa = ppeHeure/P.TP_nbh
     frac_ns = ppeJours/P.TP_nbj
@@ -1111,8 +1111,8 @@ def _ppe_coeff_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
     tp = (ppeCheckBox == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
     return tp + not_(tp)*(frac_sa + frac_ns) 
     
-def _ppe_base(ppe_rev, ppe_coeff_tp, ppe_coef):
-    out = ppe_rev/(ppe_coeff_tp + (ppe_coeff_tp==0))*ppe_coef
+def _ppe_base(ppe_rev, ppe_coef_tp, ppe_coef):
+    out = ppe_rev/(ppe_coef_tp + (ppe_coef_tp==0))*ppe_coef
     return out
 
 def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
@@ -1120,7 +1120,7 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
     eligibilité individuelle à la ppe
     '''
     P = _P.ir.ppe
-    return (ppe_rev >= P.seuil1)&(_ppe_coeff_tp!=0)
+    return (ppe_rev >= P.seuil1)&(_ppe_coef_tp!=0)
 
 def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''

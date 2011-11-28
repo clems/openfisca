@@ -65,9 +65,19 @@ class Model(SystemSf):
     iaidrdi = Prestation(ir._iaidrdi, 'foy')
     teicaa = Prestation(ir._teicaa, 'foy')
     cont_rev_loc = Prestation(ir._cont_rev_loc, 'foy')
-    iai = Prestation(ir._iai,'foy')
+    iai = Prestation(ir._iai, 'foy')
+    tehr = Prestation(ir._tehr, 'foy')
 
+    ppe_coef = Prestation(ir._ppe_coef)
+    ppe_base = Prestation(ir._ppe_base)
+    ppe_coef_tp = Prestation(ir._ppe_coef_tp)
+    ppe_elig = Prestation(ir._ppe_elig)
+    ppe_elig_i = Prestation(ir._ppe_elig_i)
+    ppe_rev = Prestation(ir._ppe_rev)
+    ppe = Prestation(ir._ppe, 'foy')
+    irpp = Prestation(ir._irpp, 'foy')
 
+    rfr = Prestation(ir._rfr, 'foy')
     rev_coll = Prestation(ir._rev_coll, 'foy')
 #    alv = Prestation(ir._alv)
     glo = Prestation(ir._glo, 'foy')
@@ -82,10 +92,12 @@ class Model(SystemSf):
     rpns_pvct = Prestation(ir._rpns_pvct)
     rpns_mvlt = Prestation(ir._rpns_mvlt)
     rpns_pvce = Prestation(ir._rpns_pvce)
+    rpns_exon = Prestation(ir._rpns_exon)
     
     rev_cap_bar = Prestation(ir._rev_cap_bar, 'foy')
     rev_cap_lib = Prestation(ir._rev_cap_lib, 'foy')
     avf = Prestation(ir._avf, 'foy')
+    
 # variables pour les prestations familiales
     etu      = Prestation(pf._etu, label = u"Indicatrice individuelle étudiant")
     biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
