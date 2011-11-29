@@ -232,7 +232,7 @@ def _sal_h_b(salbrut):
 
 
 def _alleg_fillon(salbrut, sal_h_b, type_sal, _P):
-    P = _P.cotsoc.exo_fillon
+    P = _P.cotsoc
     # TODO: utiliser type sal: uniquement pour les non cadres
     taux_fillon = taux_exo_fillon(sal_h_b, P) # * type_sal== 'noncadre'
     alleg_fillon = taux_fillon*salbrut
@@ -400,9 +400,12 @@ def taux_exo_fillon(sal_h_b, P):
     # il est égal au produit de la totalité de la rémunération annuelle telle que visée à l’article L. 242-1 du code de la Sécurité sociale par un coefficient. 
     # Ce montant est majoré de 10 % pour les entreprises de travail temporaire au titre des salariés temporaires pour lesquels elle est tenue à l’obligation 
     # d’indemnisation compensatrice de congés payés.
-    if P.seuil <= 1:
+    smic_h_b = P.gen.smic_h_b
+    seuil = P.exo_fillon.seuil
+    tx_max = P.exo_fillon.tx_max
+    if seuil <= 1:
         return 0 
-    return P.tx_max*min_(1,max_(P.seuil*smic_h_b/(sal_h_b + 1e-10)-1,0)/(P.seuil-1))
+    return tx_max*min_(1,max_(seuil*smic_h_b/(sal_h_b + 1e-10)-1,0)/(seuil-1))
 
 def combineBaremes(BarColl, name="onsenfout"):
     baremeTot = Bareme(name=name)
