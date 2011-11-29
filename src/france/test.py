@@ -48,10 +48,7 @@ if __name__ == '__main__':
     model.calculate('irpp')
     model.calculate('aspa_elig')
     model.calculate('salsuperbrut')
-    
-    
-    
-    model.calculate('paje') 
+    model.calculate('paje')
     model.calculate('af_nbenf')
 #    print inputs.sali.get_value()
 #    print model.salbrut.get_value()
@@ -61,8 +58,3 @@ if __name__ == '__main__':
     # print model.paje.get_value()
     print model.af_nbenf.get_value()
     print model.aspa_elig.get_value()
-    
-    
-    
-    
-    

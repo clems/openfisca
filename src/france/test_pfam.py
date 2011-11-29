@@ -66,6 +66,7 @@ if __name__ == '__main__':
     
     print model.irpp.get_value()
     print inputs.age.get_value()
+    print inputs.birth.get_value()
 #    print model.af.get_value()
 #    print model.af_nbenf.get_value()
 #    print model.af_base.get_value()

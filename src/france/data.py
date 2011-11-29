@@ -21,7 +21,7 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from core.datatable import DataTable, IntCol, EnumCol, BoolCol, FloatCol, AgesCol
+from core.datatable import DataTable, IntCol, EnumCol, BoolCol, FloatCol, AgesCol, DateCol
 from core.utils import Enum
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
@@ -271,3 +271,4 @@ class InputTable(DataTable):
     csg_taux_plein = IntCol(default = 1)
     aer = IntCol()
     ass = IntCol()
+#    birth = DateCol()
