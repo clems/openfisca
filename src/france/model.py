@@ -22,7 +22,7 @@ This file is part of openFisca.
 """
 
 from core.systemsf import SystemSf, Prestation
-import france.irpp.funcs as ir
+import france.irpp as ir
 import france.pfam.funcs as pf
 import france.cotsoc as cs
 
