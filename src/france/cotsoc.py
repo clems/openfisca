@@ -64,44 +64,46 @@ class Object(object):
 #a = {'sal':sal, 'pat':pat, 'csg':csg, 'crds':crds, 'exo_fillon': P.cotsoc.exo_fillon, 'lps': P.lps, 'ir': P.ir, 'prelsoc': P.prelsoc}
 #return Dicts2Object(**a)
 
+def _mhsup(hsup):
+    return -hsup
 
 ############################################################################
 ## Revenus du captital
 ############################################################################
 
 # revenus du capital soumis au barème
-def _csgcap_bar(rev_cap_bar, _P):
+def _csg_cap_bar(rev_cap_bar, _P):
     '''
     Calcule la CSG sur les revenus du captial soumis au barème
     '''
     return - rev_cap_bar*_P.csg.capital.glob
 
-def _crdscap_bar(rev_cap_bar, _P):
+def _crds_cap_bar(rev_cap_bar, _P):
     '''
     Calcule la CRDS sur les revenus du captial soumis au barème
     '''
     return - rev_cap_bar*_P.crds.capital
 
-def _prelsocap_bar(rev_cap_bar, _P):
+def _prelsoc_cap_bar(rev_cap_bar, _P):
     '''
     Calcule le prélèvement social sur les revenus du captial soumis au barème
     '''
     return - rev_cap_bar*_P.prelsoc.total
 
 # revenus du capital soumis au prélèvement libératoire
-def _csgcap_lib(rev_cap_lib, _P):
+def _csg_cap_lib(rev_cap_lib, _P):
     '''
     Calcule la CSG sur les revenus du captial soumis au prélèvement libératoire
     '''
     return - rev_cap_lib*_P.csg.capital.glob
 
-def _crdscap_lib(rev_cap_lib, _P):
+def _crds_cap_lib(rev_cap_lib, _P):
     '''
     Calcule la CRDS sur les revenus du captial soumis au prélèvement libératoire
     '''
     return - rev_cap_lib*_P.crds.capital
 
-def _prelsoccap_lib(rev_cap_lib, _P):
+def _prelsoc_cap_lib(rev_cap_lib, _P):
     '''
     Calcule le prélèvement social sur les revenus du captial soumis au prélèvement libératoire
     '''

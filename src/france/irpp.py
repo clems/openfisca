@@ -413,6 +413,10 @@ def _irpp(iai, credits_impot, tehr, ppe):
 ###############################################################################
 ## Autres totaux utiles pour la suite
 ###############################################################################
+def _alr():
+    '''
+    Pensions alimentaires reçues
+    '''
 
 def _rfr(rni, alloc, f3va, f3vg, f3vi, rfr_cd, rfr_rvcm, rpns_exon, rpns_pvce, rev_cap_lib):
     '''
@@ -1051,6 +1055,8 @@ def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, glo, fon, f7ga, 
 def _asf_elig(caseT, caseL):
     return caseT | caseL
 
+def _alv(sal):
+    return 0*sal
 #def Credits(self, P, table):
 #    '''
 #    Imputations (crédits d'impôts)

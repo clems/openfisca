@@ -8,17 +8,16 @@
       	<NODE desc= "Allègement sur les bas salaires" shortname="Allèg. sal." code= "alleg_fillon"/>
         </NODE>
         <NODE desc= "Cotisations sociales salariées" shortname="Cot. soc. sal." code= "cotsal" color = "243,166,171"/>
-        <NODE desc= "CSG déductible (salaires)" shortname="CSG deduc." code= "csgactd" color = "235,114,118"/>
+        <NODE desc= "CSG déductible (salaires)" shortname="CSG deduc." code= "csgsald" color = "235,114,118"/>
         <NODE desc= "Heures supplémentaires" shortname="Heures sup." code= "mhsup" color = "0,115,170"/>
       </NODE>
-      <NODE desc= "CSG non déductible (salaires)" shortname="CSG imp. sal." code= "csgacti" color = "235,114,118"/>
-      <NODE desc= "CRDS (salaires)" shortname="CRDS sal." code= "crdsact" color = "229,48,56"/>
+      <NODE desc= "CSG non déductible (salaires)" shortname="CSG imp. sal." code= "csgsali" color = "235,114,118"/>
+      <NODE desc= "CRDS (salaires)" shortname="CRDS sal." code= "crdssal" color = "229,48,56"/>
       <NODE desc= "Heures supplémentaires" shortname="Heures sup." code= "hsup" color = "0,115,170"/>
     </NODE>
     <NODE desc= "Revenus agricoles" shortname="Rev. agric." code= "rag"/>
     <NODE desc= "Revenus industriels et commerciaux" shortname="R. ind. comm." code= "ric"/>
     <NODE desc= "Revenus non commerciaux" shortname="R. non comm." code= "rnc"/>
-    <NODE desc= "Revenus de l'étranger" shortname="Rev. étranger" code='etr' />
   </NODE>
   <NODE desc="Pensions" shortname="Pensions" code="pen" color="97,75,150">
     <NODE desc= "Chômage net" shortname="Chômage net" code = "chonet" color = "136,120,178">
@@ -41,19 +40,17 @@
     <NODE desc= "Pensions alimentaires versée" shortname="P. alim. vers." code = "alv" color = "136,120,178"/>
     <NODE desc= "Rentes viagères" shortname="Rentes viag." code= "rto" color = "125,185,86"/>
   </NODE>
-  <NODE desc= "Revenus du patrimoine" shortname="Rev. capital" code = "revcap" color= "255,222,48">
+  <NODE desc= "Revenus du patrimoine" shortname="Rev. capital" code = "rev_cap" color= "255,222,48">
     <NODE desc= "Revenus fonciers" shortname="Rev. fonciers" code='fon' color = "255,245,155"/>
-    <NODE desc= "Revenus du capital soumis au barème" shortname="Rev. cap. bar." code='revcap_bar' color = "255,239,103"/>
-    <NODE desc= "Revenus du capital soumis au prélèvement libératoire" shortname="Rev. cap. lib." code='revcap_lib' color = "255,233,28"/>
+    <NODE desc= "Revenus du capital soumis au barème" shortname="Rev. cap. bar." code='rev_cap_bar' color = "255,239,103"/>
+    <NODE desc= "Revenus du capital soumis au prélèvement libératoire" shortname="Rev. cap. lib." code='rev_cap_lib' color = "255,233,28"/>
     <NODE desc= "Contributions sociales des revenus du patrimoine soumis au prélèvement libératoire" shortname="Cont. soc. cap. (lib.)" code = "csg_lib" color = "243,166,171">
-      <NODE desc= "CSG (revenus du capital soumis au prélèvement libératoire)" shortname="CSG cap. lib." code= "csgcap_lib" color = "235,114,118"/>
-      <NODE desc= "Prélèvement social sur les revenus du capital soumis au prélèvement libératoire" shortname="Prel. soc. (lib.)" code= "prelsoccap_lib"/>
-      <NODE desc= "CRDS (revenus du capital soumis au prélèvement libératoire)" shortname="CRDS cap. lib." code= "crdscap_lib" color = "229,48,56"/>
+      <NODE desc= "CSG (revenus du capital soumis au prélèvement libératoire)" shortname="CSG cap. lib." code= "csg_cap_lib" color = "235,114,118"/>
+      <NODE desc= "Prélèvement social sur les revenus du capital soumis au prélèvement libératoire" shortname="Prel. soc. (lib.)" code= "prelsoc_cap_lib"/>
+      <NODE desc= "CRDS (revenus du capital soumis au prélèvement libératoire)" shortname="CRDS cap. lib." code= "crds_cap_lib" color = "229,48,56"/>
     </NODE>
     <NODE desc= "Prélèvement libératoire sur les revenus du patrimoine" shortname="Prél. libérat." code = "imp_lib" color = "232,79,95"/>
     <NODE desc= "Revenus accessoires" shortname="Rev. accesoires" code='rac' color="247,221,0"/>
-    <NODE desc= "Autres revenus financiers" shortname="Autres rev. fin." code = "produitfin_i" color="236,210,0"/>
-    <NODE desc= "CSG (autres revenus financiers)" shortname="CSG autres fin." code = "csgfin_i" color="235,114,118"/>
   </NODE>
   <NODE desc= "Impôt sur le revenu (Landais, Piketty, Saez)" shortname="IR (LPS)" code = "ir_lps" color = "232,79,95"/>
   <NODE desc= "Prestations sociales" shortname="Prest. soc." code= "psoc" color = "255,102,63">

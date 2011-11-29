@@ -27,6 +27,10 @@ import france.pfam.funcs as pf
 import france.cotsoc as cs
 
 class Model(SystemSf):
+    mhsup = Prestation(cs._mhsup)
+    hsup  = Prestation(cs._mhsup)
+    alv   = Prestation(ir._alv)
+    
     # variables pour les cotisations sociales
     salbrut = Prestation(cs._salbrut)
     sal_h_b = Prestation(cs._sal_h_b)
@@ -35,24 +39,38 @@ class Model(SystemSf):
     cotsal  = Prestation(cs._cotsal)
     csgsald = Prestation(cs._csgsald)
     csgsali = Prestation(cs._csgsali)
-    sal = Prestation(cs._sal)
-    
+    crdssal = Prestation(cs._crdssal)
+    sal = Prestation(cs._sal)    
     salsuperbrut = Prestation(cs._salsuperbrut)
     
     chobrut = Prestation(cs._chobrut)
     csgchod = Prestation(cs._csgchod)
     csgchoi = Prestation(cs._csgchoi)
+    crdscho = Prestation(cs._crdscho)
     cho = Prestation(cs._cho)
 
     rstbrut = Prestation(cs._rstbrut)
     csgrstd = Prestation(cs._csgrstd)
     csgrsti = Prestation(cs._csgrsti)
+    crdsrst = Prestation(cs._crdsrst)
     rst = Prestation(cs._rst)
+    
+    csg_cap_lib = Prestation(cs._csg_cap_lib)
+    crds_cap_lib = Prestation(cs._crds_cap_lib)
+    prelsoc_cap_lib = Prestation(cs._prelsoc_cap_lib)
+
+    csg_cap_bar = Prestation(cs._csg_cap_bar)
+    crds_cap_bar = Prestation(cs._crds_cap_bar)
+    prelsoc_cap_bar = Prestation(cs._prelsoc_cap_bar)
+
+    base_csg = Prestation(cs._base_csg)    
+    ir_lps = Prestation(cs._ir_lps)
     # variables pour l'ir
     marpac = Prestation(ir._marpac, 'foy')
     celdiv = Prestation(ir._celdiv, 'foy')
     veuf = Prestation(ir._veuf, 'foy')
     jveuf = Prestation(ir._jveuf, 'foy')
+    nbptr = Prestation(ir._nbptr, 'foy', label = u"Nombre de parts")
 
     rbg = Prestation(ir._rbg, 'foy', label = u"Revenu brut global")
     rng = Prestation(ir._rng, 'foy', label = u"Revenu net global")
@@ -62,7 +80,6 @@ class Model(SystemSf):
     alloc = Prestation(ir._alloc, 'foy', label = u"Allocation familiale pour l'ir")
     deficit_ante = Prestation(ir._deficit_ante, 'foy', label = u"Déficit global antérieur")
     rev_cat = Prestation(ir._rev_cat, 'foy', label = u"Revenus catégoriels")
-    nbptr = Prestation(ir._nbptr, 'foy', label = u"Nombre de parts")
     rev_sal = Prestation(ir._rev_sal)
     sal_net = Prestation(ir._sal_net)
     rev_pen = Prestation(ir._rev_pen)
@@ -90,7 +107,7 @@ class Model(SystemSf):
     cont_rev_loc = Prestation(ir._cont_rev_loc, 'foy')
     iai = Prestation(ir._iai, 'foy')
     tehr = Prestation(ir._tehr, 'foy')
-
+    imp_lib = Prestation(ir._imp_lib, 'foy')
     ppe_coef = Prestation(ir._ppe_coef)
     ppe_base = Prestation(ir._ppe_base)
     ppe_coef_tp = Prestation(ir._ppe_coef_tp)
@@ -114,6 +131,7 @@ class Model(SystemSf):
     div  = Prestation(ir._div, 'foy')
     fon  = Prestation(ir._fon, 'foy')
     rfon_rmi = Prestation(ir._rfon_rmi, 'foy')
+    alr  = Prestation(ir._alr, 'foy')
     
     rpns_mvct = Prestation(ir._rpns_mvct)
     rpns_pvct = Prestation(ir._rpns_pvct)
