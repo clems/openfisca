@@ -464,7 +464,7 @@ def _imp_lib(f2da, f2dh, f2ee, _P):
     '''
     Prelèvement libératoire sur les revenus du capital
     '''
-    P = _P.ir.prelevement_liberatoire
+    P = _P.ir.rvcm.prelevement_liberatoire
     if YEAR <=2007: 
         out = - (P.assvie*f2dh + P.autre*f2ee )
     else:
