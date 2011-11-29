@@ -26,7 +26,7 @@ from numpy import ( maximum as max_, minimum as min_, logical_xor as xor_,
                     logical_not as not_, round)
 from Utils import BarmMar
 
-from france.data import QUIFOY, year
+from france.data import QUIFOY, YEAR
 
 VOUS = QUIFOY['vous']
 CONJ = QUIFOY['conj']
@@ -180,7 +180,7 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr,
     REVENUS DES VALEURS ET CAPITAUX MOBILIERS
     '''
     P = _P.ir.rvcm
-    if year > 2004: f2gr = 0
+    if YEAR > 2004: f2gr = 0
 
     ## Calcul du revenu catégoriel
     #1.2 Revenus des valeurs et capitaux mobiliers
@@ -446,7 +446,7 @@ def _rev_cap_lib(f2da, f2dh, f2ee):
     '''
     Revenu du capital imposé au prélèvement libératoire
     '''
-    if year <=2007: out = f2dh + f2ee
+    if YEAR <=2007: out = f2dh + f2ee
     else: out = f2da + f2dh + f2ee
     return out
 
@@ -461,7 +461,7 @@ def _imp_lib(f2da, f2dh, f2ee, _P):
     Prelèvement libératoire sur les revenus du capital
     '''
     P = _P.ir.prelevement_liberatoire
-    if year <=2007: 
+    if YEAR <=2007: 
         out = - (P.assvie*f2dh + P.autre*f2ee )
     else:
         out = - (P.action*f2da + P.assvie*f2dh + P.autre*f2ee )
@@ -885,7 +885,7 @@ def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
 #    table = population
 #
 #    table.openReadMode()
-#    niches1, niches2, ind_rfr = charges_deductibles.niches(year)
+#    niches1, niches2, ind_rfr = charges_deductibles.niches(YEAR)
 #    charges_deductibles.charges_calc(self, P, table, niches1, niches2, ind_rfr)
 #
 #    ## stockage des pensions dans les individus
@@ -1005,7 +1005,7 @@ def _nbptr(nb_pac, marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, ca
 #    Réductions d'impôts
 #    '''
 #    table.openReadMode()
-#    niches = reductions_impots.niches(year)
+#    niches = reductions_impots.niches(YEAR)
 #    reducs = zeros(taille)
 #    for niche in niches:
 #        reducs += niche(self, P, table)
@@ -1023,7 +1023,7 @@ def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
            P.pea*f3vm +
            P.taux3*f3vi +
            P.taux4*f3vf )
-    if year >= 2008:
+    if YEAR >= 2008:
         # revenus taxés à un taux proportionnel
         rdp += f3vd
         out += P.taux1*f3vd
@@ -1056,7 +1056,7 @@ def _asf_elig(caseT, caseL):
 #    Imputations (crédits d'impôts)
 #    '''
 #    table.openReadMode()
-#    niches = credits_impots.niches(year)
+#    niches = credits_impots.niches(YEAR)
 #    reducs = zeros(taille)
 #    for niche in niches:
 #        reducs += niche(self, P, table)
