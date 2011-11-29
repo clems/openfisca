@@ -50,7 +50,8 @@ class Model(SystemSf):
     rev_cat_rvcm = Prestation(ir._rev_cat_rvcm, 'foy', label = u'Revenu catégoriel - Capitaux')
     rev_cat_rpns = Prestation(ir._rev_cat_rpns, 'foy', label = u'Revenu catégoriel - Rpns')
     rev_cat_rfon = Prestation(ir._rev_cat_rfon, 'foy', label = u'Revenu catégoriel - Foncier')
-    rto_net = Prestation(ir._rto_net, 'foy', label = u'Rentes viagère après abattements')
+    rto = Prestation(ir._rto, 'foy', label = u'Rentes viagères (rentes à titre onéreux)')
+    rto_net = Prestation(ir._rto_net, 'foy', label = u'Rentes viagères après abattements')
     deficit_rcm = Prestation(ir._deficit_rcm, 'foy', u'Deficit capitaux mobiliers')
     csg_deduc = Prestation(ir._csg_deduc, 'foy', u'Csg déductible')
     
@@ -78,6 +79,8 @@ class Model(SystemSf):
     irpp = Prestation(ir._irpp, 'foy')
 
     rfr = Prestation(ir._rfr, 'foy')
+
+    div_rmi  = Prestation(ir._div_rmi, 'foy')
     rev_coll = Prestation(ir._rev_coll, 'foy')
 #    alv = Prestation(ir._alv)
     glo = Prestation(ir._glo, 'foy')
@@ -88,6 +91,8 @@ class Model(SystemSf):
     rpns = Prestation(ir._rpns)
     div  = Prestation(ir._div, 'foy')
     fon  = Prestation(ir._fon, 'foy')
+    rfon_rmi = Prestation(ir._rfon_rmi, 'foy')
+    
     rpns_mvct = Prestation(ir._rpns_mvct)
     rpns_pvct = Prestation(ir._rpns_pvct)
     rpns_mvlt = Prestation(ir._rpns_mvlt)
@@ -102,21 +107,15 @@ class Model(SystemSf):
     etu      = Prestation(pf._etu, label = u"Indicatrice individuelle étudiant")
     biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
     concub   = Prestation(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
+    maries   = Prestation(pf._maries, 'fam') 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
     smic55   = Prestation(pf._smic55, 'fam', label = u"Indicatrice d'un salaire supérieur à 55% du smic")
-
-
-# TODO consolider les sous totaux et éliminer ceux qui sont superflus    
-    rpns_fam = Prestation(pf._tspr_fam, 'fam', label = u"Traitements, salaires, pensions et rentes de la famille")
-    tspr_fam = Prestation(pf._rpns_fam, 'fam', label = u"Revenus des personnes non salariés de la famille")
-    rst_fam  = Prestation(pf._rst_fam, 'fam', label = u"Retraites au sens strict de la famille")
     
     af_nbenf = Prestation(pf._af_nbenf, 'fam', u"Nombre d'enfant au sens des AF")
     af_base  = Prestation(pf._af_base, 'fam', label ='Allocations familiales - Base')
     af_majo  = Prestation(pf._af_majo, 'fam', label ='Allocations familiales - Majoration pour age')
     af_forf  = Prestation(pf._af_forf, 'fam', label ='Allocations familiales - Forfait 20 ans')
     af       = Prestation(pf._af, 'fam', label = u"Allocations familiales")
-    
     
     rev_pf   = Prestation(pf._rev_pf, 'fam', label ='Base ressource individuele des prestations familiales')
     br_pf    = Prestation(pf._br_pf, 'fam', label ='Base ressource des prestations familiales')
@@ -129,14 +128,18 @@ class Model(SystemSf):
     cf             = Prestation(pf._cf_cumul_paje, 'fam', label = u"Complément familial avant d'éventuels cumuls")
     paje_nais      = Prestation(pf._paje_nais, 'fam', label = u"Allocation de naissance de la PAJE")
     paje_clca      = Prestation(pf._paje_clca, 'fam', label = u"PAJE - Complément de libre choix d'activité")
-    paje_clca_taux_plein      = Prestation(pf._paje_clca_taux_plein, 'fam', label = u"Indicatrice Clca taux plein")
-    paje_clca_taux_partiel      = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel ")
-    #paje_clmg        = Prestation(Paje_Clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
+    paje_clca_taux_plein   = Prestation(pf._paje_clca_taux_plein, 'fam', label = u"Indicatrice Clca taux plein")
+    paje_clca_taux_partiel = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel ")
+    paje_colca     = Prestation(pf._paje_colca, 'fam', label = u"PAJE - Complément optionnel de libre choix d'activité")
+    paje_clmg        = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
+    
+    ape            = Prestation(pf._ape, 'fam', label = u"Allocation parentale d'éducation")
+    apje           = Prestation(pf._apje, 'fam', label = u"Allocation pour le jeune enfant") 
     
     asf_elig = Prestation(ir._asf_elig, 'foy')
 
-# allocations logements
+    # Allocations logement
     br_al  = Prestation(pf._br_al, 'fam', label = u"Base ressource des allocations logement")
     al_pac = Prestation(pf._al_pac, 'fam', label = u"Nombre de personnes à charge au sens des allocations logement")  
     al     = Prestation(pf._al, 'fam', label = u"Allocation logement (indifferrenciée)")
@@ -144,6 +147,29 @@ class Model(SystemSf):
     als    = Prestation(pf._als, 'fam', label = u"Allocation logement sociale")
     alset  = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
     
+    # RSA/RMI
     
-    br_mv  = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
     
+    
+    # ASPA/ASI
+    br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
+    rmi_nbp = Prestation(pf._rmi_nbp, 'fam', label = u"Nombre de personne à charge au sens du Rmi/Rsa")
+    br_rmi  = Prestation(pf._br_rmi, 'fam', label = u"Base ressources du Rmi/Rsa")
+    ra_rsa  = Prestation(pf._ra_rsa, 'fam', label = u"Revenus d'activité du Rsa")
+    
+    asi_aspa_nb_alloc = Prestation(pf._asi_aspa_nb_alloc, 'fam')
+    asi_aspa_elig = Prestation(pf._asi_elig, 'fam')
+    asi_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")           
+    asi_coexist_aspa = Prestation(pf._asi_coexist_aspa, 'fam', label = u"Allocation supplémentaire d'invalidité quand un adulte de la famille perçoit l'ASPA")
+    asi_pure         = Prestation(pf._asi_pure, 'fam', label = u"Allocation supplémentaire d'invalidité quand aucun adulte de la famille ne perçoit l'ASPA") 
+    asi     = Prestation(pf._asi, 'fam', label = u"Allocation supplémentaire d'invalidité")
+    
+    aspa_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
+    aspa_coexist_asi = Prestation(pf._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
+    aspa_pure         = Prestation(pf._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
+    mv     = Prestation(pf._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
+    
+    # AAH
+    br_aah  = Prestation(pf._br_aah, 'fam', label = u"Base ressources de l'allocation adulte handicapé")
+    aah     = Prestation(pf._aah, 'fam', label = u"Allocation adulte handicapé")
+    caah    = Prestation(pf._caah, 'fam', label = u"Complément de l'allocation adulte handicapé")

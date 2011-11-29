@@ -252,8 +252,13 @@ class InputTable(DataTable):
     partiel1 = BoolCol()
     partiel2 = BoolCol() 
     categ_inv = IntCol()
+    opt_colca = BoolCol()
+    empl_dir = BoolCol() 
+    ass_mat  = BoolCol()
+    gar_dom  = BoolCol()
 
     # to remove
+    etr = IntCol()     
     charges_deduc = IntCol()
     reductions = IntCol()
     credits_impot = IntCol()
@@ -261,4 +266,4 @@ class InputTable(DataTable):
     rfr_rvcm = IntCol()
     isol  = BoolCol(default=True)
     coloc = BoolCol()
-
+    

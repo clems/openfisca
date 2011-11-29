@@ -88,30 +88,6 @@ def _etu(activite):
     ''' 
     return activite==2
 
-def _sal_fam(sal, _option = {'rst': [CHEF, PART]}):
-    '''
-    Salaires de la famille
-    ''' 
-    return sal[CHEF] + sal[PART]
-
-def _rst_fam(rst, _option = {'rst': [CHEF, PART]}):
-    '''
-    Retraites au sens strict de la famille
-    ''' 
-    return rst[CHEF] + rst[PART]
-
-def _tspr_fam(tspr, _option = {'tspr': [CHEF, PART]}):
-    '''
-    Traitements, salaires, pensions et rentes de la famille
-    ''' 
-    return tspr[CHEF] + tspr[PART]
-    
-def _rpns_fam(rpns, _option = {'rpns': [CHEF, PART]}):
-    '''
-    Revenus des personnes non salariées de la famille
-    '''
-    return rpns[CHEF] + rpns[PART]
-
 def _smic55(sal, _P):
     nbh_travaillees = 151.67*12
     smic_annuel = _P.cotsoc.gen.smic_h_b*nbh_travaillees
@@ -162,12 +138,13 @@ def _ra_rsa(sal, hsup, rpns, etr, div_rmi):
     '''
     return sal + hsup + rpns + etr + div_rmi
 
-def _rev_pf(tspr_fam, hsup, rpns_fam, _option = {'hsup': [CHEF, PART]}):
+def _rev_pf(tspr, hsup, rpns, 
+            _option = {'tspr': [CHEF, PART], 'hsup': [CHEF, PART],
+                       'rpns': [CHEF, PART]}):
     '''
     Base ressource individuelle des prestations familiales
     '''
-    rev_pf  = tspr_fam + hsup[PART] + hsup[CHEF] + rpns_fam   
-    return rev_pf
+    return tspr[CHEF] + tspr[PART] + hsup[CHEF] + hsup[PART] +  rpns[CHEF] + rpns[PART]   
 
 def _biact(rev_pf, _P, _option = {'rev_pf': [CHEF, PART]}):
     '''
@@ -271,7 +248,7 @@ def _cf(age, br_pf, isol, biact, smic55, _P, _option = {'age': ENFS, 'smic55': E
                              (br_pf > cf_plaf)*max_(cf_plaf2- br_pf,0)/12.0 )
     return cf_brut
 
-def _asf(age, rst_fam, isol, asf_elig, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
+def _asf(age, rst, isol, asf_elig, smic55, _P, _option = {'rst': [CHEF, PART], 'age': ENFS, 'smic55': ENFS}):
     '''
     Allocation de soutien familial
     '''
@@ -491,8 +468,6 @@ def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, as
     cond_nonact  =  or_(aah >0, etu[CHEF] & etu[PART])   
 #  TODO RSA insertion, alloc insertion, ass   
     elig = cond_age_enf & (  or_(cond_act,cond_nonact) ) 
-             
-    
     nbenf = af_nbenf
     seuil1 = P.paje.clmg.seuil11*(nbenf==1) + P.paje.clmg.seuil12*(nbenf>=2) + max_(nbenf-2,0)*P.paje.clmg.seuil1sup
     seuil2 = P.paje.clmg.seuil21*(nbenf==1) + P.paje.clmg.seuil22*(nbenf>=2) + max_(nbenf-2,0)*P.paje.clmg.seuil2sup
@@ -519,33 +494,25 @@ def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, as
             (br_pf < seuil1)*P.paje.clmg.domi1 +
             ((br_pf >= seuil1) & (br_pf < seuil2) )*P.paje.clmg.domi2 +
             (br_pf >= seuil2)*P.paje.clmg.domi3))        
-
     # TODO: connecter avec le crédit d'impôt
-
 #        Si vous bénéficiez du Clca taux plein (= vous ne travaillez plus ou interrompez votre activité professionnelle), 
 #        vous ne pouvez pas bénéficier du Cmg.         
     paje_clmg = elig*not_(paje_clca_taux_plein)*clmg
-    
     # TODO vérfiez les règles de cumul        
-    
     return paje_clmg
     
-def _paje_colca(af_nbenf, agem, opt_colca, paje_brut, _P):    
+def _paje_colca(af_nbenf, agem, opt_colca, paje_base, _P):    
     '''
     Prestation d'accueil du jeune enfant - Complément optionnel de libre choix du mode de garde
     '''
-
     P = _P.fam
     age_m_benjamin = age_en_mois_benjamin(agem)
-    
     condition = (age_m_benjamin < 12*P.paje.colca.age )*(age_m_benjamin >=0)   
     nbenf = af_nbenf
-    
-    paje = (paje_brut > 0)  
-    colca = opt_colca*condition*(nbenf>=3)*P.af.bmaf*(
+    paje = (paje_base > 0)  
+    paje_colca = opt_colca*condition*(nbenf>=3)*P.af.bmaf*(
         (paje)*P.paje.colca.avecab + not_(paje)*P.paje.colca.sansab )
-
-    return colca
+    return paje_colca
 
     #TODO: cumul avec clca self.colca_tot_m 
 
@@ -980,11 +947,15 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     
 #T    self.apl   = 12*zeros(self.taille) #TODO: Pour les logements conventionné (surtout des HLM)
 
- 
-def _br_mv(sal, cho, rst, alr, rto, rpns, revcap_bar, revcap_lib, rfon, etr, div_rmi,
+#     TODO: rajouter etr: revenus de l'étranger  
+#def _br_mv(sal, cho, rst, alr, rto, rpns, rev_cap_bar, rev_cap_lib, rev_cat_rfon, etr, div_rmi,
+#           _option = {'sal': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART], 'alr': [CHEF, PART], 'rto': [CHEF, PART], 
+#                      'rpns': [CHEF, PART], 'rev_cap_bar': [CHEF, PART], 'rev_cap_lib': [CHEF, PART], 'rfon_rmi': [CHEF, PART], 
+#                      'etr': [CHEF, PART], 'div_rmi': [CHEF, PART]}):
+def _br_mv(sal, cho, rst, alr, rto, rpns, rev_cap_bar, rev_cap_lib, rev_cat_rfon, div_rmi,
            _option = {'sal': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART], 'alr': [CHEF, PART], 'rto': [CHEF, PART], 
-                      'rpns': [CHEF, PART], 'revcap_bar': [CHEF, PART], 'revcap_lib': [CHEF, PART], 'rfon': [CHEF, PART], 
-                      'etr': [CHEF, PART], 'div_rmi': [CHEF, PART]}):
+                      'rpns': [CHEF, PART], 'rev_cap_bar': [CHEF, PART], 'rev_cap_lib': [CHEF, PART], 'rfon_rmi': [CHEF, PART], 
+                      'div_rmi': [CHEF, PART]}):
     '''
     Base ressource du minimlum vieillesse et assimilés (ASPA)
     '''    
@@ -1003,9 +974,10 @@ def _br_mv(sal, cho, rst, alr, rto, rpns, revcap_bar, revcap_lib, rfon, etr, div
 
     br_mv = (max_(0,sal[CHEF] + cho[CHEF] + sal[PART] + cho[PART]) + 
              max_(0,rst[CHEF] + alr[CHEF] + rto[CHEF] + rst[PART] + alr[PART] + rto[PART]) + 
-             max_(0,revcap_bar[CHEF] + rpns[CHEF] + revcap_bar[PART] +rpns[PART]) + 
-                 max_(0,revcap_lib[CHEF] + revcap_lib[PART]) + max_(0,rfon[CHEF] + rfon[PART]) +
-                 max_(0,etr[CHEF] + etr[PART]) + max_(0,div_rmi[CHEF] + div_rmi[PART]))
+             max_(0,rev_cap_bar[CHEF] + rpns[CHEF] + rev_cap_bar[PART] +rpns[PART]) + 
+                 max_(0,rev_cap_lib[CHEF] + rev_cap_lib[PART]) + max_(0,rev_cat_rfon[CHEF] + rev_cat_rfon[PART]) +
+                 #max_(0,etr[CHEF] + etr[PART]) + 
+                 max_(0,div_rmi[CHEF] + div_rmi[PART]))
     return br_mv
 
 def _mv(aspa_elig, nb_par, br_mv, _P, 
@@ -1049,9 +1021,12 @@ def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     return nb_par + _nb_enf(age, smic55, 0, 24)  # TODO limite d'âge dans paramètres
 
-def _br_rmi(af_base, cf, asf, paje, clca, colca, ape, apje, mv, asi, aah, caah, 
-            ra_rsa, cho_fam, rst_fam, alr_fam, rto_fam, revcap_bar_fam,
-            revcap_lib_fam, rfon_fam, _P, _option = {'asi': [CHEF, PART], 'ra_rsa': [CHEF, PART]}):
+def _br_rmi(af_base, cf, asf, paje_base, paje_clca, paje_colca, ape, apje, mv, asi, aah, caah, 
+            ra_rsa, cho, rst, alr, rto, rev_cap_bar,
+            rev_cap_lib, rev_cat_rfon, _P, 
+            _option = {'ra_rsa': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART],
+                       'alr': [CHEF, PART], 'rto': [CHEF, PART], 'rev_cap_bar': [CHEF, PART],
+                       'rev_cap_lib': [CHEF, PART], 'rev_cat_rfon': [CHEF, PART]}):
     '''
     Base ressources du Rmi ou du Rsa
     '''
@@ -1076,13 +1051,13 @@ def _br_rmi(af_base, cf, asf, paje, clca, colca, ape, apje, mv, asi, aah, caah,
     if year < 2004:
         pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
     else: 
-        pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje + clca + colca)
-
-
-    br_rmi = (ra_rsa[CHEF] + ra_rsa[PART] + cho_fam + rst_fam + alr_fam + rto_fam + 
-                  max_(0,revcap_bar_fam + revcap_lib_fam + rfon_fam) + 
-                  pf_br_rmi +
-                  mv + asi[CHEF] + asi[PART] + aah + caah)
+        pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
+        
+    br_rmi = (ra_rsa[CHEF] + ra_rsa[PART] + cho[CHEF] + cho[PART] + rst[CHEF] + rst[PART] +
+              alr[CHEF] + alr[PART] + rto[CHEF] + rto[PART] + 
+                  max_(0,rev_cap_bar[CHEF] + rev_cap_bar[PART] + rev_cap_lib[CHEF] + rev_cap_lib[PART] + 
+                       rev_cat_rfon[CHEF]  + rev_cat_rfon[PART]) + 
+                  pf_br_rmi + mv + asi + aah + caah)
     # Ne sont pas pris en compte:
     #  
     # 1 De la prime à la naissance ou à l’adoption mentionnée à l’article L. 531-2 du code de la sécurité
@@ -1317,7 +1292,7 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
 
 def _aspa_elig(age, inv, activite, _P):
     '''
-    Eligibitié à l'ASPA
+    Eligibitié individuelle à l'ASPA
     'ind'
     '''
     P = _P.mini.aspa
@@ -1325,19 +1300,19 @@ def _aspa_elig(age, inv, activite, _P):
 
 def _asi_elig(aspa_elig, inv, activite):
     '''
-    Éligibilité à l'ASI
+    Éligibilité individuelle à l'ASI
     '''
     return ((inv==1) & (activite==3)) & not_(aspa_elig)
 
-def _aspa_asi_nb_alloc(aspa_elig, asi_elig):
+def _asi_aspa_nb_alloc(aspa_elig, asi_elig, _option = {'elig_apsa': [CHEF, PART], 'elig_asi': [CHEF, PART]}):
     return (1*aspa_elig[CHEF] + 1*aspa_elig[PART] + 1*asi_elig[CHEF]  + 1*asi_elig[PART])
 
-def _aspa_pure(aspa_elig, marpac, maries, aspa_asi_nb_alloc, br_mv, _P, _option = {'elig_apsa': [CHEF, PART]}):
+def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = {'apsa_elig': [CHEF, PART]}):
     '''
     Calcule l'ASPA lorsqu'il y a un ou deux bénéficiaire de l'ASPA et aucun bénéficiaire de l'ASI
     '''
     P = _P 
-    elig1 = ( (aspa_asi_nb_alloc==1) & ( aspa_elig[CHEF] | aspa_elig[PART]) )
+    elig1 = ( (asi_aspa_nb_alloc==1) & ( aspa_elig[CHEF] | aspa_elig[PART]) )
     elig2 = (aspa_elig[CHEF] & aspa_elig[PART])*maries
     elig  = elig1 | elig2
 
@@ -1348,16 +1323,19 @@ def _aspa_pure(aspa_elig, marpac, maries, aspa_asi_nb_alloc, br_mv, _P, _option 
     
     montant_servi_aspa   = max_(montant_max - depassement, 0)/12
     
-    # TODO Faute de mieux
+    # TODO Faute de mieux, on verse l'aspa à la famille plutôt qu'aux individus
     # aspa[CHEF] = aspa_elig[CHEF]*montant_servi_aspa*(elig1 + elig2/2)
     # aspa[PART] = aspa_elig[PART]*montant_servi_aspa*(elig1 + elig2/2)
     
     return  (aspa_elig[CHEF]+aspa_elig[PART])*montant_servi_aspa*(elig1 + elig2/2)
 
-def _asi_pure(asi_elig, marpac, maries, aspa_asi_nb_alloc, br_mv, _P, _option = {'elig_apsa': [CHEF, PART]}): 
+def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = {'asi_elig': [CHEF, PART]}): 
+    '''
+    Calcule l'ASI lorsqu'il y a un ou deux bénéficiaire de l'ASI et aucun bénéficiaire de l'ASPA
+    '''
     P = _P
     # 1 A Un ou deux bénéficiaire(s) de l'ASI et aucun bénéficiaire de l'ASPA  
-    elig1 = ( (aspa_asi_nb_alloc==1) & ( asi_elig[CHEF] | asi_elig[PART]) )      # un seul éligible
+    elig1 = ( (asi_aspa_nb_alloc==1) & ( asi_elig[CHEF] | asi_elig[PART]) )      # un seul éligible
     elig2 = (asi_elig[CHEF] & asi_elig[PART])*maries                    # couple d'éligible marié
     elig3 = (asi_elig[CHEF] & asi_elig[PART])*(marpac & not_(maries))  # couple d'éligible non marié
     elig  =  elig1 | elig2
@@ -1367,12 +1345,15 @@ def _asi_pure(asi_elig, marpac, maries, aspa_asi_nb_alloc, br_mv, _P, _option = 
     plafond_ressources = elig1*(P.asi.plaf_seul*not_(marpac) + P.aspa.plaf_couple*marpac) + elig2*P.aspa.plaf_couple + elig3*P.asi.plaf_couple
     depassement     = ressources - plafond_ressources 
     montant_servi_asi   = max_(montant_max - depassement, 0)/12 
-    # TODO faute de mieux
+    # TODO Faute de mieux, on verse l'asi à la famille plutôt qu'aux individus
     # asi[CHEF] = asi_elig[CHEF]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     # asi[PART] = asi_elig[PART]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     return (asi_elig[CHEF]++ asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
 
-def _asi_aspa_elig(aspa_elig, asi_elig):
+def _asi_aspa_elig(aspa_elig, asi_elig, _option = {'asi_elig': [CHEF, PART], 'aspa_elig': [CHEF, PART]}):
+    '''
+    Éligibilité des membres de la famille à l'ASPA et à l'ASI
+    '''    
     return ( (asi_elig[CHEF] & aspa_elig[PART]) | (asi_elig[PART] & aspa_elig[CHEF]))
 
 def _asi_coexist_aspa(asi_aspa_elig, maries, marpac, br_mv, _P):
@@ -1423,7 +1404,7 @@ def _aspa_coexist_asi(asi_aspa_elig, maries, marpac, br_mv, _P):
 #    mv = aspaC + aspaP    
 #
 
-def _apsa(aspa_pure, aspa_coexist_asi):
+def _aspa(aspa_pure, aspa_coexist_asi):
     return aspa_pure + aspa_coexist_asi
 
 #def _mv(aspa_pure, aspa_coexist_asi):    # TODO remove and define mv in model ?
@@ -1432,13 +1413,9 @@ def _apsa(aspa_pure, aspa_coexist_asi):
 def _asi(asi_pure, asi_coexist_aspa):
     return asi_pure + asi_coexist_aspa
 
-def _br_aah(br_pf, asi, aspa, mv, _P, 
-            _option = {'inv': [CHEF, PART], 'age': [CHEF, PART]} ): 
-    br_aah = br_pf/12 + asi + aspa
-        
-#    elif hasattr(self, "mv_m"):  br_aah = br_pf/12 + mv
+def _br_aah(br_pf, asi, mv, _P): 
+    br_aah = br_pf/12 + asi + mv
     return br_aah
-
 
 def _aah(rev_pf, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'rev_pf': [CHEF, PART]}):
     '''
