@@ -48,10 +48,13 @@ if __name__ == '__main__':
 
     model.calculate('irpp')
     model.calculate('salsuperbrut')
+    #model.calculate('paje') 
+    model.calculate('af_nbenf')
     print inputs.sali.get_value()
     print model.salbrut.get_value()
     print model.csgsald.get_value()
 #    print model.cho.get_value()
     print model.ars.get_value()
+    # print model.paje.get_value()
     print model.af_nbenf.get_value()
         

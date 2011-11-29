@@ -298,7 +298,7 @@ def _ars(age, smic55, br_pf, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     ars = max_(0,(ars_plaf_res + arsbase*arsnbenf - max_(br_pf, ars_plaf_res))/max_(1,arsnbenf))
     return ars*(ars>=P.ars.seuil_nv)
 
-def _paje(paje_base, paje_nais, paje_clca, paje_clmg, paje_colca): # TODO
+def _paje(paje_base, paje_nais, paje_clca, paje_clmg, paje_colca):
     '''
     Prestation d'accueil du jeune enfant
     '''
@@ -644,7 +644,7 @@ def _ape_cumul_apje_cf(apje_temp, ape_temp, cf_temp):
 
 def _apje_cumul_ape_cf(apje_temp, ape_temp, cf_temp):
     '''
-    L'allocation de base de la paje n'est pas cummulable avec le complément familial
+    L'APJE n'est pas cummulable avec le complément familial et l'APE
     '''
     apje  = (cf_temp <  apje_temp)*(ape_temp < apje_temp)*apje_temp
     return round(apje, 2)

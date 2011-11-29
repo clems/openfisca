@@ -171,6 +171,8 @@ class Model(SystemSf):
     paje_clca_taux_partiel = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel ")
     paje_colca     = Prestation(pf._paje_colca, 'fam', label = u"PAJE - Complément optionnel de libre choix d'activité")
     paje_clmg        = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
+    #paje            = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Ensemble des prestations")
+    
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
     
     ape            = Prestation(pf._ape, 'fam', label = u"Allocation parentale d'éducation")
