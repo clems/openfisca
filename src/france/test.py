@@ -55,6 +55,6 @@ if __name__ == '__main__':
     print model.cotpat.get_value()
 #    print model.cho.get_value()
     
-
+    
     
         

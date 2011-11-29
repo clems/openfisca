@@ -156,15 +156,16 @@ class Model(SystemSf):
     #paje_clmg        = Prestation(Paje_Clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
     
-    
     asf_elig = Prestation(ir._asf_elig, 'foy')
 
 # allocations logements
-    br_al = Prestation(pf._br_al, 'fam', label = u"Base ressource des allocations logement")
+    br_al  = Prestation(pf._br_al, 'fam', label = u"Base ressource des allocations logement")
     al_pac = Prestation(pf._al_pac, 'fam', label = u"Nombre de personnes à charge au sens des allocations logement")  
-    al =  Prestation(pf._al, 'fam', label = u"Allocation logement (indifferrenciée)")
-    alf =  Prestation(pf._alf, 'fam', label = u"Allocation logement familiale")
-    als =  Prestation(pf._als, 'fam', label = u"Allocation logement sociale")
-    alset = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
+    al     = Prestation(pf._al, 'fam', label = u"Allocation logement (indifferrenciée)")
+    alf    = Prestation(pf._alf, 'fam', label = u"Allocation logement familiale")
+    als    = Prestation(pf._als, 'fam', label = u"Allocation logement sociale")
+    alset  = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
     
+    
+    br_mv  = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
     
