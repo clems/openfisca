@@ -47,9 +47,11 @@ class InputTable(DataTable):
     quifoy  = EnumCol(QUIFOY)
     quifam  = EnumCol(QUIFAM)
     
-    sal = IntCol()
-    cho = IntCol()
-    rst = IntCol()
+    type_sal = EnumCol(CAT)
+    
+    sali = IntCol()
+    choi = IntCol()
+    rsti = IntCol()
     fra = IntCol()
     alr = IntCol()
     
@@ -266,4 +268,4 @@ class InputTable(DataTable):
     rfr_rvcm = IntCol()
     isol  = BoolCol(default=True)
     coloc = BoolCol()
-    
+    csg_taux_plein = IntCol(default = 1)
