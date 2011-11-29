@@ -24,7 +24,7 @@ This file is part of openFisca.
 from __future__ import division
 from numpy import (round, floor, zeros, maximum as max_, minimum as min_, 
                    ceil, where, logical_not as not_, logical_or as or_)
-from france.data import QUIFAM, QUIFOY, year
+from france.data import QUIFAM, QUIFOY, Year
 
 CHEF = QUIFAM['chef']
 PART = QUIFAM['part']
@@ -1048,7 +1048,7 @@ def _br_rmi(af_base, cf, asf, paje_base, paje_clca, paje_colca, ape, apje, mv, a
     # Nota: ra_rsa revenus d'activité au sens du RSA
     
     P = _P
-    if year < 2004:
+    if Year < 2004:
         pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
     else: 
         pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
@@ -1247,7 +1247,7 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
               + nbPAC*P.aefa.tx_supp*(nb_par<=2)
               + nbPAC*P.aefa.tx_3pac*max_(nbPAC-2,0))
     
-    if year==2008: aefa += condition*P.aefa.forf2008
+    if Year==2008: aefa += condition*P.aefa.forf2008
                
     aefa_maj  = P.aefa.mon_seul*maj
     aefa = max_(aefa_maj,aefa)   
@@ -1527,7 +1527,7 @@ def _caah(aah, _P):
     P = _P.minim 
     elig_cpl = 0    # TODO: éligibilité
     
-    if year >= 2006: compl = elig_cpl*max_(P.caah.grph-aah,0)  
+    if Year >= 2006: compl = elig_cpl*max_(P.caah.grph-aah,0)  
     else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*aah
 #        else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*self.aah_m 
         # En fait perdure jusqu'en 2008 
@@ -1547,7 +1547,7 @@ def _caah(aah, _P):
 #La majoration pour la vie autonome n'est pas cumulable avec la garantie de ressources pour les personnes handicapées.
 #La personne qui remplit les conditions d'octroi de ces deux avantages doit choisir de bénéficier de l'un ou de l'autre.
 
-    if year >= 2006:        
+    if Year >= 2006:        
         elig_mva = 0*(aah>0)   # TODO: éligibilité
         mva = P.caah.mva*elig_mva
     else: mva = 0      

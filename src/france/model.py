@@ -170,14 +170,14 @@ class Model(SystemSf):
     alset  = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
     
     # RSA/RMI
-    
+    rmi_nbp = Prestation(pf._rmi_nbp, 'fam', label = u"Nombre de personne à charge au sens du Rmi/Rsa")
+    br_rmi  = Prestation(pf._br_rmi, 'fam', label = u"Base ressources du Rmi/Rsa")
+    ra_rsa  = Prestation(pf._ra_rsa, 'fam', label = u"Revenus d'activité du Rsa")
+    rsa  = Prestation(pf._ra_rsa, 'fam')
     
     
     # ASPA/ASI
     br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
-    rmi_nbp = Prestation(pf._rmi_nbp, 'fam', label = u"Nombre de personne à charge au sens du Rmi/Rsa")
-    br_rmi  = Prestation(pf._br_rmi, 'fam', label = u"Base ressources du Rmi/Rsa")
-    ra_rsa  = Prestation(pf._ra_rsa, 'fam', label = u"Revenus d'activité du Rsa")
     
     asi_aspa_nb_alloc = Prestation(pf._asi_aspa_nb_alloc, 'fam')
     asi_aspa_elig = Prestation(pf._asi_elig, 'fam')
@@ -187,7 +187,7 @@ class Model(SystemSf):
     asi     = Prestation(pf._asi, 'fam', label = u"Allocation supplémentaire d'invalidité")
     
     aspa_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
-    aspa_coexist_asi = Prestation(pf._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
+    aspa_coexist_asi  = Prestation(pf._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
     aspa_pure         = Prestation(pf._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
     mv     = Prestation(pf._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
     

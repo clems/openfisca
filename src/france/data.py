@@ -250,14 +250,14 @@ class InputTable(DataTable):
     nbnc_pvce = IntCol() # (f5qj, f5rj, f5sj)
 
 # pfam only
-    inactif  = BoolCol()
-    partiel1 = BoolCol()
-    partiel2 = BoolCol() 
+    inactif   = BoolCol()
+    partiel1  = BoolCol()
+    partiel2  = BoolCol() 
     categ_inv = IntCol()
     opt_colca = BoolCol()
-    empl_dir = BoolCol() 
-    ass_mat  = BoolCol()
-    gar_dom  = BoolCol()
+    empl_dir  = BoolCol() 
+    ass_mat   = BoolCol()
+    gar_dom   = BoolCol()
 
     # to remove
     etr = IntCol()     
