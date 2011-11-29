@@ -88,7 +88,9 @@ def _prelsoc_cap_bar(rev_cap_bar, _P):
     '''
     Calcule le prélèvement social sur les revenus du captial soumis au barème
     '''
-    return - rev_cap_bar*_P.prelsoc.total
+    P = _P.prelsoc
+    total = P.base + P.add + P.rsa
+    return - rev_cap_bar*total
 
 # revenus du capital soumis au prélèvement libératoire
 def _csg_cap_lib(rev_cap_lib, _P):
@@ -107,7 +109,9 @@ def _prelsoc_cap_lib(rev_cap_lib, _P):
     '''
     Calcule le prélèvement social sur les revenus du captial soumis au prélèvement libératoire
     '''
-    return - rev_cap_lib*_P.prelsoc.total
+    P = _P.prelsoc
+    total = P.base + P.add + P.rsa
+    return - rev_cap_lib*total
 
 
 # TODO: non_imposabilité pour les revenus au barème
