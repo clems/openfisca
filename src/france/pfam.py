@@ -131,7 +131,6 @@ def age_en_mois_benjamin(agems):
         agem_benjamin = isbenjamin*agem + not_(isbenjamin)*agem_benjamin
     return agem_benjamin
 
-
 def _ra_rsa(sal, hsup, rpns, etr, div_rmi):
     '''
     Revenus d'activité au sens du Rsa
@@ -205,15 +204,11 @@ def _af_majo(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
 def _af_forf(age, af_nbenf, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     P = _P.fam
     bmaf = _P.fam.af.bmaf    
-#    TODO    
-#    if hasattr(P.af,"age3"): af_nbenf_20 = self.NbEnf(P.af.age3,P.af.age3)
-#    else: af_nbenf_20 = 0
-    nbenf_forf = _nb_enf(age, smic55, P.af.age3, P.af.age3)
-    
+#    TODO juillet 2003   
+    if YEAR >= 2004:     nbenf_forf = _nb_enf(age, smic55, P.af.age3, P.af.age3)
+    else: nbenf_forf = 0
     af_forfait   = round(bmaf*P.af.taux.forfait,2)
-    af_ai20 = ((af_nbenf>=2)*nbenf_forf)*af_forfait
-    
-    return af_ai20
+    return ((af_nbenf>=2)*nbenf_forf)*af_forfait
 
 def _af(af_base, af_majo, af_forf):
     return af_base + af_majo + af_forf
@@ -263,13 +258,12 @@ def _asf(age, rst, isol, asf_elig, smic55, _P, _option = {'rst': [CHEF, PART], '
     # action devant le TGI pour complêter l'éligibilité               
 
     P = _P.fam
-    
     asf_nbenf = _nb_enf(age, smic55, P.af.age1, P.af.age2)
     # TODO : gérer la mensualisation de l'ASF: pb de la pension alimentaire
     asf_nbenfa = asf_nbenf
-
-    asf_brut = round(isol*asf_elig*max_(0,asf_nbenfa*12*P.af.bmaf*P.asf.taux1 - rst_fam),2)    
-#    asf_m    = round(isol*asf_elig*max_(0,asf_nbenf*P.af.bmaf*P.asf.taux1 - rst_fam/12.0),2)
+    asf_brut = round(isol*asf_elig*max_(0,asf_nbenfa*12*P.af.bmaf*P.asf.taux1 
+                                        - rst[CHEF] - rst[PART]),2)    
+    #asf_m    = round(isol*asf_elig*max_(0,asf_nbenf*P.af.bmaf*P.asf.taux1 - rst_fam/12.0),2)
 
     return asf_brut
 
@@ -285,14 +279,14 @@ def _ars(age, smic55, br_pf, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     P = _P.fam
     bmaf = P.af.bmaf
     # On prend l'âge en septembre
-    enf_05    = _nb_enf(age, smic55, P.ars.agep-1,P.ars.agep-1)[8,:]  # 6 ans avant le 31 janvier
+    enf_05    = _nb_enf(age, smic55, P.ars.agep-1,P.ars.agep-1)  # 6 ans avant le 31 janvier
     # Un enfant scolarisé qui n'a pas encore atteint l'âge de 6 ans 
     # avant le 1er février 2012 peut donner droit à l'ARS à condition qu'il 
     # soit inscrit à l'école primaire. Il faudra alors présenter un 
     # certificat de scolarité. 
-    enf_primaire = enf_05 + _nb_enf(age, smic55, P.ars.agep,P.ars.agec-1)[8,:]
-    enf_college = _nb_enf(age, smic55, P.ars.agec,P.ars.agel-1)[8,:]
-    enf_lycee = _nb_enf(age, smic55, P.ars.agel,P.ars.ages)[8,:]
+    enf_primaire = enf_05 + _nb_enf(age, smic55, P.ars.agep,P.ars.agec-1)
+    enf_college = _nb_enf(age, smic55, P.ars.agec,P.ars.agel-1)
+    enf_lycee = _nb_enf(age, smic55, P.ars.agel,P.ars.ages)
     
     arsnbenf =   enf_primaire + enf_college + enf_lycee
     
@@ -302,7 +296,6 @@ def _ars(age, smic55, br_pf, _P, _option = {'age': ENFS, 'smic55': ENFS}):
                      P.ars.tx1518*enf_lycee )
     # Forme de l'ARS  en fonction des enfants a*n - (rev-plaf)/n                                             
     ars = max_(0,(ars_plaf_res + arsbase*arsnbenf - max_(br_pf, ars_plaf_res))/max_(1,arsnbenf))
-
     return ars*(ars>=P.ars.seuil_nv)
 
 def _paje(paje_base, paje_nais, paje_clca, paje_clmg, paje_colca): # TODO
@@ -388,7 +381,7 @@ def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _opti
     
     # Calcul de l'année et mois de naisage_in_months( du cadet 
     # TODO: ajuster en fonction de la cessation des IJ etc
-    # TODO les 6 mois sont codés en dur 
+    # TODO: les 6 mois sont codés en dur 
     
     age_m_benjamin = age_en_mois_benjamin(agem)
 
@@ -1120,7 +1113,7 @@ def _forf_log(so, rmi_nbp, _P):
     Forfait logement intervenant dans le calcul du Rmi ou du Rsa
     '''
     # calcul du forfait logement annuel si le ménage touche des allocations logements
-    P = _P
+    P = _P.minim
     loca = (3 <= so)&(5 >= so)
     FL = P.rmi.forfait_logement
     tx_fl = ((rmi_nbp==1)*FL.taux1 +
@@ -1132,7 +1125,7 @@ def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P):
     '''
     Rsa socle / Rmi
     '''
-    P = _P
+    P = _P.minim
     # RSA socle TODO mécanisme similaire à l'API: Pour les
     # personnes ayant la charge d’au moins un enfant né ou à
     # naître et se retrouvant en situation d’isolement, le montant
@@ -1154,18 +1147,17 @@ def _rmi(rsa_socle, forf_log, br_rmi):
     return rmi
 
 def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P): 
-    P = _P.rmi 
+    P = _P.minim.rmi 
     RSA = max_(0,rsa_socle + P.pente*(ra_rsa[CHEF] + ra_rsa[PART]) - forf_log - br_rmi)
     rsa = (RSA>=P.rsa_nv)*RSA
     return rsa
     
-def _ra_act(rsa, rmi):    
+def _rsa_act(rsa, rmi):    
     return rsa - rmi
         
-def _ppe_cumul_rsa_act(ppe_temp, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
-#   TODO où mettre cela ? 
+def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
 #   On retranche le RSA activité de la PPE
-    ppe = max_(ppe_temp - rsa_act[VOUS] - rsa_act[CONJ])
+    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ])
     return ppe 
     
     
@@ -1199,10 +1191,8 @@ def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = 
     br_api = br_rmi + af_majo*not_(rsa)
     # TODO: mensualiser RMI, BRrmi et forfait logement
     api  = max_(0, api1 - forf_log/12 - br_api/12 - rsa/12) 
-    
     # L'API est exonérée de CRDS
     return api
-    
     # TODO API: temps partiel qui modifie la base ressource
     # Cumul
     # Cumul avec un revenu
@@ -1221,9 +1211,8 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     '''
     Aide exceptionelle de fin d'année (prime de Noël)
     '''
-        # Insituée en 1998        
-        # Complément de rmi dans les ERF
-        
+    # Insituée en 1998        
+    # Apparaît sous le nom de complément de rmi dans les ERF    
     P = _P
     dummy_ass = ass > 0
     dummy_aer = aer > 0
@@ -1254,26 +1243,28 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     return aefa 
 
 
-#    """
+#    Bloc ASAP/ASI
 #    Allocation de solidarité aux personnes agées (ASPA)
 #    et Allocation supplémentaire d'invalidité (ASI)
-#    """
-    # ASPA crée le 1er janvier 2006
-    # TODO Allocation supplémentaire avant le 1er janvier 2006
-    
-    # Anciennes allocations du minimum vieillesse remplacées par l'ASPA
-    #
-    #Il s'agit de :
-    #    l'allocation aux vieux travailleurs salariés (AVTS),
-    #    l'allocation aux vieux travailleurs non salariés,
-    #    l'allocation aux mères de familles,
-    #    l'allocation spéciale de vieillesse,
-    #    l'allocation supplémentaire de vieillesse,
-    #    l'allocation de vieillesse agricole,
-    #    le secours viager,
-    #    la majoration versée pour porter le montant d'une pension de vieillesse au niveau de l'AVTS,
-    #    l'allocation viagère aux rapatriés âgés.
-    
+
+# ASPA crée le 1er janvier 2006
+# TODO Allocation supplémentaire avant le 1er janvier 2006
+
+# ASPA:    
+# Anciennes allocations du minimum vieillesse remplacées par l'ASPA
+#
+#Il s'agit de :
+#    l'allocation aux vieux travailleurs salariés (AVTS),
+#    l'allocation aux vieux travailleurs non salariés,
+#    l'allocation aux mères de familles,
+#    l'allocation spéciale de vieillesse,
+#    l'allocation supplémentaire de vieillesse,
+#    l'allocation de vieillesse agricole,
+#    le secours viager,
+#    la majoration versée pour porter le montant d'une pension de vieillesse au niveau de l'AVTS,
+#    l'allocation viagère aux rapatriés âgés.
+
+# ASI:    
 #        L'ASI peut être attribuée aux personnes atteintes d'une invalidité générale 
 #        réduisant au moins des deux tiers leur capacité de travail ou de gain.
 #        Les personnes qui ont été reconnues atteintes d'une invalidité générale réduisant 
@@ -1323,7 +1314,7 @@ def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option 
     
     montant_servi_aspa   = max_(montant_max - depassement, 0)/12
     
-    # TODO Faute de mieux, on verse l'aspa à la famille plutôt qu'aux individus
+    # Faute de mieux, on verse l'aspa à la famille plutôt qu'aux individus
     # aspa[CHEF] = aspa_elig[CHEF]*montant_servi_aspa*(elig1 + elig2/2)
     # aspa[PART] = aspa_elig[PART]*montant_servi_aspa*(elig1 + elig2/2)
     
@@ -1345,7 +1336,7 @@ def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = 
     plafond_ressources = elig1*(P.asi.plaf_seul*not_(marpac) + P.aspa.plaf_couple*marpac) + elig2*P.aspa.plaf_couple + elig3*P.asi.plaf_couple
     depassement     = ressources - plafond_ressources 
     montant_servi_asi   = max_(montant_max - depassement, 0)/12 
-    # TODO Faute de mieux, on verse l'asi à la famille plutôt qu'aux individus
+    # Faute de mieux, on verse l'asi à la famille plutôt qu'aux individus
     # asi[CHEF] = asi_elig[CHEF]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     # asi[PART] = asi_elig[PART]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     return (asi_elig[CHEF]++ asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
@@ -1400,15 +1391,8 @@ def _aspa_coexist_asi(asi_aspa_elig, maries, marpac, br_mv, _P):
     montant_servi_aspa_c  = where(index, max_(.5*P.aspa.montant_couple - 0.5*depassement, 0),0)/12
     return montant_servi_aspa_m + montant_servi_aspa_c 
     
-#        
-#    mv = aspaC + aspaP    
-#
-
 def _aspa(aspa_pure, aspa_coexist_asi):
     return aspa_pure + aspa_coexist_asi
-
-#def _mv(aspa_pure, aspa_coexist_asi):    # TODO remove and define mv in model ?
-#    return aspa_pure + aspa_coexist_asi  
 
 def _asi(asi_pure, asi_coexist_aspa):
     return asi_pure + asi_coexist_aspa

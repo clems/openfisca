@@ -36,10 +36,9 @@ if __name__ == '__main__':
     f = '../castypes/2010 - Couple 3 enfants.ofct'
     scenario = Scenario()
     scenario.openFile(f)
-    
-    
+        
     inputs = InputTable(6)
-    inputs.populate_from_scenario(scenario, date)
+    inputs.populate_from_scenario(scenario)
     inputs.gen_index(['men', 'foy', 'fam'])
 
     model = Model(P)
@@ -53,6 +52,6 @@ if __name__ == '__main__':
     print model.salbrut.get_value()
     print model.csgsald.get_value()
 #    print model.cho.get_value()
-    
-    
+    print model.ars.get_value()
+    print model.af_nbenf.get_value()
         

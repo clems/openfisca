@@ -28,7 +28,6 @@ import france.cotsoc as cs
 
 class Model(SystemSf):
     mhsup = Prestation(cs._mhsup)
-    hsup  = Prestation(cs._mhsup)
     alv   = Prestation(ir._alv)
     
     # variables pour les cotisations sociales
@@ -131,7 +130,7 @@ class Model(SystemSf):
     div  = Prestation(ir._div, 'foy')
     fon  = Prestation(ir._fon, 'foy')
     rfon_rmi = Prestation(ir._rfon_rmi, 'foy')
-    alr  = Prestation(ir._alr, 'foy')
+    
     
     rpns_mvct = Prestation(ir._rpns_mvct)
     rpns_pvct = Prestation(ir._rpns_pvct)
@@ -162,7 +161,7 @@ class Model(SystemSf):
     cf_temp  = Prestation(pf._cf, 'fam', label = u"Complément familial avant d'éventuels cumuls")
     asf      = Prestation(pf._asf, 'fam', label = u"Allocation de soutien familial")
 
-# TODO mensualisation âge    ars     = Prestation(ARS, 'fam', label = u"Allocation de rentrée scolaire")
+    ars            = Prestation(pf._ars, 'fam', label = u"Allocation de rentrée scolaire")
     paje_base_temp = Prestation(pf._paje_base, 'fam', label = u"Allocation de base de la PAJE sans tenir compte d'éventuels cumuls")
     paje_base      = Prestation(pf._paje_cumul_cf, 'fam', label = u"Allocation de base de la PAJE")
     cf             = Prestation(pf._cf_cumul_paje, 'fam', label = u"Complément familial avant d'éventuels cumuls")
