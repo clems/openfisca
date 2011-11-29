@@ -49,6 +49,7 @@ if __name__ == '__main__':
 
     model.calculate('cotpat')
     model.calculate('irpp')
+    model.calculate('salsuperbrut')
     print inputs.sali.get_value()
     print model.salbrut.get_value()
     print model.csgsald.get_value()

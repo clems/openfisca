@@ -24,17 +24,13 @@ This file is part of openFisca.
 from __future__ import division
 from france.data import CAT
 from numpy import maximum as max_, minimum as min_, logical_not as not_, zeros
-from Utils import Bareme, BarmMar, Dicts2Object
+from Utils import Bareme, BarmMar
 from parametres.paramData import Tree2Object
-
-#salcats = ['cadre', 'noncadre', 'fonc']
-
 
 class Object(object):
     def __init__(self):
         object.__init__(self)
                 
-
 # TODO: CHECK la csg déductible en 2006 est case GH
 # TODO:  la revenus soumis aux csg déductible et imposable sont en CG et BH en 2010 
 
@@ -407,7 +403,6 @@ def taux_exo_fillon(sal_h_b, P):
     if P.seuil <= 1:
         return 0 
     return P.tx_max*min_(1,max_(P.seuil*smic_h_b/(sal_h_b + 1e-10)-1,0)/(P.seuil-1))
-
 
 def combineBaremes(BarColl, name="onsenfout"):
     baremeTot = Bareme(name=name)
