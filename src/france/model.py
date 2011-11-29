@@ -24,8 +24,30 @@ This file is part of openFisca.
 from core.systemsf import SystemSf, Prestation
 import france.irpp.funcs as ir
 import france.pfam.funcs as pf
+import france.cotsoc as cs
 
 class Model(SystemSf):
+    # variables pour les cotisations sociales
+    salbrut = Prestation(cs._salbrut)
+    sal_h_b = Prestation(cs._sal_h_b)
+    cotpat  = Prestation(cs._cotpat)
+    alleg_fillon = Prestation(cs._alleg_fillon)
+    cotsal  = Prestation(cs._cotsal)
+    csgsald = Prestation(cs._csgsald)
+    csgsali = Prestation(cs._csgsali)
+    sal = Prestation(cs._sal)
+    
+    salsuperbrut = Prestation(cs._salsuperbrut)
+    
+    chobrut = Prestation(cs._chobrut)
+    csgchod = Prestation(cs._csgchod)
+    csgchoi = Prestation(cs._csgchoi)
+    cho = Prestation(cs._cho)
+
+    rstbrut = Prestation(cs._rstbrut)
+    csgrstd = Prestation(cs._csgrstd)
+    csgrsti = Prestation(cs._csgrsti)
+    rst = Prestation(cs._rst)
     # variables pour l'ir
     marpac = Prestation(ir._marpac, 'foy')
     celdiv = Prestation(ir._celdiv, 'foy')
