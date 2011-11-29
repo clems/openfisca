@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from core.systemsf import SystemSf, Prestation
 import irpp as ir
-import france.pfam.funcs as pf
+import pfam as pf
 import france.cotsoc as cs
 
 class Model(SystemSf):
@@ -173,8 +173,13 @@ class Model(SystemSf):
     rmi_nbp = Prestation(pf._rmi_nbp, 'fam', label = u"Nombre de personne à charge au sens du Rmi/Rsa")
     br_rmi  = Prestation(pf._br_rmi, 'fam', label = u"Base ressources du Rmi/Rsa")
     ra_rsa  = Prestation(pf._ra_rsa, 'fam', label = u"Revenus d'activité du Rsa")
-    rsa  = Prestation(pf._ra_rsa, 'fam')
-    
+    forf_log  = Prestation(pf._forf_log, 'fam')
+    rsa_socle = Prestation(pf._rsa_socle, 'fam')
+    rmi  = Prestation(pf._rmi, 'fam')
+    rsa  = Prestation(pf._rsa, 'fam')
+    rsa_act = Prestation(pf._rsa_act, 'fam')
+    api  = Prestation(pf._api, 'fam')
+    ppe_cumul_rsa_act  = Prestation(pf._ppe_cumul_rsa_act)
     
     # ASPA/ASI
     br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
