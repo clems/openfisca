@@ -494,7 +494,7 @@ def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, as
     # TODO vérfiez les règles de cumul        
     return paje_clmg
     
-def _paje_colca(af_nbenf, agem, opt_colca, paje_base, _P):    
+def _paje_colca(af_nbenf, agem, opt_colca, paje_base, _P, _option = {'agem': ENFS}):    
     '''
     Prestation d'accueil du jeune enfant - Complément optionnel de libre choix du mode de garde
     '''
@@ -937,8 +937,10 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''    
     alset = (al_pac==0)*or_(etu[CHEF],etu[PART])*al
     return alset
-    
-#T    self.apl   = 12*zeros(self.taille) #TODO: Pour les logements conventionné (surtout des HLM)
+
+def _apl(al):
+    #TODO: Pour les logements conventionné (surtout des HLM)
+    return al*0
 
 #     TODO: rajouter etr: revenus de l'étranger  
 #def _br_mv(sal, cho, rst, alr, rto, rpns, rev_cap_bar, rev_cap_lib, rev_cat_rfon, etr, div_rmi,
@@ -947,7 +949,7 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
 #                      'etr': [CHEF, PART], 'div_rmi': [CHEF, PART]}):
 def _br_mv(sal, cho, rst, alr, rto, rpns, rev_cap_bar, rev_cap_lib, rev_cat_rfon, div_rmi,
            _option = {'sal': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART], 'alr': [CHEF, PART], 'rto': [CHEF, PART], 
-                      'rpns': [CHEF, PART], 'rev_cap_bar': [CHEF, PART], 'rev_cap_lib': [CHEF, PART], 'rfon_rmi': [CHEF, PART], 
+                      'rpns': [CHEF, PART], 'rev_cap_bar': [CHEF, PART], 'rev_cap_lib': [CHEF, PART], 'rev_cat_rfon': [CHEF, PART], 
                       'div_rmi': [CHEF, PART]}):
     '''
     Base ressource du minimlum vieillesse et assimilés (ASPA)
@@ -1014,7 +1016,7 @@ def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     return nb_par + _nb_enf(age, smic55, 0, 24)  # TODO limite d'âge dans paramètres
 
-def _br_rmi(af_base, cf, asf, paje_base, paje_clca, paje_colca, ape, apje, mv, asi, aah, caah, 
+def _br_rmi(af_base, cf, asf, paje_base, paje_clca, paje_colca, mv, asi, aah, caah, 
             ra_rsa, cho, rst, alr, rto, rev_cap_bar,
             rev_cap_lib, rev_cat_rfon, _P, 
             _option = {'ra_rsa': [CHEF, PART], 'cho': [CHEF, PART], 'rst': [CHEF, PART],
@@ -1040,11 +1042,11 @@ def _br_rmi(af_base, cf, asf, paje_base, paje_clca, paje_colca, ape, apje, mv, a
     #   professionnelle pendant une durée qui ne peut excéder trois mois à compter de l’arrêt de travail
     # Nota: ra_rsa revenus d'activité au sens du RSA
     
-    P = _P
-    if YEAR < 2004:
-        pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
-    else: 
-        pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
+    P = _P.minim
+#    if YEAR < 2004:
+#        pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
+#    else: 
+    pf_br_rmi =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
         
     br_rmi = (ra_rsa[CHEF] + ra_rsa[PART] + cho[CHEF] + cho[PART] + rst[CHEF] + rst[PART] +
               alr[CHEF] + alr[PART] + rto[CHEF] + rto[PART] + 
@@ -1161,7 +1163,7 @@ def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
     return ppe 
     
     
-def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'smic55': ENFS}):
+def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):
     '''
     Allocation de parent isolé
     '''
@@ -1228,7 +1230,7 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     
     condition = (dummy_ass+dummy_aer+dummy_api+dummy_rmi > 0)
     
-    if hasattr(P.fam.af,"age3"): nbPAC = _nb_enf(age, smic55, P.fam.af.age1,P.fam.af.age3)[11,:]
+    if hasattr(P.fam.af,"age3"): nbPAC = _nb_enf(age, smic55, P.fam.af.age1,P.fam.af.age3)
     else: nbPAC = af_nbenf
     # TODO check nombre de PAC pour une famille
     P = _P.minim
@@ -1286,23 +1288,26 @@ def _aspa_elig(age, inv, activite, _P):
     Eligibitié individuelle à l'ASPA
     'ind'
     '''
-    P = _P.mini.aspa
-    return ((age >= P.age_min) | ((age >=P.age_ina) &  (inv ==1))) & (activite ==3) 
+    P = _P.minim.aspa
+    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite ==3) 
+    print out
+    return out
 
 def _asi_elig(aspa_elig, inv, activite):
     '''
     Éligibilité individuelle à l'ASI
+    'ind'
     '''
-    return ((inv==1) & (activite==3)) & not_(aspa_elig)
+    return (inv & (activite==3)) & not_(aspa_elig)
 
-def _asi_aspa_nb_alloc(aspa_elig, asi_elig, _option = {'elig_apsa': [CHEF, PART], 'elig_asi': [CHEF, PART]}):
+def _asi_aspa_nb_alloc(aspa_elig, asi_elig, _option = {'aspa_elig': [CHEF, PART], 'asi_elig': [CHEF, PART]}):
     return (1*aspa_elig[CHEF] + 1*aspa_elig[PART] + 1*asi_elig[CHEF]  + 1*asi_elig[PART])
 
-def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = {'apsa_elig': [CHEF, PART]}):
+def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = {'aspa_elig': [CHEF, PART]}):
     '''
     Calcule l'ASPA lorsqu'il y a un ou deux bénéficiaire de l'ASPA et aucun bénéficiaire de l'ASI
     '''
-    P = _P 
+    P = _P.minim
     elig1 = ( (asi_aspa_nb_alloc==1) & ( aspa_elig[CHEF] | aspa_elig[PART]) )
     elig2 = (aspa_elig[CHEF] & aspa_elig[PART])*maries
     elig  = elig1 | elig2
@@ -1324,7 +1329,7 @@ def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = 
     '''
     Calcule l'ASI lorsqu'il y a un ou deux bénéficiaire de l'ASI et aucun bénéficiaire de l'ASPA
     '''
-    P = _P
+    P = _P.minim
     # 1 A Un ou deux bénéficiaire(s) de l'ASI et aucun bénéficiaire de l'ASPA  
     elig1 = ( (asi_aspa_nb_alloc==1) & ( asi_elig[CHEF] | asi_elig[PART]) )      # un seul éligible
     elig2 = (asi_elig[CHEF] & asi_elig[PART])*maries                    # couple d'éligible marié
@@ -1351,7 +1356,7 @@ def _asi_coexist_aspa(asi_aspa_elig, maries, marpac, br_mv, _P):
     '''
     Montant de l'ASI quand une personne perçoit l'ASI et l'autre l'ASPA
     '''
-    P = _P
+    P = _P.minim
     # Une personne peçoit l'ASI et l'autre l'ASPA
     # Les persones sont mariées 
     index       = asi_aspa_elig*maries
@@ -1373,7 +1378,7 @@ def _aspa_coexist_asi(asi_aspa_elig, maries, marpac, br_mv, _P):
     '''
     Montant de l'ASPA quand une personne perçoit l'ASPA et l'autre l'ASI
     '''
-    P = _P
+    P = _P.minim
     # Une personne peçoit l'ASI et l'autre l'ASPA
     # Les persones sont mariées 
     index       = asi_aspa_elig*maries

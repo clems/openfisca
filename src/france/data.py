@@ -269,3 +269,5 @@ class InputTable(DataTable):
     isol  = BoolCol(default=True)
     coloc = BoolCol()
     csg_taux_plein = IntCol(default = 1)
+    aer = IntCol()
+    ass = IntCol()

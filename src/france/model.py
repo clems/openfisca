@@ -171,7 +171,7 @@ class Model(SystemSf):
     paje_clca_taux_partiel = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel ")
     paje_colca     = Prestation(pf._paje_colca, 'fam', label = u"PAJE - Complément optionnel de libre choix d'activité")
     paje_clmg        = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde")
-    #paje            = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Ensemble des prestations")
+    paje            = Prestation(pf._paje, 'fam', label = u"PAJE - Ensemble des prestations")
     
     aeeh           = Prestation(pf._aeeh, 'fam', label = u"Allocation d'éducation de l'enfant handicapé")
     
@@ -187,6 +187,7 @@ class Model(SystemSf):
     alf    = Prestation(pf._alf, 'fam', label = u"Allocation logement familiale")
     als    = Prestation(pf._als, 'fam', label = u"Allocation logement sociale")
     alset  = Prestation(pf._alset, 'fam', label = u"Allocation logement sociale étudiante")
+    apl    = Prestation(pf._apl, 'fam', label = u"Aide personalisée au logement")
     
     # RSA/RMI
     rmi_nbp = Prestation(pf._rmi_nbp, 'fam', label = u"Nombre de personne à charge au sens du Rmi/Rsa")
@@ -199,18 +200,18 @@ class Model(SystemSf):
     rsa_act = Prestation(pf._rsa_act, 'fam')
     api  = Prestation(pf._api, 'fam')
     ppe_cumul_rsa_act  = Prestation(pf._ppe_cumul_rsa_act)
-    
+    aefa = Prestation(pf._aefa, 'fam')
     # ASPA/ASI
     br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
     
     asi_aspa_nb_alloc = Prestation(pf._asi_aspa_nb_alloc, 'fam')
-    asi_aspa_elig = Prestation(pf._asi_elig, 'fam')
-    asi_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")           
+    asi_aspa_elig = Prestation(pf._asi_aspa_elig, 'fam')
+    asi_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")
     asi_coexist_aspa = Prestation(pf._asi_coexist_aspa, 'fam', label = u"Allocation supplémentaire d'invalidité quand un adulte de la famille perçoit l'ASPA")
     asi_pure         = Prestation(pf._asi_pure, 'fam', label = u"Allocation supplémentaire d'invalidité quand aucun adulte de la famille ne perçoit l'ASPA") 
     asi     = Prestation(pf._asi, 'fam', label = u"Allocation supplémentaire d'invalidité")
     
-    aspa_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
+    aspa_elig = Prestation(pf._aspa_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
     aspa_coexist_asi  = Prestation(pf._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
     aspa_pure         = Prestation(pf._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
     mv     = Prestation(pf._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
