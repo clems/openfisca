@@ -1117,7 +1117,7 @@ def _forf_log(so, rmi_nbp, _P):
              (rmi_nbp>=3)*FL.taux3 )    
     return 12*loca*(tx_fl*P.rmi.rmi)
 
-def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P):
+def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P, _option = {'age' : [CHEF, PART]}):
     '''
     Rsa socle / Rmi 
     '''
