@@ -1290,7 +1290,6 @@ def _aspa_elig(age, inv, activite, _P):
     '''
     P = _P.minim.aspa
     out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite ==3) 
-    print out
     return out
 
 def _asi_elig(aspa_elig, inv, activite):
