@@ -81,7 +81,6 @@ def _isol(nb_par):
     '''
     return nb_par==1
 
-
 def _etu(activite):
     '''
     Indicatrice individuelle etudiant
@@ -105,7 +104,7 @@ def _nb_enf(ages, smic55, ag1, ag2):
     res = None
     for key, age in ages.iteritems():
         if res is None: res = zeros(len(age))  
-        res += ((ag1 <=age) & (age <=ag2))*smic55[key]
+        res += ((ag1 <=age) & (age <=ag2))*not_(smic55[key])
     return res
 
 def _age_aine(ages, ag1, ag2):
@@ -179,7 +178,7 @@ def _af_base(af_nbenf, _P):
 
     af_base = (af_nbenf>=1)*af_1enf + (af_nbenf>=2)*af_2enf  + max_(af_nbenf-2,0)*af_enf_supp
 
-    return af_base
+    return 12*af_base  # annualisé
     
 def _af_majo(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     # Date d'entrée en vigueur de la nouvelle majoration
@@ -199,7 +198,7 @@ def _af_majo(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
 
     af_majo = nbenf_maj1*af_maj1 + nbenf_maj2*af_maj2
 
-    return af_majo
+    return 12*af_majo # annualisé
 
 def _af_forf(age, af_nbenf, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     P = _P.fam
@@ -208,7 +207,7 @@ def _af_forf(age, af_nbenf, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS})
     if YEAR >= 2004:     nbenf_forf = _nb_enf(age, smic55, P.af.age3, P.af.age3)
     else: nbenf_forf = 0
     af_forfait   = round(bmaf*P.af.taux.forfait,2)
-    return ((af_nbenf>=2)*nbenf_forf)*af_forfait
+    return 12*((af_nbenf>=2)*nbenf_forf)*af_forfait # annualisé
 
 def _af(af_base, af_majo, af_forf):
     return af_base + af_majo + af_forf
@@ -239,9 +238,9 @@ def _cf(age, br_pf, isol, biact, smic55, _P, _option = {'age': ENFS, 'smic55': E
     cf_plaf    = P.cf.plaf*cf_plaf_tx + P.cf.plaf_maj*cf_majo
     cf_plaf2 = cf_plaf + 12*cf_base_n_2
     
-    cf_brut = (cf_nbenf>=3)*((br_pf <= cf_plaf)*cf_base + 
+    cf = (cf_nbenf>=3)*((br_pf <= cf_plaf)*cf_base + 
                              (br_pf > cf_plaf)*max_(cf_plaf2- br_pf,0)/12.0 )
-    return cf_brut
+    return 12*cf
 
 def _asf(age, rst, isol, asf_elig, smic55, _P, _option = {'rst': [CHEF, PART], 'age': ENFS, 'smic55': ENFS}):
     '''
@@ -335,7 +334,7 @@ def _paje_base(age, br_pf, isol, biact, smic55, _P, _option = {'age': ENFS, 'smi
                            (br_pf >= plaf)*max_(plaf2-br_pf,0)/12) 
     
     # non cumulabe avec la CF, voir Paje_CumulCf
-    return paje_base
+    return 12*paje_base # annualisé
 
 def _paje_nais(agem, age, af_nbenf, br_pf, isol, biact, _P, _option = {'age': ENFS, 'agem': ENFS}):
     '''
@@ -411,7 +410,7 @@ def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _opti
                             partiel1*P.paje.clca.avecab_tx_partiel1 +
                             partiel2*P.paje.clca.avecab_tx_partiel2))
 
-    return paje_clca
+    return 12*paje_clca  # annualisé
     
 def _paje_clca_taux_plein(paje_clca, inactif):
     return (paje_clca>0)*inactif
@@ -492,7 +491,7 @@ def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, as
 #        vous ne pouvez pas bénéficier du Cmg.         
     paje_clmg = elig*not_(paje_clca_taux_plein)*clmg
     # TODO vérfiez les règles de cumul        
-    return paje_clmg
+    return 12*paje_clmg  # annualisé
     
 def _paje_colca(af_nbenf, agem, opt_colca, paje_base, _P, _option = {'agem': ENFS}):    
     '''
@@ -505,7 +504,7 @@ def _paje_colca(af_nbenf, agem, opt_colca, paje_base, _P, _option = {'agem': ENF
     paje = (paje_base > 0)  
     paje_colca = opt_colca*condition*(nbenf>=3)*P.af.bmaf*(
         (paje)*P.paje.colca.avecab + not_(paje)*P.paje.colca.sansab )
-    return paje_colca
+    return 12*paje_colca  # annualisé
 
     #TODO: cumul avec clca self.colca_tot_m 
 
@@ -566,7 +565,7 @@ def _aeeh(age, inv, isol, categ_inv, _P, _option = {'categ_inv': ENFS, 'inv': EN
 # du complément d'AEEH et la PCH.   
             
     # Ces allocations ne sont pas soumis à la CRDS
-    return aeeh  
+    return 12*aeeh  # annualisé
 
 def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     ''' 
@@ -601,8 +600,8 @@ def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, '
     ape = elig*(inactif*P.ape.tx_inactif + partiel1*P.ape.tx_50 + partiel2*P.ape.tx_80)
 
     # Cummul APE APJE CF    
-    return ape
-    
+    return 12*ape  # annualisé
+     
 
 def _apje(br_pf, age, smic55, isol, biact, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
@@ -625,7 +624,7 @@ def _apje(br_pf, age, smic55, isol, biact, _P, _option = {'age': ENFS, 'smic55':
             + (br_pf > plaf)*max_(plaf2-br_pf,0)/12.0 )
     
     # Non cummul APE APJE CF  
-    return apje
+    return 12*apje  # annualisé
 
 
 def _cf_cumul_apje_ape(apje_temp, ape_temp, cf_temp):
@@ -676,7 +675,7 @@ def _aged(age, smic55, br_pf, ape_taux_partiel, dep_trim, _P, _option = {'age': 
     
     aged6  = elig2*max_(P.aged.remb_taux2*depenses - P.aged.remb_plaf2,0)
 
-    return aged3 + aged6 
+    return 12*(aged3 + aged6) # annualisé 
 
 
 def _afeama(age, smic55, ape, af_nbenf, br_pf, _P, _option = {'age': ENFS, 'smic55': ENFS}):
@@ -711,13 +710,8 @@ def _afeama(age, smic55, ape, af_nbenf, br_pf, _P, _option = {'age': ENFS, 'smic
             (br_pf < seuil1)*P.afeama.taux_mini +
             ( (br_pf >= seuil1) & (br_pf < seuil2) )*P.afeama.taux_median +
             (br_pf >= seuil2)*P.afeama.taux_maxi)
-    return afeama
+    return 12*afeama # annualisé
 
-# TODO remove me when done
-#def _al(self, P):
-#    self.AlNbp(P)
-#    self.AlBaseRessource(P)
-#    self.AlFormule(P)
 
 def _al_pac(age, smic55, nbR, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
@@ -1008,7 +1002,7 @@ def _mv(aspa_elig, nb_par, br_mv, _P,
     # TODO ASI avant fusion ASI ASPA
     # TODO voir comment fusionner avec nouvelle aspa ?
 
-    return mv
+    return 12*mv # annualisé
 
 def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
@@ -1125,7 +1119,7 @@ def _forf_log(so, rmi_nbp, _P):
 
 def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P):
     '''
-    Rsa socle / Rmi
+    Rsa socle / Rmi 
     '''
     P = _P.minim
     # RSA socle TODO mécanisme similaire à l'API: Pour les
@@ -1144,11 +1138,16 @@ def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P):
     return 12*P.rmi.rmi*tx_rmi*eligib
     
 def _rmi(rsa_socle, forf_log, br_rmi):     
-    # cacul du RMI/RSA 
+    ''' 
+    Cacule le montant du RMI 
+    ''' 
     rmi = max_(0, rsa_socle  - forf_log - br_rmi)
     return rmi
 
 def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P): 
+    ''' 
+    Cacule le montant du RSA 
+    '''
     P = _P.minim.rmi 
     RSA = max_(0,rsa_socle + P.pente*(ra_rsa[CHEF] + ra_rsa[PART]) - forf_log - br_rmi)
     rsa = (RSA>=P.rsa_nv)*RSA
@@ -1161,7 +1160,6 @@ def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
 #   On retranche le RSA activité de la PPE
     ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ])
     return ppe 
-    
     
 def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):
     '''
@@ -1194,7 +1192,7 @@ def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = 
     # TODO: mensualiser RMI, BRrmi et forfait logement
     api  = max_(0, api1 - forf_log/12 - br_api/12 - rsa/12) 
     # L'API est exonérée de CRDS
-    return api
+    return 12*api # annualisé
     # TODO API: temps partiel qui modifie la base ressource
     # Cumul
     # Cumul avec un revenu
@@ -1322,7 +1320,7 @@ def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option 
     # aspa[CHEF] = aspa_elig[CHEF]*montant_servi_aspa*(elig1 + elig2/2)
     # aspa[PART] = aspa_elig[PART]*montant_servi_aspa*(elig1 + elig2/2)
     
-    return  (aspa_elig[CHEF]+aspa_elig[PART])*montant_servi_aspa*(elig1 + elig2/2)
+    return 12*(aspa_elig[CHEF]+aspa_elig[PART])*montant_servi_aspa*(elig1 + elig2/2) # annualisé
 
 def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = {'asi_elig': [CHEF, PART]}): 
     '''
@@ -1343,7 +1341,7 @@ def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = 
     # Faute de mieux, on verse l'asi à la famille plutôt qu'aux individus
     # asi[CHEF] = asi_elig[CHEF]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     # asi[PART] = asi_elig[PART]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
-    return (asi_elig[CHEF]++ asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
+    return 12*(asi_elig[CHEF]++ asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2) # annualisé
 
 def _asi_aspa_elig(aspa_elig, asi_elig, _option = {'asi_elig': [CHEF, PART], 'aspa_elig': [CHEF, PART]}):
     '''
@@ -1371,7 +1369,7 @@ def _asi_coexist_aspa(asi_aspa_elig, maries, marpac, br_mv, _P):
     plafond_ressources = where( index, P.aspa.plaf_couple, 0)  
     depassement        = ressources - plafond_ressources
     montant_servi_asi_c   = where(index, max_(P.asi.montant_seul - 0.5*depassement, 0),0)/12
-    return montant_servi_asi_m + montant_servi_asi_c 
+    return 12*(montant_servi_asi_m + montant_servi_asi_c)   # annualisé 
     
 def _aspa_coexist_asi(asi_aspa_elig, maries, marpac, br_mv, _P):
     '''
@@ -1393,7 +1391,7 @@ def _aspa_coexist_asi(asi_aspa_elig, maries, marpac, br_mv, _P):
     plafond_ressources = where( index, P.aspa.plaf_couple, 0)  
     depassement        = ressources - plafond_ressources
     montant_servi_aspa_c  = where(index, max_(.5*P.aspa.montant_couple - 0.5*depassement, 0),0)/12
-    return montant_servi_aspa_m + montant_servi_aspa_c 
+    return 12*(montant_servi_aspa_m + montant_servi_aspa_c) # annualisé 
     
 def _aspa(aspa_pure, aspa_coexist_asi):
     return aspa_pure + aspa_coexist_asi
@@ -1481,7 +1479,7 @@ def _aah(rev_pf, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHEF
 # L'AAH n'est pas cumulable avec la perception d'un avantage de vieillesse, 
 # d'invalidité, ou d'accident du travail si cet avantage est d'un montant au 
 # moins égal à ladite allocation.
-    return aah
+    return 12*aah # annualisé
 
 
 def _caah(aah, _P):
@@ -1541,7 +1539,7 @@ def _caah(aah, _P):
     else: mva = 0      
     caah = max_(compl,mva)
           
-    return caah
+    return 12*caah   # annualisé
     
 def _ass(br_pf, concub, _P):
     '''
@@ -1571,8 +1569,8 @@ def _ass(br_pf, concub, _P):
     montant_mensuel = 30*(P.chomage.ass.montant_plein*not_(majo) 
                           + majo*P.chomage.ass.montant_maj)
     revenus = br_pf + 12*montant_mensuel  # TODO check base ressources
-    ass = 12*(montant_mensuel*(revenus<=plaf) 
+    ass = (montant_mensuel*(revenus<=plaf) 
               + (revenus>plaf)*max_(plaf+montant_mensuel-revenus,0))
     
-    return ass
+    return 12*ass  # annualisé
     
