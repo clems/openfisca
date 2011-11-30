@@ -67,7 +67,7 @@ class InputTable(DataTable):
     age = AgesCol()
     agem = AgesCol()
     zone_apl = IntCol()
-    loyer = IntCol()
+    loyer = IntCol(default = 500)
     so = IntCol(default = 3)
     activite = IntCol()
     statmarit = IntCol(default = 2)

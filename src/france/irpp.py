@@ -407,7 +407,7 @@ def _irpp(iai, credits_impot, tehr, ppe):
     '''
     Montant avant seuil de recouvrement (hors ppe)
     '''
-    return  iai - credits_impot + ppe + tehr
+    return  -(iai - credits_impot + ppe + tehr)
 
 
 ###############################################################################
