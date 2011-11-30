@@ -33,12 +33,8 @@ CONJ = QUIFOY['conj']
 PAC1 = QUIFOY['pac1']
 PAC2 = QUIFOY['pac2']
 PAC3 = QUIFOY['pac3']
-ALL = []
-for qui in QUIFOY:
-    ALL.append(qui[1])
+ALL = [x[1] for x in QUIFOY]
         
-
-# zglof = Glo(table)
 # zetrf = zeros(taille)
 # jveuf = zeros(taille, dtype = bool)
 # jourXYZ = 360*ones(taille)
@@ -107,7 +103,7 @@ def _jveuf(statmarit):
 
 def _alloc(af, _P):
     '''
-    ALLOCATION FAMILLIALE IMPOSABLE
+    Allocations familiales imposables
     '''
     P = _P.ir.autre
     return af*P.alloc_imp
@@ -115,12 +111,14 @@ def _alloc(af, _P):
 def _rev_sal(sal):
     '''
     Revenu imposé comme des salaires (salaires, mais aussi 3vj, 3vk)
+    'ind'
     '''
     return sal
 
 def _sal_net(rev_sal, choCheckBox, fra, _P):
     '''
     Salaires après abattements
+    'ind'
     '''
     P = _P.ir.tspr.abatpro
     amin = P.min*not_(choCheckBox) + P.min2*choCheckBox
@@ -139,41 +137,46 @@ def _pen_net(rev_pen, _P):
     Pensions après abattements
     '''
     P = _P.ir.tspr.abatpen
-#    #problème car les pensions sont majorées au niveau du foyer
+#    problème car les pensions sont majorées au niveau du foyer
 #    d11 = ( AS + BS + CS + DS + ES + 
 #            AO + BO + CO + DO + EO ) 
 #    penv2 = (d11-f11> P.abatpen.max)*(penv + (d11-f11-P.abatpen.max)) + (d11-f11<= P.abatpen.max)*penv   
-#    # Plus d'abatement de 20% en 2006
+#    Plus d'abatement de 20% en 2006
 
     return max_(0, rev_pen - round(max_(P.taux*rev_pen , P.min)))
 
+def _rto(f1aw, f1bw, f1cw, f1dw):
+    '''
+    Rentes viagères à titre onéreux (avant abattements)
+    '''
+    return f1aw + f1bw + f1cw + f1dw
+
 def _rto_net(f1aw, f1bw, f1cw, f1dw, _P):
     '''
-    Rentes viagères après abatements
+    Rentes viagères après abattements
     '''
     P = _P.ir.tspr.abatviag
-    return round(P.taux1*f1aw + 
-                 P.taux2*f1bw + 
-                 P.taux3*f1cw + 
-                 P.taux4*f1dw )
+    return round(P.taux1*f1aw + P.taux2*f1bw + P.taux3*f1cw + P.taux4*f1dw )
 
-def _tspr(sal_net, pen_net):
+def _tspr(sal_net, pen_net, rto_net):
     '''
     Traitemens salaires pensions et rentes individuelles
     '''
-    return sal_net + pen_net
+    return sal_net + pen_net + rto_net
 
-def _rev_cat_tspr(tspr, rto_net, _option = {'tspr': ALL}):
+def _rev_cat_tspr(tspr, _option = {'tspr': ALL}):
     '''
-    TRAITEMENTS SALAIRES PENSIONS ET RENTES
+    Traitemens salaires pensions et rentes
+    'foy'
     '''
     out = 0
     for qui in tspr.itervalues():
         out += qui
-
-    out += rto_net
     
     return out
+
+def _deficit_rcm(f2aa, f2al, f2am, f2an):
+    return f2aa + f2al + f2am + f2an
 
 def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, _P):
     '''
@@ -244,6 +247,12 @@ def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
 ## Déroulé du calcul de l'irpp
 ###############################################################################
 
+def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
+    '''
+    Déficits antérieurs
+    '''
+    return f6fa + f6fb + f6fc + f6fd + f6fe + f6fl
+
 def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
     '''
     Revenu brut global (Total 17)
@@ -290,13 +299,13 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celd
     aa1 = min_((nbptr-1)*2,2)/2  # deux première demi part excédants une part
     aa2 = max_((nbptr-2)*2,0)    # nombre de demi part restantes
     # celdiv parents isolés
-    condition61 = (celdiv==1) & caseT
+    condition61 = celdiv & caseT
     B1 = P.plafond_qf.celib_enf*aa1 + P.plafond_qf.marpac*aa2
     # tous les autres
     B2 = P.plafond_qf.marpac*aa0                 #si autre
     # celdiv, veufs (non jveuf) vivants seuls et autres conditions TODO année codéee en dur
     # TODO: année en dur... pour caseH
-    condition63 = ((celdiv==1) | ((veuf==1) & not_(jveuf))) & not_(caseN) & (nb_pac==0) & (caseK | caseE) & (caseH<1981)
+    condition63 = (celdiv | (veuf & not_(jveuf))) & not_(caseN) & (nb_pac==0) & (caseK | caseE) & (caseH<1981)
     B3 = P.plafond_qf.celib
 
     B = B1*condition61 + \
@@ -327,9 +336,8 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celd
 
     E = max_(0,A-I-B)
     Fo = D*(D<=E) + E*(E<D)
-    out = IP0-Fo
+    IP1 = IP0-Fo
 
-    return out
     # TODO :6.3 Cas particulier: Contribuables domiciliés dans les DOM.    
     # conditionGuadMarReu =
     # conditionGuyane=
@@ -337,10 +345,9 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celd
     # postplafGuadMarReu = 5100
     # postplafGuyane = 6700
     # IP2 = IP1 - conditionGuadMarReu*min( postplafGuadMarReu,.3*IP1)  - conditionGuyane*min(postplafGuyane,.4*IP1)
-#
-#
-#    # Récapitulatif
-#    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
+
+    # Récapitulatif
+    return condition62a*IP0 + condition62b*IP1 # IP2 si DOM
 
 def _decote(ir_plaf_qf, _P):
     '''
@@ -367,7 +374,7 @@ def _iaidrdi(ip_net, reductions):
     '''
     impot après imputation des réductions d'impôt
     '''
-    return   ip_net - reductions
+    return ip_net - reductions
 
 def _cont_rev_loc(f4bl):
     '''
@@ -390,6 +397,23 @@ def _teicaa(f5qm, f5rm):
     
     return H90_a2 + H90_a3 + H90_b2 + H90_b3
 
+def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
+    P = _P.ir.plus_values
+        # revenus taxés à un taux proportionnel
+    rdp = max_(0,f3vg - f3vh) + f3vl + rpns_pvce + f3vm + f3vi + f3vf
+    out = (P.pvce*rpns_pvce +
+           P.taux1*max_(0,f3vg - f3vh) +
+           P.caprisque*f3vl +
+           P.pea*f3vm +
+           P.taux3*f3vi +
+           P.taux4*f3vf )
+    if YEAR >= 2008:
+        # revenus taxés à un taux proportionnel
+        rdp += f3vd
+        out += P.taux1*f3vd
+        
+    return round(out)
+
 def _iai(iaidrdi, plus_values, cont_rev_loc, teicaa):
     '''
     impôt avant imputation
@@ -410,14 +434,15 @@ def _irpp(iai, credits_impot, tehr, ppe):
     '''
     return  -(iai - credits_impot + ppe + tehr)
 
-
 ###############################################################################
 ## Autres totaux utiles pour la suite
 ###############################################################################
-def _alr():
+
+def _alv(sal):
     '''
-    Pensions alimentaires reçues
+    Pensions alimentaires versées
     '''
+    return 0*sal
 
 def _rfr(rni, alloc, f3va, f3vg, f3vi, rfr_cd, rfr_rvcm, rpns_exon, rpns_pvce, rev_cap_lib):
     '''
@@ -432,15 +457,6 @@ def _glo(f1tv, f1tw, f1tx, f1uv, f1uw, f1ux, f3vf, f3vi, f3vj, f3vk):
     '''
     return f1tv + f1tw + f1tx + f1uv + f1uw + f1ux + f3vf + f3vi + f3vj + f3vk                   
 
-def _rto(f1aw, f1bw, f1cw, f1dw):
-    '''
-    Rentes viagères à titre onéreux
-    '''
-    return f1aw + f1bw + f1cw + f1dw
-
-def _deficit_rcm(f2aa, f2al, f2am, f2an):
-    return f2aa + f2al + f2am + f2an
-    
 def _rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
     '''
     revenus du capital imposés au barème
@@ -472,18 +488,12 @@ def _imp_lib(f2da, f2dh, f2ee, _P):
         out = - (P.action*f2da + P.assvie*f2dh + P.autre*f2ee )
     return out
 
-def _rfon_rmi(f4ba, f4be):
-    '''
-    Revenus fonciers pour la base ressource du rmi/rsa
-    '''
-    return f4ba + f4be
-
-
 def _fon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     ## Calcul des totaux        
     P = _P.ir.microfoncier
     fon = f4ba - f4bb - f4bc + round(f4be*(1-P.taux))  
     return fon
+
 
 def _rpns_pvce(frag_pvce, arag_pvce, nrag_pvce, mbic_pvce, abic_pvce, 
                nbic_pvce, macc_pvce, aacc_pvce, nacc_pvce, mbnc_pvce, 
@@ -876,56 +886,24 @@ def _rpns_mvlt(mbic_mvlt, macc_mvlt, mbnc_mvlt, mncn_mvlt):
 #    
 #    return RPNS
 
-def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
-    '''
-    Déficits antérieurs
-    '''
-    return f6fa + f6fb + f6fc + f6fd + f6fe + f6fl
-
-
-#def Charges_deductibles(self, P):
-#    '''
-#    Charges déductibles
-#    '''
-#    table = population
-#
-#    table.openReadMode()
-#    niches1, niches2, ind_rfr = charges_deductibles.niches(YEAR)
-#    charges_deductibles.charges_calc(self, P, table, niches1, niches2, ind_rfr)
-#
-#    ## stockage des pensions dans les individus
-#    zalvf = charges_deductibles.penali(self, P, table)
-#    table.close_()
-#
-#    table.openWriteMode()
-#    table.setColl('alv', -zalvf, table = 'output')
-#    table.close_()
-
 def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
     '''
     Abattements spéciaux 
-    - pour personnes âges ou invalides : Si vous êtes âgé(e) de plus de 65 ans
+    - pour personnes âges ou invalides : âgé(e) de plus de 65 ans
       ou invalide (titulaire d’une pension d’invalidité militaire ou d’accident 
-      du travail d’au moins 40 % ou titulaire de la carte d’invalidité), vous 
-      bénéficiez d’un abattement de 2 172 € si le revenu net global de votre 
-      foyer fiscal n’excède pas 13 370 € ; il est de 1 086 € si ce revenu est 
-      compris entre 13 370 € et 21 570 €. Cet abattement est doublé si votre 
-      conjoint ou votre partenaire de PACS remplit également ces conditions 
-      d’âge ou d’invalidité. Cet abattement sera déduit automatiquement lors 
-      du calcul de l’impôt.
-    - pour enfants à charge ayant fondé un foyer distinct : Si vous avez accepté
-      le rattachement de vos enfants mariés ou pacsés ou de vos enfants 
-      célibataires, veufs, divorcés, séparés, chargés de famille, vous bénéficiez 
-      d’un abattement sur le revenu imposable de 5 495 € par personne ainsi 
-      rattachée. Si l’enfant de la personne rattachée est réputé à charge de 
+      du travail d’au moins 40 % ou titulaire de la carte d’invalidité), 
+      abattement de 2 172 € si rng du foyer fiscal inférieur à 13 370 € 
+                    1 086 € si rng  compris entre 13 370 € et 21 570 €. 
+      Abattement doublé si conjoint remplit également ces conditions 
+      d’âge ou d’invalidité. 
+    - pour enfants à charge ayant fondé un foyer distinct : Si  rattachement 
+      enfants mariés ou pacsés ou enfants  célibataires, veufs, divorcés, séparés, chargés de famille, 
+      abattement 5 495 € par personne ainsi rattachée. 
+      Si l’enfant de la personne rattachée est réputé à charge de 
       l’un et l’autre de ses parents (garde alternée), cet abattement est divisé 
       par deux soit 2 748€. Exemple : 10 990 € pour un jeune ménage et 8 243 €
       pour un célibataire avec un jeune enfant en résidence alternée.
     '''
-
-
-
-    
     ageV, ageC = age[VOUS], age[CONJ]
     invV, invC = caseP, caseF
     P = _P.ir.abattements_speciaux
@@ -937,9 +915,14 @@ def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
 
     return min_(rng, as_inv + as_enf)
 
+###############################################################################
+## Calcul du nombre de parts
+###############################################################################
+
 def _nbptr(nb_pac, marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, caseP, caseW, caseG, caseE, caseK, caseN, caseF, caseS, caseL, caseT, _P):
     '''
-    nombre de parts du foyer
+    Nombre de parts du foyer
+    
     note 1 enfants et résidence alternée (formulaire 2041 GV page 10)
     
     P.enf1 : nb part 2 premiers enfants
@@ -1009,75 +992,6 @@ def _nbptr(nb_pac, marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, ca
     c = 1 + enf + n2 + n3 + n6 + n7
     return (marpac | jveuf)*m + (veuf & not_(jveuf))*v + celdiv*c
     
-
-#def Reductions(self, IPnet, P, table):
-#    ''' 
-#    Réductions d'impôts
-#    '''
-#    table.openReadMode()
-#    niches = reductions_impots.niches(YEAR)
-#    reducs = zeros(taille)
-#    for niche in niches:
-#        reducs += niche(self, P, table)
-#         
-#    table.close_()
-#    return min_(reducs, IPnet)
-
-def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
-    P = _P.ir.plus_values
-        # revenus taxés à un taux proportionnel
-    rdp = max_(0,f3vg - f3vh) + f3vl + rpns_pvce + f3vm + f3vi + f3vf
-    out = (P.pvce*rpns_pvce +
-           P.taux1*max_(0,f3vg - f3vh) +
-           P.caprisque*f3vl +
-           P.pea*f3vm +
-           P.taux3*f3vi +
-           P.taux4*f3vf )
-    if YEAR >= 2008:
-        # revenus taxés à un taux proportionnel
-        rdp += f3vd
-        out += P.taux1*f3vd
-        
-    return round(out)
-
-def _div(rpns_pvce, rpns_pvct, rpns_mvct, rpns_mvlt, f3vc, f3ve, f3vg, f3vh, f3vl, f3vm):
-    return f3vc + f3ve + f3vg - f3vh + f3vl+ f3vm + rpns_pvce + rpns_pvct - rpns_mvct - rpns_mvlt
-    
-
-def _div_rmi(f3vc, f3ve, f3vg, f3vl, f3vm):
-    return f3vc + f3ve + f3vg + f3vl+ f3vm
-    
-def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, glo, fon, f7ga, f7gb, f7gc):
-    '''
-    revenus collectif
-    'foy'
-    '''
-    # TODO: ajouter les revenus de l'étranger etr*0.9
-    # TODO: ajouter les pensions alimentaires versées
-    alv = 0
-    return rto_net + rev_cap_lib + rev_cap_bar  + fon + glo - alv - f7ga - f7gb - f7gc - abat_spe
-    
-    # pour le calcul de l'allocation de soutien familial     
-def _asf_elig(caseT, caseL):
-    return caseT | caseL
-
-def _alv(sal):
-    return 0*sal
-#def Credits(self, P, table):
-#    '''
-#    Imputations (crédits d'impôts)
-#    '''
-#    table.openReadMode()
-#    niches = credits_impots.niches(YEAR)
-#    reducs = zeros(taille)
-#    for niche in niches:
-#        reducs += niche(self, P, table)
-#    table.close_()
-#
-#    ppe = Ppe(P.ppe)
-#
-#    return reducs + ppe
-
 ###############################################################################
 ## Calcul de la prime pour l'emploi
 ###############################################################################
@@ -1201,3 +1115,54 @@ def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac,
     ppe_tot = (ppe_tot!=0)*max_(P.versmin,ppe_vous + ppe_conj + ppe_pac1 + ppe_pac2 + ppe_pac3 + maj_pac)
             
     return ppe_tot
+
+
+
+
+#def Charges_deductibles(self, P):
+#    '''
+#    Charges déductibles
+#    '''
+#    table = population
+#
+#    table.openReadMode()
+#    niches1, niches2, ind_rfr = charges_deductibles.niches(YEAR)
+#    charges_deductibles.charges_calc(self, P, table, niches1, niches2, ind_rfr)
+#
+#    ## stockage des pensions dans les individus
+#    zalvf = charges_deductibles.penali(self, P, table)
+#    table.close_()
+#
+#    table.openWriteMode()
+#    table.setColl('alv', -zalvf, table = 'output')
+#    table.close_()
+
+#def Reductions(self, IPnet, P, table):
+#    ''' 
+#    Réductions d'impôts
+#    '''
+#    table.openReadMode()
+#    niches = reductions_impots.niches(YEAR)
+#    reducs = zeros(taille)
+#    for niche in niches:
+#        reducs += niche(self, P, table)
+#         
+#    table.close_()
+#    return min_(reducs, IPnet)
+
+
+#def Credits(self, P, table):
+#    '''
+#    Imputations (crédits d'impôts)
+#    '''
+#    table.openReadMode()
+#    niches = credits_impots.niches(YEAR)
+#    reducs = zeros(taille)
+#    for niche in niches:
+#        reducs += niche(self, P, table)
+#    table.close_()
+#
+#    ppe = Ppe(P.ppe)
+#
+#    return reducs + ppe
+
