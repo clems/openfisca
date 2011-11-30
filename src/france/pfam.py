@@ -762,9 +762,9 @@ def _br_al(etu, rev_pf, rev_coll, biact, _P ,_option = {'etu': [CHEF, PART], 're
     P = _P
     Pr = P.al.ressources
     
-    etuC = (etu[CHEF]>=1)&(etu[PART]==0)
-    etuP = (etu[CHEF]==0)&(etu[PART]>=1)
-    etuCP= (etu[CHEF]>=1)&(etu[PART]>=1)
+    etuC = (etu[CHEF])&(etu[PART]==0)
+    etuP = (etu[CHEF]==0)&(etu[PART])
+    etuCP= (etu[CHEF])&(etu[PART])
     # self.etu = (self.etu[CHEF]>=1)|(self.etuP>=1)
     
     revCatVous = max_(rev_pf[CHEF],etuC*(Pr.dar_4-(etu[CHEF]==2)*Pr.dar_5))
@@ -908,7 +908,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     # les allocations logmeent sont sumis à la crds
     # al = (al_loc + al_acc)*(1-P.fam.af.crds)
 
-    return al 
+    return al
 
 def _alf(al, al_pac, zone_apl, _P):
     '''
@@ -921,7 +921,7 @@ def _als(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale
     '''    
-    als   = (al_pac==0)*not_(or_(etu[CHEF],etu[PART]))*al # Allocation logement sociale
+    als   = (al_pac==0)*not_(etu[CHEF]|etu[PART])*al # Allocation logement sociale
     return als
      
      
@@ -1144,7 +1144,7 @@ def _rmi(rsa_socle, forf_log, br_rmi):
     rmi = max_(0, rsa_socle  - forf_log - br_rmi)
     return rmi
 
-def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P): 
+def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa':[CHEF, PART]}): 
     ''' 
     Cacule le montant du RSA 
     '''
