@@ -662,7 +662,6 @@ def _caah(aah, al, _P):
         mva = P.caah.mva*elig_mva
     else: mva = 0      
     caah = max_(compl,mva)
-    print caah      
     return 12*caah   # annualisé
     
 def _ass(br_pf, concub, _P):

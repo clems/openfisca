@@ -37,7 +37,6 @@ ALL = [x[1] for x in QUIFOY]
         
 # zetrf = zeros(taille)
 # jveuf = zeros(taille, dtype = bool)
-# jourXYZ = 360*ones(taille)
 # Reprise du crédit d'impôt en faveur des jeunes, des accomptes et des versements mensues de prime pour l'emploi
 # reprise = zeros(taille) # TODO : reprise=J80
 # Pcredit = P.credits_impots
@@ -212,10 +211,16 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr,
 
     DEF = deficit_rcm
 
-    ## TODO: pour le calcul du revenu fiscal de référence
-    rfr_rvcm = max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
-
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
+
+def _rfr_rvcm(f2dc, f2fu, _P):
+    '''
+    Réintégration des abattements pour le revenu fiscal de référence
+    '''
+    P = _P.ir.rvcm
+    ## TODO: manque le sous total i121 (dans la fonction _rev_cat_rvcm)
+    i121 = 0
+    return max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
 
 def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     '''
@@ -427,7 +432,14 @@ def _tehr(rfr, nb_adult, _P):
     '''
     P = _P.ir.tehr
     return BarmMar(rfr/nb_adult, P)*nb_adult
-    
+
+def _credits_impot(ppe):
+    '''
+    Crédits d'impôts
+    '''
+    # TODO: ajouter les autres crédits d'impôts
+    return ppe
+
 def _irpp(iai, credits_impot, tehr, ppe):
     '''
     Montant avant seuil de recouvrement (hors ppe)
@@ -1000,7 +1012,7 @@ def _ppe_coef(jour_xyz):
     '''
     ppe: coefficient de conversion en cas de changement en cours d'année
     'foy'
-    '''    
+    '''
     nbJour = (jour_xyz==0) + jour_xyz
     return 360/nbJour
 
@@ -1022,7 +1034,7 @@ def _ppe_rev(sal, hsup, rpns, _P):
     '''
     P = _P.ir.credits_impot.ppe
     # Revenu d'activité salarié
-    rev_sa = sal + hsup #+ TV + TW + TX + AQ + LZ + VJ
+    rev_sa = sal + hsup # TODO: + TV + TW + TX + AQ + LZ + VJ
     # Revenu d'activité non salarié
     rev_ns = min_(0,rpns)/P.abatns + max_(0,rpns)*P.abatns
     return rev_sa + rev_ns
@@ -1053,6 +1065,7 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
 def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''
     Prime pour l'emploi
+    'foy'
     '''
     P = _P.ir.credits_impot.ppe
 
@@ -1112,8 +1125,8 @@ def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac,
     
     ppe_tot = ppe_vous + ppe_conj + ppe_pac1 + ppe_pac2 + ppe_pac3 +  maj_pac
     
-    ppe_tot = (ppe_tot!=0)*max_(P.versmin,ppe_vous + ppe_conj + ppe_pac1 + ppe_pac2 + ppe_pac3 + maj_pac)
-            
+    ppe_tot = (ppe_tot!=0)*max_(P.versmin, ppe_tot)
+    
     return ppe_tot
 
 
