@@ -115,13 +115,13 @@ def _rev_sal(sal):
     '''
     return sal
 
-def _sal_net(rev_sal, choCheckBox, fra, _P):
+def _sal_net(rev_sal, cho_ld, fra, _P):
     '''
     Salaires après abattements
     'ind'
     '''
     P = _P.ir.tspr.abatpro
-    amin = P.min*not_(choCheckBox) + P.min2*choCheckBox
+    amin = P.min*not_(cho_ld) + P.min2*cho_ld
     abatfor = round(min_(max_(P.taux*rev_sal, amin),P.max))
     return (fra > abatfor)*(rev_sal - fra) \
          + (fra <= abatfor)*max_(0,rev_sal - abatfor)
@@ -1027,7 +1027,7 @@ def _ppe_rev(sal, hsup, rpns, _P):
     rev_ns = min_(0,rpns)/P.abatns + max_(0,rpns)*P.abatns
     return rev_sa + rev_ns
 
-def _ppe_coef_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
+def _ppe_coef_tp(ppeHeure, ppeJours, ppe_tp_sa, ppe_tp_ns, _P):
     '''
     PPE: coefficient de conversion temps partiel
     'ind'
@@ -1035,8 +1035,8 @@ def _ppe_coef_tp(ppeHeure, ppeJours, ppeCheckBox, ppe_tp_ns, _P):
     P = _P.ir.credits_impot.ppe
     frac_sa = ppeHeure/P.TP_nbh
     frac_ns = ppeJours/P.TP_nbj
-    # TODO: changer ppeCheckBox en ppe_tp_sa
-    tp = (ppeCheckBox == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
+    # TODO: changer ppe_tp_sa en ppe_tp_sa
+    tp = (ppe_tp_sa == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
     return tp + not_(tp)*(frac_sa + frac_ns) 
     
 def _ppe_base(ppe_rev, ppe_coef_tp, ppe_coef):

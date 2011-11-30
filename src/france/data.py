@@ -58,8 +58,8 @@ class InputTable(DataTable):
     hsup = IntCol()
     inv = BoolCol()
     alt = BoolCol()
-    choCheckBox = BoolCol()
-    ppeCheckBox = BoolCol()
+    cho_ld = BoolCol()
+    ppe_tp_sa = BoolCol()
     ppe_tp_ns = BoolCol()
     ppeHeure = IntCol()
     ppeJours = IntCol()
@@ -165,10 +165,40 @@ class InputTable(DataTable):
     f6gh = IntCol()
     f6de = IntCol()
 
+
+    
+    f2cg = IntCol()
+    
+    # Intérêt des emprunts contractés pour l'acquisition ou la construction de l'habitation principale
+    f7vy = IntCol()
+    f7vz = IntCol()
+    f7vx = IntCol()
+    f7vw = IntCol()
+
+    # Frais de garde des enfants de moins de 6 ans
     f7ga = IntCol()
     f7gb = IntCol()
     f7gc = IntCol()
+    f7ge = IntCol()
+    f7gf = IntCol()
+    f7gg = IntCol()
 
+    # Enfants à charge poursuivant leurs études
+    f7ea = IntCol()
+    f7eb = IntCol()
+    f7ec = IntCol()
+    f7ed = IntCol()
+    f7ef = IntCol()
+    f7eg = IntCol()
+
+    # Intérêts des prêts étudiants
+    f7td = IntCol()
+    f7vo = IntCol()
+    f7uk = IntCol()
+    
+    # Primes de survies, contrat d'épargne handicap
+    f7gz = IntCol()
+    
     # Revenus des professions non salariées
     frag_exon = IntCol() # (f5hn, f5in, f5jn)
     frag_impo = IntCol() # (f5ho, f5io, f5jo)    

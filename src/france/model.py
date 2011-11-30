@@ -34,6 +34,8 @@ class Model(SystemSf):
     ############################################################
     # Cotisations sociales
     ############################################################
+    
+    # Salaires
     salbrut = Prestation(cs._salbrut)
     sal_h_b = Prestation(cs._sal_h_b)
     cotpat  = Prestation(cs._cotpat)
@@ -45,22 +47,26 @@ class Model(SystemSf):
     sal = Prestation(cs._sal)    
     salsuperbrut = Prestation(cs._salsuperbrut)
     
+    # Chômage
     chobrut = Prestation(cs._chobrut)
     csgchod = Prestation(cs._csgchod)
     csgchoi = Prestation(cs._csgchoi)
     crdscho = Prestation(cs._crdscho)
     cho = Prestation(cs._cho)
 
+    # Pension
     rstbrut = Prestation(cs._rstbrut)
     csgrstd = Prestation(cs._csgrstd)
     csgrsti = Prestation(cs._csgrsti)
     crdsrst = Prestation(cs._crdsrst)
     rst = Prestation(cs._rst)
     
+    # Revenu du capital soumis au prélèvement libératoire
     csg_cap_lib = Prestation(cs._csg_cap_lib)
     crds_cap_lib = Prestation(cs._crds_cap_lib)
     prelsoc_cap_lib = Prestation(cs._prelsoc_cap_lib)
 
+    # Revenu du capital soumis au barème
     csg_cap_bar = Prestation(cs._csg_cap_bar)
     crds_cap_bar = Prestation(cs._crds_cap_bar)
     prelsoc_cap_bar = Prestation(cs._prelsoc_cap_bar)
