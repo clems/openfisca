@@ -108,12 +108,12 @@ def _alloc(af, _P):
     P = _P.ir.autre
     return af*P.alloc_imp
 
-def _rev_sal(sal):
+def _rev_sal(sal, cho):
     '''
     Revenu imposé comme des salaires (salaires, mais aussi 3vj, 3vk)
     'ind'
     '''
-    return sal
+    return sal + cho
 
 def _sal_net(rev_sal, cho_ld, fra, _P):
     '''
