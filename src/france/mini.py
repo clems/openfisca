@@ -525,10 +525,8 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     aefa = max_(aefa_maj,aefa)   
     return aefa 
 
-
-
 def _br_aah(br_pf, asi, mv, _P): 
-    br_aah = br_pf/12 + asi + mv
+    br_aah = br_pf + asi + mv
     return br_aah
 
 def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART]}):
@@ -575,7 +573,7 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
     
 #        TODO avoir le % d'incapacité ?        
     P = _P
-    
+    #TODO: on caompare brut et net à modifier
     nbh_travaillees = 151.67*12
     smic_annuel = P.cotsoc.gen.smic_h_b*nbh_travaillees
 
@@ -589,9 +587,8 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
 
     plaf = 12*P.minim.aah.montant*(1 + concub + P.minim.aah.tx_plaf_supp*af_nbenf)
 
-
     eligib = ( eligC | eligP )*(br_aah <= plaf)
-    aah = eligib*max_(P.minim.aah.montant - br_aah, 0 ) 
+    aah = eligib*max_(P.minim.aah.montant - br_aah/12, 0 ) 
     
     # l'aah est exonérée de crds 
 
@@ -610,7 +607,7 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
     return 12*aah # annualisé
 
 
-def _caah(aah, _P):
+def _caah(aah, al, _P):
     '''
     Complément d'allocation adulte handicapé
     '''
@@ -639,11 +636,10 @@ def _caah(aah, _P):
 #       ressources pour les personnes handicapées (GRPH) et l’AAH
 
     P = _P.minim 
-    elig_cpl = 0    # TODO: éligibilité
+    elig_cpl = aah>0    # TODO: éligibilité logement indépendant
     
-    if YEAR >= 2006: compl = elig_cpl*max_(P.caah.grph-aah,0)  
-    else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*aah
-#        else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*self.aah_m 
+    if YEAR >= 2006: compl = elig_cpl*max_(P.caah.grph-aah/12,0)  
+    else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*aah/12
         # En fait perdure jusqu'en 2008 
  
     # Majoration pour la vie autonome
@@ -662,11 +658,11 @@ def _caah(aah, _P):
 #La personne qui remplit les conditions d'octroi de ces deux avantages doit choisir de bénéficier de l'un ou de l'autre.
 
     if YEAR >= 2006:        
-        elig_mva = 0*(aah>0)   # TODO: éligibilité
+        elig_mva = (al>0)*(aah>0)   # TODO: éligibilité
         mva = P.caah.mva*elig_mva
     else: mva = 0      
     caah = max_(compl,mva)
-          
+    print caah      
     return 12*caah   # annualisé
     
 def _ass(br_pf, concub, _P):
