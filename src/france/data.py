@@ -266,7 +266,6 @@ class InputTable(DataTable):
     credits_impot = IntCol()
     rfr_cd = IntCol()
     rfr_rvcm = IntCol()
-    isol  = BoolCol(default=True)
     coloc = BoolCol()
     csg_taux_plein = IntCol(default = 1)
     aer = IntCol()

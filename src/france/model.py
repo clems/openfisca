@@ -149,6 +149,7 @@ class Model(SystemSf):
     maries   = Prestation(pf._maries, 'fam') 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
     smic55   = Prestation(pf._smic55, 'fam', label = u"Indicatrice d'un salaire supérieur à 55% du smic")
+    isol     = Prestation(pf._isol, 'fam')
     
     af_nbenf = Prestation(pf._af_nbenf, 'fam', u"Nombre d'enfant au sens des AF")
     af_base  = Prestation(pf._af_base, 'fam', label ='Allocations familiales - Base')
