@@ -109,30 +109,41 @@ class InputTable(DataTable):
     f1ux = IntCol()
     
     # RVCM
-    f2ch = IntCol()
+    # revenus au prélèvement libératoire
+    f2da = IntCol()
+    f2dh = IntCol()
+    f2ee = IntCol()
+
+    # revenus ouvrant droit à abattement
     f2dc = IntCol()
-    f2ts = IntCol()
-    f2ca = IntCol()
     f2fu = IntCol()
+    f2ch = IntCol()
+    
+    # Revenus n'ouvrant pas droit à abattement
+    f2ts = IntCol()
     f2go = IntCol()
     f2tr = IntCol()
     
+    # Autres
+    f2cg = IntCol()
+    f2bh = IntCol()
+    f2ca = IntCol()
+    f2ab = IntCol()    
     f2aa = IntCol()
     f2al = IntCol()
     f2am = IntCol()
     f2an = IntCol()
-    f2ee = IntCol()
-    f2gr = IntCol()
-    f2ab = IntCol()
-    f2dh = IntCol()
-    f2da = IntCol()
+
+    # non accessible (from previous years)
+    f2gr = IntCol() 
+    
+
     
     f3vc = IntCol()
     f3vd = IntCol()
     f3ve = IntCol()
-    f3vf = IntCol()
-    f3vg = IntCol()
-    f3vh = IntCol()
+    f3vf = IntCol()    
+    
     f3vl = IntCol()
     f3vi = IntCol()
     f3vm = IntCol()
@@ -141,7 +152,13 @@ class InputTable(DataTable):
     f3vk = IntCol()
     f3va = IntCol()
     
-    
+    # Plus values et gains taxables à 18%
+    f3vg = IntCol()
+    f3vh = IntCol()
+    f3vt = IntCol()
+    f3vu = IntCol()
+    f3vv = IntCol()
+
     # Revenu foncier
     f4ba = IntCol()
     f4bb = IntCol()
@@ -149,10 +166,38 @@ class InputTable(DataTable):
     f4bd = IntCol()
     f4be = IntCol()
     
+    # Prime d'assurance loyers impayés
+    f4bf = IntCol()
+    
     f4bl = IntCol()
     
     f5qm = IntCol()
     f5rm = IntCol()
+    
+    # Csg déductible
+    f6de = IntCol()
+
+    # Pensions alimentaires
+    f6gi = IntCol()
+    f6gj = IntCol()
+    f6el = IntCol()
+    f6em = IntCol()
+    f6gp = IntCol()
+    f6gu = IntCol()
+    
+    # Frais d'accueil d'une personne de plus de 75 ans dans le besoin
+    f6eu = IntCol()
+    f6ev = IntCol()
+    
+    # Déductions diverses
+    f6dd = IntCol()
+    
+    # Dépenses de grosses réparations effectuées par les nus propriétaires
+    f6cb = IntCol()
+    f6hj = IntCol()
+    
+    # Sommes à rajouter au revenu imposable
+    f6gh = IntCol()    
     
     # Deficit Antérieur
     f6fa = IntCol()
@@ -162,18 +207,36 @@ class InputTable(DataTable):
     f6fe = IntCol()
     f6fl = IntCol()
     
-    f6gh = IntCol()
-    f6de = IntCol()
-
-
+    # Dons
+    f7ud = IntCol()
+    f7uf = IntCol()
+    f7xs = IntCol()
+    f7xt = IntCol()
+    f7xu = IntCol()
+    f7xw = IntCol()
+    f7xy = IntCol()
     
-    f2cg = IntCol()
+    # Cotisations syndicales des salariées et pensionnés
+    f7ac = IntCol()
+    f7ae = IntCol()
+    f7ag = IntCol()
+
+    # Salarié à domicile
+    f7db = IntCol()
+    f7df = IntCol()
+    f7dq = IntCol()
+    f7dg = IntCol()
+    f7dl = IntCol()
     
     # Intérêt des emprunts contractés pour l'acquisition ou la construction de l'habitation principale
     f7vy = IntCol()
     f7vz = IntCol()
     f7vx = IntCol()
     f7vw = IntCol()
+
+    # Dépenses d'accueil dans un établissement pour personnes âgées dépendantes
+    f7cd = IntCol()
+    f7ce = IntCol()
 
     # Frais de garde des enfants de moins de 6 ans
     f7ga = IntCol()
@@ -198,6 +261,24 @@ class InputTable(DataTable):
     
     # Primes de survies, contrat d'épargne handicap
     f7gz = IntCol()
+    
+    # Prestations compensatoires
+    f7wm = IntCol()
+    f7wn = IntCol()
+    f7wo = IntCol()
+    f7wp = IntCol()
+    
+    # Dépenses en faveur de la qualité environnementale
+    f7we = IntCol()
+    f7wq = IntCol()
+    f7wh = IntCol()
+    f7wk = IntCol()
+    f7wf = IntCol()
+    
+    # Dépenses en faveur de l'aide aux personnes
+    f7wi = IntCol()
+    f7wj = IntCol()
+    f7wl = IntCol()
     
     # Revenus des professions non salariées
     frag_exon = IntCol() # (f5hn, f5in, f5jn)
