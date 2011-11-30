@@ -272,6 +272,7 @@ def _ir_brut(nbptr, rni, _P):
     'foy'
     '''
     P = _P.ir.bareme
+
     return nbptr*BarmMar(rni/nbptr, P) # TODO : partir d'ici, petite différence avec Matlab
 
 def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
@@ -921,12 +922,17 @@ def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
       par deux soit 2 748€. Exemple : 10 990 € pour un jeune ménage et 8 243 €
       pour un célibataire avec un jeune enfant en résidence alternée.
     '''
+
+
+
+    
     ageV, ageC = age[VOUS], age[CONJ]
     invV, invC = caseP, caseF
     P = _P.ir.abattements_speciaux
-    as_inv = P.inv_montant*((rng <= P.inv_max1) + 
-                            ((rng > P.inv_max1)&(rng <= P.inv_max2))*0.5*(1*(((ageV>=65)&(ageV>0))| invV) + 
-                                                                        1*(((ageC>=65)&(ageC>0))| invC) )  )
+    nb_elig_as = (1*(( (ageV>=65) | invV) & (ageV>0)) + 
+               1*(( (ageC>=65) | invC) & (ageC>0)) )
+    as_inv = nb_elig_as*P.inv_montant*((rng <= P.inv_max1) + ((rng > P.inv_max1)&(rng <= P.inv_max2))*0.5)
+
     as_enf = nbN*P.enf_montant 
 
     return min_(rng, as_inv + as_enf)
