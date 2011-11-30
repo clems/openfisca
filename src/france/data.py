@@ -66,7 +66,7 @@ class InputTable(DataTable):
     jour_xyz = IntCol()
     age = AgesCol()
     agem = AgesCol()
-    zone_apl = IntCol()
+    zone_apl = IntCol(default=1)
     loyer = IntCol(default = 500)
     so = IntCol(default = 3)
     activite = IntCol()

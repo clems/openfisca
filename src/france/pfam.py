@@ -575,12 +575,12 @@ def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, '
     dans le cadre de la Prestation d’Accueil du Jeune Enfant, les parents peuvent bénéficier 
     du « complément de libre choix d’activité. »
     '''    
-    
+    if YEAR < 2004: # TODO fix this
     # TODO cumul (hyper important), adoption, triplés, 
     # L'allocation parentale d'éducation n'est pas soumise 
     # à condition de ressources, sauf l’APE à taux partiel pour les professions non salariées
-    P = _P.fam
-    elig = (_nb_enf(age, smic55, 0,P.ape.age-1)>=1) & (_nb_enf(age, smic55, 0,P.af.age2)>=2)
+        P = _P.fam
+        elig = (_nb_enf(age, smic55, 0,P.ape.age-1)>=1) & (_nb_enf(age, smic55, 0,P.af.age2)>=2)
     
     # TODO: rajouter ces infos aux parents
     # Inactif
@@ -597,8 +597,11 @@ def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, '
     # Temps de travail compris entre 77 et 122 heures par mois et un revenu professionnel mensuel ne dépassant pas
     #  (smic_8.27*169*136 %)
 
-    ape = elig*(inactif*P.ape.tx_inactif + partiel1*P.ape.tx_50 + partiel2*P.ape.tx_80)
-
+        ape = elig*(inactif*P.ape.tx_inactif + partiel1*P.ape.tx_50 + partiel2*P.ape.tx_80)
+        
+    else:
+        ape = 0*inactif
+        
     # Cummul APE APJE CF    
     return 12*ape  # annualisé
      
@@ -608,22 +611,25 @@ def _apje(br_pf, age, smic55, isol, biact, _P, _option = {'age': ENFS, 'smic55':
     Allocation pour jeune enfant
     '''
     # TODO: APJE courte voir doc ERF 2006
-    P = _P.fam
-    nbenf = _nb_enf(age, smic55, 0,P.apje.age-1)
-    bmaf = P.af.bmaf
-    bmaf_n_2= P.af.bmaf_n_2 
-    base = round(P.apje.taux*bmaf,2)
-    base2 = round(P.apje.taux*bmaf_n_2,2)
+    
+    if YEAR < 2004: # TODO fix this
+        P = _P.fam
+        nbenf = _nb_enf(age, smic55, 0,P.apje.age-1)
+        bmaf = P.af.bmaf
+        bmaf_n_2= P.af.bmaf_n_2 
+        base = round(P.apje.taux*bmaf,2)
+        base2 = round(P.apje.taux*bmaf_n_2,2)
 
-    plaf_tx = (nbenf>0) + P.apje.plaf_tx1*min_(nbenf,2) + P.apje.plaf_tx2*max_(nbenf-2,0)
-    majo    = or_(isol, biact)
-    plaf    = P.apje.plaf*plaf_tx + P.apje.plaf_maj*majo
-    plaf2   = plaf + 12*base2    
+        plaf_tx = (nbenf>0) + P.apje.plaf_tx1*min_(nbenf,2) + P.apje.plaf_tx2*max_(nbenf-2,0)
+        majo    = or_(isol, biact)
+        plaf    = P.apje.plaf*plaf_tx + P.apje.plaf_maj*majo
+        plaf2   = plaf + 12*base2    
 
-    apje =  (nbenf>=1)*( ( br_pf <= plaf)*base 
-            + (br_pf > plaf)*max_(plaf2-br_pf,0)/12.0 )
+        apje =  (nbenf>=1)*( ( br_pf <= plaf)*base 
+                             + (br_pf > plaf)*max_(plaf2-br_pf,0)/12.0 )
     
     # Non cummul APE APJE CF  
+    else: apje= 0*br_pf
     return 12*apje  # annualisé
 
 
@@ -762,15 +768,15 @@ def _br_al(etu, rev_pf, rev_coll, biact, _P ,_option = {'etu': [CHEF, PART], 're
     P = _P
     Pr = P.al.ressources
     
-    etuC = (etu[CHEF])&(etu[PART]==0)
-    etuP = (etu[CHEF]==0)&(etu[PART])
-    etuCP= (etu[CHEF])&(etu[PART])
+    etuC = (etu[CHEF]) & (not_(etu[PART]))
+    etuP = not_(etu[CHEF]) & (etu[PART])
+    etuCP = (etu[CHEF]) & (etu[PART])
     # self.etu = (self.etu[CHEF]>=1)|(self.etuP>=1)
     
-    revCatVous = max_(rev_pf[CHEF],etuC*(Pr.dar_4-(etu[CHEF]==2)*Pr.dar_5))
-    revCatConj = max_(rev_pf[PART],etuP*(Pr.dar_4-(etu[PART]==2)*Pr.dar_5))
+    revCatVous = max_(rev_pf[CHEF],etuC*(Pr.dar_4-(etu[CHEF])*Pr.dar_5))
+    revCatConj = max_(rev_pf[PART],etuP*(Pr.dar_4-(etu[PART])*Pr.dar_5))
     revCatVsCj = not_(etuCP)*(revCatVous + revCatConj) + \
-                    etuCP*max_(rev_pf[CHEF] + rev_pf[PART], Pr.dar_4 -((etu[CHEF]==2)|(etu[PART]==2))*Pr.dar_5 + Pr.dar_7)
+                    etuCP*max_(rev_pf[CHEF] + rev_pf[PART], Pr.dar_4 -(etu[CHEF]|etu[PART])*Pr.dar_5 + Pr.dar_7)
     
     # somme des revenus catégoriels après abatement
     revCat = revCatVsCj + rev_coll
@@ -908,7 +914,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     # les allocations logmeent sont sumis à la crds
     # al = (al_loc + al_acc)*(1-P.fam.af.crds)
 
-    return al
+    return 12*al
 
 def _alf(al, al_pac, zone_apl, _P):
     '''
@@ -1158,7 +1164,7 @@ def _rsa_act(rsa, rmi):
         
 def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
 #   On retranche le RSA activité de la PPE
-    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ])
+    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ],0)
     return ppe 
     
 def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):

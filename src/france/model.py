@@ -200,7 +200,7 @@ class Model(SystemSf):
     rsa  = Prestation(pf._rsa, 'fam')
     rsa_act = Prestation(pf._rsa_act, 'fam')
     api  = Prestation(pf._api, 'fam')
-    ppe_cumul_rsa_act  = Prestation(pf._ppe_cumul_rsa_act)
+    ppe_cumul_rsa_act  = Prestation(pf._ppe_cumul_rsa_act ,'foy')
     aefa = Prestation(pf._aefa, 'fam')
     # ASPA/ASI
     br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
