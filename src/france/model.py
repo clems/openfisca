@@ -131,9 +131,12 @@ class Model(SystemSf):
     ppe_elig_i = Prestation(ir._ppe_elig_i)
     ppe_rev = Prestation(ir._ppe_rev)
     ppe = Prestation(ir._ppe, 'foy')
+    
+    credits_impot = Prestation(ir._credits_impot, 'foy')
     irpp = Prestation(ir._irpp, 'foy')
 
     rfr = Prestation(ir._rfr, 'foy')
+    rfr_rvcm = Prestation(ir._rfr_rvcm, 'foy')
 
 #    alv = Prestation(ir._alv)
     glo = Prestation(ir._glo, 'foy')

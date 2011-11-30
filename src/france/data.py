@@ -63,7 +63,7 @@ class InputTable(DataTable):
     ppe_tp_ns = BoolCol()
     ppeHeure = IntCol()
     ppeJours = IntCol()
-    jour_xyz = IntCol()
+    jour_xyz = IntCol(default = 360)
     age = AgesCol()
     agem = AgesCol()
     
@@ -377,9 +377,7 @@ class InputTable(DataTable):
     etr = IntCol()     
     charges_deduc = IntCol()
     reductions = IntCol()
-    credits_impot = IntCol()
     rfr_cd = IntCol()
-    rfr_rvcm = IntCol()
     coloc = BoolCol()
     csg_taux_plein = IntCol(default = 1)
     aer = IntCol()
