@@ -76,6 +76,9 @@ if __name__ == '__main__':
     model.calculate('api')
     model.calculate('ppe_cumul_rsa_act')
     model.calculate('aefa')
+    
+    model.calculate('uc')
+    print model.uc.get_value()
 #    # ASPA/ASI
 #    br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
 #    

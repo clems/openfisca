@@ -263,3 +263,9 @@ class Model(SystemSf):
     br_aah  = Prestation(ms._br_aah, 'fam', label = u"Base ressources de l'allocation adulte handicapé")
     aah     = Prestation(ms._aah, 'fam', label = u"Allocation adulte handicapé")
     caah    = Prestation(ms._caah, 'fam', label = u"Complément de l'allocation adulte handicapé")
+
+    ############################################################
+    # Unité de consommation du ménage
+    ############################################################
+    uc = Prestation(lg._uc, 'men', label = u"Unités de consommation")
+

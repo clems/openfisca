@@ -22,14 +22,16 @@ This file is part of openFisca.
 """
 
 from __future__ import division
-from numpy import (round, maximum as max_, minimum as min_, 
-                   ceil, logical_not as not_, logical_or as or_)
-from france.data import QUIFAM
+from numpy import (round, ceil, floor, maximum as max_, minimum as min_, 
+                   logical_not as not_, logical_or as or_)
+from france.data import QUIFAM, QUIMEN
 from france.pfam import nb_enf
 
 CHEF = QUIFAM['chef']
 PART = QUIFAM['part']
 ENFS = [QUIFAM['enf1'], QUIFAM['enf2'], QUIFAM['enf3'], QUIFAM['enf4'], QUIFAM['enf5'], QUIFAM['enf6'], QUIFAM['enf7'], QUIFAM['enf8'], QUIFAM['enf9'], ]
+
+ALL = [x[1] for x in QUIMEN]
 
 def _al_pac(age, smic55, nbR, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
@@ -253,3 +255,19 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
 def _apl(al):
     #TODO: Pour les logements conventionné (surtout des HLM)
     return al*0
+
+def _uc(agem, _option = {'agem': ALL}):
+    '''
+    Calcul du nombre d'unité de consommation du ménage avec l'échelle de l'insee
+    'men'
+    '''
+    uc_adt = 0.5
+    uc_enf = 0.3
+    uc = 0.5
+    for agm in agem.itervalues():
+        age = floor(agm/12)
+        adt = (15 <= age) & (age <= 150)
+        enf = (0  <= age) & (age <= 14)
+        uc += adt*uc_adt + enf*uc_enf
+    return uc
+        
