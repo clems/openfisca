@@ -526,12 +526,16 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     return aefa 
 
 def _br_aah(br_pf, asi, mv, _P): 
+    '''
+    Base ressources de l'allocation adulte handicapé
+    'fam'
+    '''
     br_aah = br_pf + asi + mv
     return br_aah
 
 def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART]}):
     '''
-    Allocation adulte handicapé (montant mensuel)
+    Allocation adulte handicapé
     '''
 #        Conditions liées au handicap
 #        La personne doit être atteinte d’un taux d’incapacité permanente :
@@ -585,10 +589,10 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
               ( (age[PART] >= P.fam.aeeh.age) | (age[PART] >= 16) & (br_pf_i[PART] > P.fam.af.seuil_rev_taux*smic_annuel)) & 
                 (age[PART] <= P.minim.aah.age_legal_retraite ))
 
-    plaf = 12*P.minim.aah.montant*(1 + concub + P.minim.aah.tx_plaf_supp*af_nbenf)
+    plaf_aah = 12*P.minim.aah.montant*(1 + concub + P.minim.aah.tx_plaf_supp*af_nbenf)
 
-    eligib = ( eligC | eligP )*(br_aah <= plaf)
-    aah = eligib*max_(P.minim.aah.montant - br_aah/12, 0 ) 
+    eligib = ( eligC | eligP )
+    aah = eligib*max_(plaf_aah - br_aah, 0 )/12 
     
     # l'aah est exonérée de crds 
 
@@ -607,15 +611,12 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
     return 12*aah # annualisé
 
 
-def _caah(aah, asi, mv, al, _P):
+def _caah(aah, asi, br_aah, al, _P):
     '''
     Complément d'allocation adulte handicapé
     '''
-    
-#        Conditions
-#Pour bénéficier du complément de ressources, l’intéressé doit remplir les conditions
+# Pour bénéficier du complément de ressources, l’intéressé doit remplir les conditions
 # suivantes :
-
 #- percevoir l’allocation aux adultes handicapés à taux normal ou en
 #    complément d’une pension d’invalidité, d’une pension de vieillesse ou
 #    d’une rente accident du travail ;
@@ -625,7 +626,7 @@ def _caah(aah, asi, mv, al, _P):
 #- ne pas avoir perçu de revenu à caractère professionnel depuis un an à la date
 #    du dépôt de la demande de complément ;
 #- disposer d’un logement indépendant.
-#A noter : une personne hébergée par un particulier à son domicile n’est pas 
+# A noter : une personne hébergée par un particulier à son domicile n’est pas 
 # considérée disposer d’un logement indépendant, sauf s’il s’agit de son conjoint, 
 # de son concubin ou de la personne avec laquelle elle est liée par un pacte civil 
 # de solidarité.
@@ -636,9 +637,9 @@ def _caah(aah, asi, mv, al, _P):
 #       ressources pour les personnes handicapées (GRPH) et l’AAH
 
     P = _P.minim 
-    elig_cpl = ( aah > 0)    # TODO: éligibilité logement indépendant
-    # TODO ajouter retraite à aah + asi + mv 
-    if YEAR >= 2006: compl = elig_cpl*max_(P.caah.grph-(aah+asi+mv)/12,0)  
+    elig_cpl = ((aah>0) | (asi>0))    # TODO: éligibilité logement indépendant
+    if YEAR >= 2006: 
+        compl = elig_cpl*max_(P.caah.grph-(aah+br_aah)/12,0)
     else : compl = P.caah.cpltx*P.aah.montant*elig_cpl
         # En fait perdure jusqu'en 2008 
  
@@ -657,14 +658,12 @@ def _caah(aah, asi, mv, al, _P):
 #Choix entre la majoration ou la garantie de ressources
 #La majoration pour la vie autonome n'est pas cumulable avec la garantie de ressources pour les personnes handicapées.
 #La personne qui remplit les conditions d'octroi de ces deux avantages doit choisir de bénéficier de l'un ou de l'autre.
-
     if YEAR >= 2006:        
-        elig_mva = (al>0)*(aah>0)   # TODO: éligibilité
-        mva = P.caah.mva*elig_mva
+        elig_mva = (al>0)*( (aah>0) | (asi>0))   # TODO: complêter éligibilité
+        mva = P.caah.mva*elig_mva*0
     else: mva = 0      
     caah = max_(compl, mva)
-     
-    return 12*caah*0   # annualisé
+    return 12*caah   # annualisé
     
 def _ass(br_pf, concub, _P):
     '''

@@ -33,11 +33,11 @@ if __name__ == '__main__':
     reader = XmlReader('../data/param.xml', date)
     P = Tree2Object(reader.tree)
 
-    f = '../castypes/2010 - Couple 3 enfants.ofct'
+    f = '../castypes/test ASI .ofct'
     scenario = Scenario()
     scenario.openFile(f)
         
-    inputs = InputTable(6)
+    inputs = InputTable(10)
     inputs.populate_from_scenario(scenario)
     inputs.gen_index(['men', 'foy', 'fam'])
 
@@ -76,51 +76,11 @@ if __name__ == '__main__':
     model.calculate('api')
     model.calculate('ppe_cumul_rsa_act')
     model.calculate('aefa')
-    
-    model.calculate('uc')
-    print model.uc.get_value()
-#    # ASPA/ASI
-#    br_mv   = Prestation(pf._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
-#    
-#    asi_aspa_nb_alloc = Prestation(pf._asi_aspa_nb_alloc, 'fam')
-#    asi_aspa_elig = Prestation(pf._asi_aspa_elig, 'fam')
-#    asi_elig = Prestation(pf._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")
-#    asi_coexist_aspa = Prestation(pf._asi_coexist_aspa, 'fam', label = u"Allocation supplémentaire d'invalidité quand un adulte de la famille perçoit l'ASPA")
-#    asi_pure         = Prestation(pf._asi_pure, 'fam', label = u"Allocation supplémentaire d'invalidité quand aucun adulte de la famille ne perçoit l'ASPA") 
-#    asi     = Prestation(pf._asi, 'fam', label = u"Allocation supplémentaire d'invalidité")
-#    
-#    aspa_elig = Prestation(pf._aspa_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
-#    aspa_coexist_asi  = Prestation(pf._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
-#    aspa_pure         = Prestation(pf._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
-#    mv     = Prestation(pf._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
-#    
-#    # AAH
-#    br_aah  = Prestation(pf._br_aah, 'fam', label = u"Base ressources de l'allocation adulte handicapé")
-#    aah     = Prestation(pf._aah, 'fam', label = u"Allocation adulte handicapé")
-#    caah    = Prestation(pf._caah, 'fam', label = u"Complément de l'allocation adulte handicapé")
- 
-    print inputs.agem.get_value()
-    print model.af.get_value()
-    print 'af_nbenf'
-    print model.af_nbenf.get_value()
-    print model.af_base.get_value()
-    print model.cf_temp.get_value()
-    print model.cf.get_value()
-    print model.asf.get_value()
-    print model.ars.get_value()
-    print model.paje_base.get_value()
-    print model.paje_nais.get_value()
-    print model.paje_clca.get_value()
-#    print model.paje_clca_taux_plein.get_value()
-#    print model.paje_clca_taux_partiel.get_value()
-    print model.paje_clmg.get_value()
-    print model.aeeh.get_value()
-    
-    print model.ape.get_value()
-    print model.apje.get_value()
-    
-    print model.al.get_value()
-    print model.rmi.get_value()
-    print model.rsa.get_value()
-    print model.api.get_value()
-    
+   
+    ## AAH
+    model.calculate('br_aah')
+    model.calculate('aah')
+    model.calculate('caah')
+    print 'br_aah ', model.br_aah.get_value()
+    print 'aah ', model.aah.get_value()
+    print 'caah', model.caah.get_value()
