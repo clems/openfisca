@@ -71,6 +71,7 @@ class InputTable(DataTable):
     loyer = IntCol()
     so = IntCol()
     activite = IntCol()
+    boursier = BoolCol()
     code_postal = IntCol()
     
     statmarit = IntCol(default = 2)
