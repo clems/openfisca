@@ -1039,14 +1039,14 @@ def _ppe_rev(sal, hsup, rpns, _P):
     rev_ns = min_(0,rpns)/P.abatns + max_(0,rpns)*P.abatns
     return rev_sa + rev_ns
 
-def _ppe_coef_tp(ppeHeure, ppeJours, ppe_tp_sa, ppe_tp_ns, _P):
+def _ppe_coef_tp(ppe_du_sa, ppe_du_ns, ppe_tp_sa, ppe_tp_ns, _P):
     '''
     PPE: coefficient de conversion temps partiel
     'ind'
     '''
     P = _P.ir.credits_impot.ppe
-    frac_sa = ppeHeure/P.TP_nbh
-    frac_ns = ppeJours/P.TP_nbj
+    frac_sa = ppe_du_sa/P.TP_nbh
+    frac_ns = ppe_du_ns/P.TP_nbj
     # TODO: changer ppe_tp_sa en ppe_tp_sa
     tp = (ppe_tp_sa == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
     return tp + not_(tp)*(frac_sa + frac_ns) 

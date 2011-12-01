@@ -21,7 +21,7 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from core.datatable import DataTable, IntCol, EnumCol, BoolCol, FloatCol, AgesCol, DateCol
+from core.datatable import DataTable, IntCol, EnumCol, BoolCol, AgesCol
 from core.utils import Enum
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
@@ -49,20 +49,21 @@ class InputTable(DataTable):
     
     type_sal = EnumCol(CAT)
     
-    sali = IntCol()
-    choi = IntCol()
-    rsti = IntCol()
-    fra = IntCol()
-    alr = IntCol()
+    sali = IntCol() #(f1aj, f1bj, f1cj, f1dj, f1ej)
+    choi = IntCol() # (f1ap, f1bp, f1cp, f1dp, f1ep)
+    rsti = IntCol() # (f1as, f1bs, f1cs, f1ds, f1es)
+    fra = IntCol() # (f1ak, f1bk, f1ck, f1dk, f1ek)
+
+    alr = IntCol() # (f1ao, f1bo, f1co, f1do, f1eo)
     
     hsup = IntCol()
     inv = BoolCol()
     alt = BoolCol()
-    cho_ld = BoolCol()
-    ppe_tp_sa = BoolCol()
-    ppe_tp_ns = BoolCol()
-    ppeHeure = IntCol()
-    ppeJours = IntCol()
+    cho_ld = BoolCol() # (f1ai, f1bi, f1ci, f1di, f1ei)
+    ppe_tp_sa = BoolCol() # (f1ax, f1bx, f1cx, f1dx, f1qx)
+    ppe_tp_ns = BoolCol() # (f5nw, f5ow, f5pw)
+    ppe_du_sa = IntCol() # (f1av, f1bv, f1cv, f1dv, f1qv)
+    ppe_du_ns = IntCol() # (f5nv, f5ov, f5pv)
     jour_xyz = IntCol(default = 360)
     age = AgesCol()
     agem = AgesCol()
