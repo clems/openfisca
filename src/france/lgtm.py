@@ -258,7 +258,7 @@ def _apl(al):
 
 def _uc(agem, _option = {'agem': ALL}):
     '''
-    Calcul du nombre d'unité de consommation du ménage avec l'échelle de l'insee
+    Calcule le nombre d'unités de consommation du ménage avec l'échelle de l'insee
     'men'
     '''
     uc_adt = 0.5
@@ -270,4 +270,3 @@ def _uc(agem, _option = {'agem': ALL}):
         enf = (0  <= age) & (age <= 14)
         uc += adt*uc_adt + enf*uc_enf
     return uc
-        
