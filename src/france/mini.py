@@ -607,7 +607,7 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
     return 12*aah # annualisé
 
 
-def _caah(aah, al, _P):
+def _caah(aah, asi, mv, al, _P):
     '''
     Complément d'allocation adulte handicapé
     '''
@@ -636,11 +636,12 @@ def _caah(aah, al, _P):
 #       ressources pour les personnes handicapées (GRPH) et l’AAH
 
     P = _P.minim 
-    elig_cpl = aah>0    # TODO: éligibilité logement indépendant
-    
-    if YEAR >= 2006: compl = elig_cpl*max_(P.caah.grph-aah/12,0)  
-    else : compl = P.caah.cpltx*P.aah.montant*elig_cpl*aah/12
+    elig_cpl = ( aah > 0)    # TODO: éligibilité logement indépendant
+    # TODO ajouter retraite à aah + asi + mv 
+    if YEAR >= 2006: compl = elig_cpl*max_(P.caah.grph-(aah+asi+mv)/12,0)  
+    else : compl = P.caah.cpltx*P.aah.montant*elig_cpl
         # En fait perdure jusqu'en 2008 
+ 
  
     # Majoration pour la vie autonome
     # La majoration pour la vie autonome est destinée à permettre aux personnes, en capacité de travailler et au chômage
@@ -661,8 +662,9 @@ def _caah(aah, al, _P):
         elig_mva = (al>0)*(aah>0)   # TODO: éligibilité
         mva = P.caah.mva*elig_mva
     else: mva = 0      
-    caah = max_(compl,mva)
-    return 12*caah   # annualisé
+    caah = max_(compl, mva)
+     
+    return 12*caah*0   # annualisé
     
 def _ass(br_pf, concub, _P):
     '''
