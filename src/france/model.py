@@ -166,7 +166,7 @@ class Model(SystemSf):
     concub   = Prestation(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
     maries   = Prestation(pf._maries, 'fam') 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
-    smic55   = Prestation(pf._smic55, 'fam', label = u"Indicatrice d'un salaire supérieur à 55% du smic")
+    smic55   = Prestation(pf._smic55, label = u"Indicatrice individuelle d'un salaire supérieur à 55% du smic")
     isol     = Prestation(pf._isol, 'fam')
 
     div  = Prestation(pf._div)

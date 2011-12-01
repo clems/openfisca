@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import (round, ceil, floor, maximum as max_, minimum as min_, 
-                   logical_not as not_, logical_or as or_)
+                   logical_not as not_)
 from france.data import QUIFAM, QUIMEN
 from france.pfam import nb_enf
 
@@ -151,7 +151,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     # loyer;
     L1 = loyer
     # loyer plafond;
-    lp_taux = (coloc==0)*1 + coloc*P.al.loyers_plafond.colocation
+    lp_taux = (not_(coloc))*1 + coloc*P.al.loyers_plafond.colocation
     
     z1 = P.al.loyers_plafond.zone1
     z2 = P.al.loyers_plafond.zone2
@@ -216,18 +216,15 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     Tp= TF + TL
     
     PP = Po + Tp*Rp
-    al_loc = max_(0,E - PP)*(loca==1)
+    al_loc = max_(0,E - PP)*loca
     al_loc = al_loc*(al_loc>=P.al.autres.nv_seuil)
 
     ## APL pour les accédants à la propriété
-    al_acc = 0*(acce==1)
-
+    al_acc = 0*acce
     ## APL (tous)
-    
     al = al_loc + al_acc
     # les allocations logmeent sont sumis à la crds
     # al = (al_loc + al_acc)*(1-P.fam.af.crds)
-
     return 12*al
 
 def _alf(al, al_pac, zone_apl, _P):
@@ -249,7 +246,7 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale étudiante
     '''    
-    alset = (al_pac==0)*or_(etu[CHEF],etu[PART])*al
+    alset = (al_pac==0)*(etu[CHEF] | etu[PART])*al
     return alset
 
 def _apl(al):

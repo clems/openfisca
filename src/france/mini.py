@@ -146,7 +146,7 @@ def _aspa_elig(age, inv, activite, _P):
     'ind'
     '''
     P = _P.minim.aspa
-    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite ==3) 
+    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3) 
     return out
 
 def _asi_elig(aspa_elig, inv, activite):
@@ -472,7 +472,7 @@ def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = 
     api1 = eligib*bmaf*(P.minim.api.base + P.minim.api.enf_sup*nb_enf(age, smic55, P.fam.af.age1,P.minim.api.age_pac-1) )
     rsa = (P.minim.api.age_pac >= 25) # dummy passage au rsa majoré
     br_api = br_rmi + af_majo*not_(rsa)
-    # TODO: mensualiser RMI, BRrmi et forfait logement
+    # On pourrait mensualiser RMI, BRrmi et forfait logement
     api  = max_(0, api1 - forf_log/12 - br_api/12 - rsa/12) 
     # L'API est exonérée de CRDS
     return 12*api # annualisé
@@ -533,7 +533,7 @@ def _br_aah(br_pf, asi, mv, _P):
     br_aah = br_pf + asi + mv
     return br_aah
 
-def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART]}):
+def _aah(br_pf_i, br_aah, inv, age, smic55, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART], 'smic55': [CHEF, PART]}):
     '''
     Allocation adulte handicapé
     '''
@@ -552,7 +552,6 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
 #        Age minimum : Le demandeur ne doit plus avoir l'âge de bénéficier de l'allocation d'éducation de l'enfant handicapé, c'est-à-dire qu'il doit être âgé :
 #        - de plus de vingt ans,
 #        - ou de plus de seize ans, s'il ne remplit plus les conditions pour ouvrir droit aux allocations familiales.
-#        TODO: éligibilité AAH
 #        Pour les montants http://www.handipole.org/spip.php?article666
     
 #        Âge max_
@@ -572,28 +571,18 @@ def _aah(br_pf_i, br_aah, inv, age, concub, af_nbenf, _P, _option = {'inv': [CHE
 #        continue à prendre en compte les ressources de votre foyer diminuées de 20%.
 #        Notez, dans certaines situations, la Caf évalue forfaitairement vos 
 #        ressources à partir de votre revenu mensuel.
-
-#        On prend la BR des PF pour l'AAH         
-    
-#        TODO avoir le % d'incapacité ?        
+#        TODO éligibilité AAH, notamment avoir le % d'incapacité ?        
     P = _P
-    #TODO: on caompare brut et net à modifier
-    nbh_travaillees = 151.67*12
-    smic_annuel = P.cotsoc.gen.smic_h_b*nbh_travaillees
 
-    eligC = ( (inv[CHEF]==1) &
-              ( (age[CHEF] >= P.fam.aeeh.age) | (age[CHEF] >= 16) & (br_pf_i[CHEF] > P.fam.af.seuil_rev_taux*smic_annuel)) & 
-                (age[CHEF] <= P.minim.aah.age_legal_retraite ))    
-
-    eligP = ( (inv[PART]==1) &
-              ( (age[PART] >= P.fam.aeeh.age) | (age[PART] >= 16) & (br_pf_i[PART] > P.fam.af.seuil_rev_taux*smic_annuel)) & 
-                (age[PART] <= P.minim.aah.age_legal_retraite ))
-
-    plaf_aah = 12*P.minim.aah.montant*(1 + concub + P.minim.aah.tx_plaf_supp*af_nbenf)
-
-    eligib = ( eligC | eligP )
-    aah = eligib*max_(plaf_aah - br_aah, 0 )/12 
+    eligC = ( ((inv[CHEF]) & (age[CHEF] <= P.minim.aah.age_legal_retraite)) &
+              ((age[CHEF] >= P.fam.aeeh.age) | ((age[CHEF]>=16) & (smic55[CHEF]) )) )
     
+    eligP = ( ((inv[PART]) & (age[PART] <= P.minim.aah.age_legal_retraite)) &
+              ((age[PART] >= P.fam.aeeh.age) | ((age[PART]>=16) & (smic55[PART]) )) )          
+    
+    plaf_aah = 12*P.minim.aah.montant*(1 + concub + P.minim.aah.tx_plaf_supp*af_nbenf)
+    eligib = ( eligC | eligP )
+    aah = eligib*max_(plaf_aah - br_aah, 0 )/12
     # l'aah est exonérée de crds 
 
 #        Cumul d'allocation
@@ -665,10 +654,19 @@ def _caah(aah, asi, br_aah, al, _P):
     caah = max_(compl, mva)
     return 12*caah   # annualisé
     
-def _ass(br_pf, concub, _P):
+def _ass(br_pf, cho, concub, _P, _option = {'cho': [CHEF, PART]}):
     '''
     Allocation de solidarité spécifique
-    '''        
+    
+    L’Allocation de Solidarité Spécifique (ASS) est une allocation versée aux 
+    personnes ayant épuisé leurs droits à bénéficier de l'assurance chômage.
+    '''    
+    
+#  Le prétendant doit avoir épuisé ses droits à l’assurance chômage.
+#  Il doit être inscrit comme demandeur d’emploi et justifier de recherches actives.
+#  Il doit être apte à travailler.
+#  Il doit justifier de 5 ans d’activité salariée au cours des 10 ans précédant le chômage.
+#  À partir de 60 ans, il doit répondre à des conditions particulières.    
     # TODO majo ass et base ressource
     
 #        Les ressources prises en compte pour apprécier ces plafonds, comprennent l'allocation de solidarité elle-même ainsi que les autres ressources de l'intéressé, et de son conjoint, partenaire pacsé ou concubin, soumises à impôt sur le revenu.
@@ -689,11 +687,13 @@ def _ass(br_pf, concub, _P):
 #       ou justifiant d'au moins 160 trimestres de cotisation retraite.
     P = _P
     majo = 0
+    cond_act_prec_suff = False
+    elig_ass = (cho[CHEF] | cho[PART]) & cond_act_prec_suff
     plaf = P.chomage.ass.plaf_seul*not_(concub) + P.chomage.ass.plaf_coup*concub
     montant_mensuel = 30*(P.chomage.ass.montant_plein*not_(majo) 
                           + majo*P.chomage.ass.montant_maj)
     revenus = br_pf + 12*montant_mensuel  # TODO check base ressources
-    ass = (montant_mensuel*(revenus<=plaf) 
+    ass = elig_ass*(montant_mensuel*(revenus<=plaf) 
               + (revenus>plaf)*max_(plaf+montant_mensuel-revenus,0))
     
     return 12*ass  # annualisé
