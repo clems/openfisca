@@ -70,21 +70,21 @@ def _nb_pac(nbF, nbJ, nbR):
         
 def _marpac(statmarit):
     '''
-    Marié ou Pacsé
+    Marié (1) ou Pacsé (5)
     'foy'
     '''
     return (statmarit == 1) | (statmarit == 5)
 
 def _celdiv(statmarit):
     '''
-    Célibataire ou divorcé
+    Célibataire (2) ou divorcé (3)
     'foy'
     '''
     return (statmarit == 2) | (statmarit == 3)
 
 def _veuf(statmarit):
     '''
-    Veuf
+    Veuf (4)
     'foy'
     '''
     return statmarit == 4
@@ -1011,10 +1011,9 @@ def _nbptr(nb_pac, marpac, celdiv, veuf, jveuf, nbF, nbG, nbH, nbI, nbR, nbJ, ca
 def _ppe_coef(jour_xyz):
     '''
     ppe: coefficient de conversion en cas de changement en cours d'année
-    'foy'
     '''
-    nbJour = (jour_xyz==0) + jour_xyz
-    return 360/nbJour
+    nb_jour = (jour_xyz==0) + jour_xyz
+    return 360/nb_jour
 
 def _ppe_elig(rfr, ppe_coef, marpac, veuf, celdiv, nbptr, _P):
     '''

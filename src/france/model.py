@@ -127,7 +127,7 @@ class Model(SystemSf):
     ppe_coef = Prestation(ir._ppe_coef)
     ppe_base = Prestation(ir._ppe_base)
     ppe_coef_tp = Prestation(ir._ppe_coef_tp)
-    ppe_elig = Prestation(ir._ppe_elig)
+    ppe_elig = Prestation(ir._ppe_elig, 'foy')
     ppe_elig_i = Prestation(ir._ppe_elig_i)
     ppe_rev = Prestation(ir._ppe_rev)
     ppe = Prestation(ir._ppe, 'foy')

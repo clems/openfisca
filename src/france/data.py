@@ -21,7 +21,7 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from core.datatable import DataTable, IntCol, EnumCol, BoolCol, AgesCol
+from core.datatable import DataTable, IntCol, EnumCol, BoolCol, AgesCol, FloatCol
 from core.utils import Enum
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
@@ -384,3 +384,4 @@ class InputTable(DataTable):
     aer = IntCol()
     ass = IntCol()
 #    birth = DateCol()
+    wprm = FloatCol()

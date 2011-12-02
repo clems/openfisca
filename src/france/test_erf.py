@@ -22,14 +22,13 @@ This file is part of openFisca.
 """
 
 from parametres.paramData import XmlReader, Tree2Object
-from Utils import Scenario
 from france.model import Model
 from france.data import InputTable
 
     
 if __name__ == '__main__':
     import datetime
-    date = datetime.date(2010,01,01)
+    date = datetime.date(2006,01,01)
     reader = XmlReader('../data/param.xml', date)
     P = Tree2Object(reader.tree)
 
@@ -37,22 +36,16 @@ if __name__ == '__main__':
         
     inputs = InputTable()
     inputs.populate_from_external_data(filename)
-    inputs.gen_index(['men', 'foy', 'fam'])
+
+    print inputs.sali.get_value().shape
+    print inputs.sali.get_value().sum()
 
     model = Model(P)
     model.set_inputs(inputs)
 
-
     model.calculate('irpp')
-    model.calculate('aspa_elig')
-    model.calculate('salsuperbrut')
-    model.calculate('paje')
-    model.calculate('af_nbenf')
-#    print inputs.sali.get_value()
-#    print model.salbrut.get_value()
-#    print model.csgsald.get_value()
-#    print model.cho.get_value()
-    print model.ars.get_value()
-    # print model.paje.get_value()
-    print model.af_nbenf.get_value()
-    print model.aspa_elig.get_value()
+    model.calculate('af')
+    model.calculate('cf')
+    print sum(model.af.get_value()*inputs.wprm.get_value())/1e9
+    print sum(model.cf.get_value()*inputs.wprm.get_value())/1e9
+    print sum(model.irpp.get_value()*inputs.wprm.get_value())/1e9
