@@ -64,6 +64,10 @@ def _etu(activite):
     return activite==2
 
 def _smic55(sal, _P):
+    '''
+    Indicatrice individuelle d'un salaire supérieur à 55% du smic
+    'ind'
+    '''
     # TODO: ne pas comparer un salaire net à un smic brut
     nbh_travaillees = 151.67*12
     smic_annuel = _P.cotsoc.gen.smic_h_b*nbh_travaillees
@@ -92,7 +96,6 @@ def _rev_coll(rto_net, rev_cap_lib, rev_cap_bar, div, abat_spe, glo, fon, alv, f
     revenus collectif
     '''
     # TODO: ajouter les revenus de l'étranger etr*0.9
-    # TODO: ajouter les pensions alimentaires versées
     return rto_net + rev_cap_lib + rev_cap_bar  + fon + glo - alv - f7ga - f7gb - f7gc - abat_spe
     
 def _br_pf(br_pf_i, rev_coll, _option = {'br_pf_i': [CHEF, PART], 'rev_coll': [CHEF, PART]}):
@@ -115,20 +118,22 @@ def _af_nbenf(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
 def _af_base(af_nbenf, _P):
     '''
     Allocations familiales - allocation de base
+    'fam'
     '''
     P = _P.fam
     bmaf = P.af.bmaf    
-
     # prestations familliales (brutes de crds)
     af_1enf      = round(bmaf*P.af.taux.enf1,2)
     af_2enf      = round(bmaf*P.af.taux.enf2,2)
     af_enf_supp  = round(bmaf*P.af.taux.enf3,2)
-
     af_base = (af_nbenf>=1)*af_1enf + (af_nbenf>=2)*af_2enf  + max_(af_nbenf-2,0)*af_enf_supp
-
     return 12*af_base  # annualisé
     
 def _af_majo(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
+    '''
+    Allocations familiales - majoration pour âge
+    'fam'
+    '''
     # Date d'entrée en vigueur de la nouvelle majoration
     # enfants nés après le "1997-04-30"       
     bmaf  = _P.fam.af.bmaf    
@@ -151,6 +156,10 @@ def _af_majo(age, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     return 12*af_majo # annualisé
 
 def _af_forf(age, af_nbenf, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS}):
+    '''
+    Allocations familiales - forfait
+    'fam'
+    '''
     P = _P.fam
     bmaf = _P.fam.af.bmaf    
 #    TODO juillet 2003   
@@ -160,6 +169,10 @@ def _af_forf(age, af_nbenf, smic55, _P, _option = {'age': ENFS, 'smic55': ENFS})
     return 12*((af_nbenf>=2)*nbenf_forf)*af_forfait # annualisé
 
 def _af(af_base, af_majo, af_forf):
+    '''
+    Allocations familiales - total des allocations
+    'fam'
+    '''
     return af_base + af_majo + af_forf
 
 ############################################################################
@@ -327,30 +340,25 @@ def _paje_nais(agem, age, af_nbenf, br_pf, isol, biact, _P, _option = {'age': EN
 def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _option = {'agem': ENFS}):
     '''
     Prestation d'accueil du jeune enfant - Complément de libre choix d'activité
+    'fam'
     '''
     
     # http://www.caf.fr/wps/portal/particuliers/catalogue/metropole/paje
     paje     = paje_base >= 0
     P = _P.fam
-
     # durée de versement :   
-    # Pour un seul enfant à charge, le CLCA est versé pendant une période de 6 mois 
+    # Pour un seul enfant à charge, le CLCA est versé pendant une période de 6 mois (P.paje.clca.duree1)
     # à partir de la naissance ou de la cessation des IJ maternité et paternité. 
     # A partir du 2ème enfant, il est versé jusqu’au mois précédant le 3ème anniversaire 
     # de l’enfant.
     
     # Calcul de l'année et mois de naisage_in_months( du cadet 
     # TODO: ajuster en fonction de la cessation des IJ etc
-    # TODO: les 6 mois sont codés en dur 
-    
     age_m_benjamin = age_en_mois_benjamin(agem)
-
-    condition1 =(af_nbenf==1)*(age_m_benjamin>=0)*(age_m_benjamin<6)
+    condition1 =(af_nbenf==1)*(age_m_benjamin>=0)*(age_m_benjamin<P.paje.clca.duree1)
     age_benjamin = floor(age_m_benjamin/12)
     condition2 = ( age_benjamin <= (P.paje.base.age-1))            
-    condition = (af_nbenf>=2)*condition2 + condition1 
-    
-    # TODO: rajouter ces infos aux parents et mensualiser
+    condition = (af_nbenf>=2)*condition2 + condition1
     # Temps partiel 1
     # Salarié: 
     # Temps de travail ne dépassant pas 50 % de la durée du travail fixée dans l'entreprise
@@ -362,7 +370,6 @@ def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _opti
     # Salarié: Temps de travail compris entre 50 et 80 % de la durée du travail fixée dans l'entreprise.
     # Temps de travail compris entre 77 et 122 heures par mois et un revenu professionnel mensuel ne dépassant pas
     #  (smic_8.27*169*136 %)
-
     paje_clca = (condition*P.af.bmaf)*(
                 (not_(paje))*(inactif*P.paje.clca.sansab_tx_inactif   +
                             partiel1*P.paje.clca.sansab_tx_partiel1 +
@@ -370,7 +377,6 @@ def _paje_clca(agem, af_nbenf, paje_base, inactif, partiel1, partiel2, _P, _opti
                 (paje)*(inactif*P.paje.clca.avecab_tx_inactif   +
                             partiel1*P.paje.clca.avecab_tx_partiel1 +
                             partiel2*P.paje.clca.avecab_tx_partiel2))
-
     return 12*paje_clca  # annualisé
     
 def _paje_clca_taux_plein(paje_clca, inactif):
@@ -381,7 +387,7 @@ def _paje_clca_taux_partiel(paje_clca, partiel1):
             
     # TODO gérer les cumuls avec autres revenus et colca voir site caf
 
-def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, ass_mat, gar_dom, paje_clca_taux_partiel, paje_clca_taux_plein, _P, _option = {'age': ENFS, 'smic55': ENFS, 'etu': [CHEF, PART], 'sal': [CHEF, PART]}):
+def _paje_clmg(aah, age, smic55, etu, sal, hsup, concub, af_nbenf, br_pf, empl_dir, ass_mat, gar_dom, paje_clca_taux_partiel, paje_clca_taux_plein, _P, _option = {'age': ENFS, 'smic55': ENFS, 'etu': [CHEF, PART], 'sal': [CHEF, PART], 'hsup': [CHEF, PART] }):
     '''
     Prestation d accueil du jeune enfant - Complément de libre choix du mode de garde
     '''
@@ -412,13 +418,14 @@ def _paje_clmg(aah, age, smic55, etu, sal, concub, af_nbenf, br_pf, empl_dir, as
        
     P = _P.fam
    
-    # TODO condition de revenu minimal
+    # condition de revenu minimal
 
     cond_age_enf = (nb_enf(age, smic55, P.paje.clmg.age1,P.paje.clmg.age2-1)>0)
-    cond_sal     = (sal[CHEF] + sal[PART] > 12*P.af.bmaf_n_2*(1+concub))
+    cond_sal     = (sal[CHEF] + sal[PART] + hsup[CHEF] + hsup[PART]> 12*P.af.bmaf_n_2*(1+concub))
 # TODO    cond_rpns    = 
     cond_act     = cond_sal   # | cond_rpns
-    cond_nonact  =  (aah >0) | (etu[CHEF] & etu[PART])   
+    
+    cond_nonact  =  (aah >0) | (etu[CHEF] & etu[PART]) # | (ass>0)  
 #  TODO RSA insertion, alloc insertion, ass   
     elig = cond_age_enf & (  cond_act | cond_nonact) 
     nbenf = af_nbenf
@@ -506,9 +513,7 @@ def _aeeh(age, inv, isol, categ_inv, _P, _option = {'categ_inv': ENFS, 'inv': EN
     for enfant in age.iterkeys():
         enfhand = inv[enfant]*(age[enfant] < P.aeeh.age)/12
         categ   = categ_inv[enfant] 
-        
-#        if self.datesim <= date(2002, 1,1):  # TODO 
-        if True == False:
+        if YEAR <= 2002:
             aeeh += 0*enfhand    # TODO
         else:
             aeeh  += enfhand*(P.af.bmaf*(P.aeeh.base + 
@@ -534,6 +539,8 @@ def _aeeh(age, inv, isol, categ_inv, _P, _option = {'categ_inv': ENFS, 'inv': EN
 
 def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     ''' 
+    Allocation parentale d'éducation
+    'fam'
     L’allocation parentale d’éducation s’adresse aux parents qui souhaitent arrêter ou 
     réduire leur activité pour s’occuper de leurs jeunes enfants, à condition que ceux-ci 
     soient nés avant le 01/01/2004. En effet, pour les enfants nés depuis cette date, 
@@ -547,7 +554,6 @@ def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, '
         P = _P.fam
         elig = (nb_enf(age, smic55, 0,P.ape.age-1)>=1) & (nb_enf(age, smic55, 0,P.af.age2)>=2)
     
-    # TODO: rajouter ces infos aux parents
     # Inactif
     # Temps partiel 1
     # Salarié: 
@@ -561,22 +567,17 @@ def _ape(age, smic55, inactif, partiel1, partiel2, _P, _option = {'age': ENFS, '
     # Salarié: Temps de travail compris entre 50 et 80 % de la durée du travail fixée dans l'entreprise.
     # Temps de travail compris entre 77 et 122 heures par mois et un revenu professionnel mensuel ne dépassant pas
     #  (smic_8.27*169*136 %)
-
         ape = elig*(inactif*P.ape.tx_inactif + partiel1*P.ape.tx_50 + partiel2*P.ape.tx_80)
-        
     else:
         ape = 0*inactif
-        
     # Cummul APE APJE CF    
     return 12*ape  # annualisé
      
-
 def _apje(br_pf, age, smic55, isol, biact, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     Allocation pour jeune enfant
     '''
     # TODO: APJE courte voir doc ERF 2006
-    
     if YEAR < 2004: # TODO fix this
         P = _P.fam
         nbenf = nb_enf(age, smic55, 0,P.apje.age-1)
@@ -596,7 +597,6 @@ def _apje(br_pf, age, smic55, isol, biact, _P, _option = {'age': ENFS, 'smic55':
     # Non cummul APE APJE CF  
     else: apje= 0*br_pf
     return 12*apje  # annualisé
-
 
 def _cf_cumul_apje_ape(apje_temp, ape_temp, cf_temp):
     '''
@@ -630,22 +630,15 @@ def _aged(age, smic55, br_pf, ape_taux_partiel, dep_trim, _P, _option = {'age': 
     # les deux conjoints actif et revenu min requis
     # A complêter
 
-    P = _P.fam
-    
+    P = _P.fam    
     nbenf = nb_enf(age, smic55, 0, P.aged.age1-1)
     nbenf2 = nb_enf(age, smic55, 0, P.aged.age2-1)
-
     elig1 = (nbenf>0) 
     elig2 = not_(elig1)*(nbenf2>0)*ape_taux_partiel
-    
-
-    depenses = 4*dep_trim # TODO gérer les dépenses trimestrielles        
-             
+    depenses = 4*dep_trim # gérer les dépenses trimestrielles        
     aged3 = elig1*( max_(P.aged.remb_plaf1-P.aged.remb_taux1*depenses,0)*(br_pf > P.aged.revenus_plaf) 
        +  (br_pf <= P.aged.revenus_plaf)*max_(P.aged.remb_taux2*depenses - P.aged.remb_plaf1,0))
-    
     aged6  = elig2*max_(P.aged.remb_taux2*depenses - P.aged.remb_plaf2,0)
-
     return 12*(aged3 + aged6) # annualisé 
 
 

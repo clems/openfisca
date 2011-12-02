@@ -2963,6 +2963,9 @@
 	<CODE description="Taux pour les personnes inactives percevant l'allocation de base de la PAJE" code="avecab_tx_partiel2" >
 	  <VALUE valeur="0.3603" deb="2004-01-01" fin="2011-12-31" />
 	</CODE>
+	<CODE description="Durée (en mois) de versement pour le premier enfant" code="duree1" >
+	  <VALUE valeur="6" deb="2004-01-01" fin="2011-12-31" />
+	</CODE>
       </NODE>
       <NODE description="Complément de libre choix du mode de garde" code="clmg" >
 	<CODE description="Limite d'âge (stricte) pour une prestation pleine" code="age1" >

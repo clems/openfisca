@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import (round, ceil, floor, maximum as max_, minimum as min_, 
-                   logical_not as not_, logical_or as or_)
+                   logical_not as not_)
 from france.data import QUIFAM, QUIMEN
 from france.pfam import nb_enf
 
@@ -64,19 +64,18 @@ def _al_pac(age, smic55, nbR, _P, _option = {'age': ENFS, 'smic55': ENFS}):
     # pour une famille
     return al_pac
         
-def _br_al(etu, br_pf_i, rev_coll, biact, _P ,_option = {'etu': [CHEF, PART], 'br_pf_i': [CHEF, PART]}):
+def _br_al(etu, boursier, br_pf_i, rev_coll, biact, _P ,_option = {'boursier': [CHEF, PART], 'etu': [CHEF, PART], 'br_pf_i': [CHEF, PART]}):
     '''
     Base ressource des allocations logement
     '''
     # On ne considère que les revenus des 2 conjoints et les revenus non
     # individualisable
-    # self.etu_vs et self.etu_cj
     #   0 - non étudiant
     #   1 - étudiant non boursier
     #   2 - éutidant boursier
-    # self.vous et self.conj : somme des revenus catégoriel après abatement
-    # self.coll autres revenus du ménage non individualisable
-    # self.ALabat abatement prix en compte pour le calcul de la base ressources
+    # revCatvous et self.conj : somme des revenus catégoriel après abatement
+    # revColl autres revenus du ménage non individualisable
+    # ALabat abatement prix en compte pour le calcul de la base ressources
     # des allocattions logement
     # plancher de ressources pour les etudiants
     P = _P
@@ -85,12 +84,15 @@ def _br_al(etu, br_pf_i, rev_coll, biact, _P ,_option = {'etu': [CHEF, PART], 'b
     etuC = (etu[CHEF]) & (not_(etu[PART]))
     etuP = not_(etu[CHEF]) & (etu[PART])
     etuCP = (etu[CHEF]) & (etu[PART])
+    # Boursiers
+    etuCB = etu[CHEF]&boursier[CHEF]
+    etuPB = etu[PART]&boursier[PART]
     # self.etu = (self.etu[CHEF]>=1)|(self.etuP>=1)
     
-    revCatVous = max_(br_pf_i[CHEF],etuC*(Pr.dar_4-(etu[CHEF])*Pr.dar_5))
-    revCatConj = max_(br_pf_i[PART],etuP*(Pr.dar_4-(etu[PART])*Pr.dar_5))
+    revCatVous = max_(br_pf_i[CHEF],etuC*(Pr.dar_4-(etuCB)*Pr.dar_5))
+    revCatConj = max_(br_pf_i[PART],etuP*(Pr.dar_4-(etuPB)*Pr.dar_5))
     revCatVsCj = not_(etuCP)*(revCatVous + revCatConj) + \
-                    etuCP*max_(br_pf_i[CHEF] + br_pf_i[PART], Pr.dar_4 -(etu[CHEF]|etu[PART])*Pr.dar_5 + Pr.dar_7)
+                    etuCP*max_(br_pf_i[CHEF] + br_pf_i[PART], Pr.dar_4 -(etuCB|etuPB)*Pr.dar_5 + Pr.dar_7)
     
     # somme des revenus catégoriels après abatement
     revCat = revCatVsCj + rev_coll
@@ -151,7 +153,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     # loyer;
     L1 = loyer
     # loyer plafond;
-    lp_taux = (coloc==0)*1 + coloc*P.al.loyers_plafond.colocation
+    lp_taux = (not_(coloc))*1 + coloc*P.al.loyers_plafond.colocation
     
     z1 = P.al.loyers_plafond.zone1
     z2 = P.al.loyers_plafond.zone2
@@ -216,18 +218,15 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     Tp= TF + TL
     
     PP = Po + Tp*Rp
-    al_loc = max_(0,E - PP)*(loca==1)
+    al_loc = max_(0,E - PP)*loca
     al_loc = al_loc*(al_loc>=P.al.autres.nv_seuil)
 
     ## APL pour les accédants à la propriété
-    al_acc = 0*(acce==1)
-
+    al_acc = 0*acce
     ## APL (tous)
-    
     al = al_loc + al_acc
     # les allocations logmeent sont sumis à la crds
     # al = (al_loc + al_acc)*(1-P.fam.af.crds)
-
     return 12*al
 
 def _alf(al, al_pac, zone_apl, _P):
@@ -249,7 +248,7 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale étudiante
     '''    
-    alset = (al_pac==0)*or_(etu[CHEF],etu[PART])*al
+    alset = (al_pac==0)*(etu[CHEF] | etu[PART])*al
     return alset
 
 def _apl(al):
