@@ -48,7 +48,10 @@ if __name__ == '__main__':
     model.calculate('irpp')
     model.calculate('af')
     model.calculate('cf')
+    print stats.itemfreq(inputs.statmarit.get_value())
     print stats.itemfreq(model.nbptr.get_value())
     print sum(model.af.get_value()*inputs.wprm.get_value())/1e9
     print sum(model.cf.get_value()*inputs.wprm.get_value())/1e9
     print sum(model.irpp.get_value()*inputs.wprm.get_value())/1e9
+
+#    model.as_csv('out.csv')
