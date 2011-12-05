@@ -238,8 +238,16 @@ def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     out  = (c13>=0)*(g13 + e13*(e13<0)) - (c13<0)*d13
     return out
 
-def _rev_cat_rpns(sal):
-    return 0*sal
+def _rev_cat_rpns(rpns_i, _option = {'rpns_i': ALL}):
+    '''
+    Traitemens salaires pensions et rentes
+    'foy'
+    '''
+    out = 0
+    for qui in rpns_i.itervalues():
+        out += qui
+    
+    return out
 
 def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
     '''
@@ -608,12 +616,10 @@ def _ric(mbic_exon, mbic_impv, mbic_imps, abic_exon, nbic_exon, abic_impn, nbic_
            + nbic_apch)
     
     cond = (mbic_impv>0) & (mbic_imps==0)
-    taux = P.vente_taux*cond + P.servi_taux*not_(cond)
-    
-    P.cbicf_min = 305
-    
+    taux = P.vente.taux*cond + P.servi.taux*not_(cond)
+        
     cbic = min_(mbic_impv + mbic_imps + mbic_exon, 
-                max_(P.cbicf_min,round(mbic_impv*P.vente_taux + mbic_imps*P.servi_taux + mbic_exon*taux)))
+                max_(P.vente.min,round(mbic_impv*P.vente.taux + mbic_imps*P.servi.taux + mbic_exon*taux)))
     
     ric = zbic - cbic
 
@@ -622,7 +628,7 @@ def _ric(mbic_exon, mbic_impv, mbic_imps, abic_exon, nbic_exon, abic_impn, nbic_
 def _rac(macc_exon, macc_impv, macc_imps,
          aacc_exon, aacc_impn, aacc_imps, aacc_defn, aacc_defs,
          nacc_exon, nacc_impn, nacc_imps, nacc_defn, nacc_defs,
-         mncnp_impo, cncnp_bene, cncnp_defi, _P):
+         mncn_impo, cncn_bene, cncn_defi, _P):
     '''
     Revenus accessoires individuels
     'ind'
@@ -639,25 +645,24 @@ def _rac(macc_exon, macc_impv, macc_imps,
     nacc_imps (f5nj, f5oj, f5pj)
     nacc_defn (f5nl, f5ol, f5pl)
     nacc_defs (f5nm, f5om, f5pm)
-    mncnp_impo (f5ku, f5lu, f5mu)
-    cncnp_bene (f5sn, f5ns, f5os)
-    cncnp_defi (f5sp, f5nu, f5ou, f5sr)
+    mncn_impo (f5ku, f5lu, f5mu)
+    cncn_bene (f5sn, f5ns, f5os)
+    cncn_defi (f5sp, f5nu, f5ou, f5sr)
     f5sv????
     '''
     P = _P.ir.rpns.microentreprise
-    P2 = _P.ir.rpns.specialbnc
 
     zacc = (  macc_exon + macc_impv + macc_imps 
             + aacc_exon + aacc_impn + aacc_imps - aacc_defn - aacc_defs 
             + nacc_exon + nacc_impn + nacc_imps - nacc_defn - nacc_defs 
-            + mncnp_impo + cncnp_bene - cncnp_defi)
+            + mncn_impo + cncn_bene - cncn_defi)
     
     cond = (macc_impv >0) & (macc_imps ==0)
-    taux = P.vente_taux*cond + P.servi_taux*not_(cond)
+    taux = P.vente.taux*cond + P.servi.taux*not_(cond)
     
-    cacc = min_(macc_impv + macc_imps + macc_exon + mncnp_impo, 
-                max_(P.vente_min,
-                     round(macc_impv*P.vente_taux + macc_imps*P.servi_taux + macc_exon*taux + mncnp_impo*P2.taux )))
+    cacc = min_(macc_impv + macc_imps + macc_exon + mncn_impo, 
+                max_(P.vente.min,
+                     round(macc_impv*P.vente.taux + macc_imps*P.servi.taux + macc_exon*taux + mncn_impo*P.specialbnc.taux )))
     
     rac = zacc - cacc
     
@@ -677,7 +682,7 @@ def _rnc(mbnc_exon, mbnc_impo, abnc_exon, nbnc_exon, abnc_impo, nbnc_impo, abnc_
     nbnc_defi (f5qk, f5rk, f5sk)
     f5ql, f5qm????
     '''
-    P = _P.ir.rpns.specialbnc
+    P = _P.ir.rpns.microentreprise.specialbnc
 
     zbnc = (  mbnc_exon + mbnc_impo 
             + abnc_exon + nbnc_exon 
@@ -732,171 +737,97 @@ def _rpns_mvlt(mbic_mvlt, macc_mvlt, mbnc_mvlt, mncn_mvlt):
     '''
     return mbic_mvlt + macc_mvlt + mbnc_mvlt + mncn_mvlt
     
-#def _rpns_full(self, P, table):
-#    '''
-#    REVENUS DES PROFESSIONS NON SALARIEES
-#    partie 5 de la déclaration complémentaire
-#    '''
-#
-#    def abatv(rev, P):
-#        return max_(0,rev - min_(rev, max_(P.microentreprise.vente_taux*min_(P.microentreprise.vente_max, rev), P.microentreprise.vente_min)))
-#    
-#    def abats(rev, P):
-#        return max_(0,rev - min_(rev, max_(P.microentreprise.servi_taux*min_(P.microentreprise.servi_max, rev), P.microentreprise.servi_min)))
-#    
-#    def abatnc(rev, P):
-#        return max_(0,rev - min_(rev, max_(P.nc_abat_taux*min_(P.nc_abat_max, rev), P.nc_abat_min)))
-#
-#
-#    #regime du forfait
-#    frag_impo = f5ho + f5io + f5jo
-#    frag_pvct = f5hw + f5iw + f5jw
-#    frag_timp = frag_impo + frag_pvct  # majoration de 25% mais les pvct ne sont pas majorées de 25%
-#    
-#    #Régime du bénéfice réel ou transitoire bénéficiant de l'abattement CGA
-#    arag_impg = f5hc + f5ic + f5jc
-#    arag_defi = f5hf + f5if + f5jf
-#    arag_timp = arag_impg                  # + aragf_impx/5 pas de majoration
-#    
-#    #Régime du bénéfice réel ou transitoire ne bénéficiant pas de l'abattement CGA
-#    nrag_impg = f5hi + f5ii + f5ji
-#    nrag_defi = f5hl + f5il + f5jl
-#    nrag_timp = nrag_impg # + nragf_impx/5  # majoration de 25% mais les pvct ne sont pas majorées de 25%
-#    
-#    #Jeunes agriculteurs montant de l'abattement de 50% ou 100% 
-#    nrag_ajag = f5hm + f5im + f5jm 
-#    # TODO: à integrer qqpart
-#    
+def _rpns_i(frag_impo, arag_impg, nrag_impg, arag_defi,  nrag_defi,
+            mbic_impv, mbic_imps, 
+            abic_impn, abic_imps, abic_defn, abic_defs,
+            nbic_impn, nbic_imps, nbic_defn, nbic_defs,
+            macc_impv, macc_imps,
+            aacc_impn, aacc_imps, aacc_defn, aacc_defs,
+            nacc_impn, nacc_imps, nacc_defn, nacc_defs,
+            mbnc_impo,
+            abnc_impo, abnc_defi,
+            nbnc_impo, nbnc_defi,
+            mncn_impo, cncn_bene, cncn_defi,
+            rpns_pvct, rpns_mvct, rpns_mvlt, 
+            f5sq, _P):
+    '''
+    Revenus des professions non salariées individuels
+    '''
+    P = _P.ir.rpns.microentreprise
+    def abat_rnps(rev, P):
+        return max_(0,rev - min_(rev, max_(P.taux*min_(P.max, rev), P.min)))
+    
+    #Jeunes agriculteurs montant de l'abattement de 50% ou 100% 
+    # nrag_ajag = f5hm + f5im + f5jm 
+    
 #    # déficits agricole des années antérieurs (imputables uniquement
 #    # sur des revenus agricoles)
-#    rag_timp = frag_timp + arag_timp + nrag_timp 
+#    rag_timp = frag_impo + frag_pvct + arag_impg + nrag_impg 
 #    cond = (AUTRE <= P.def_agri_seuil)
 #    def_agri = cond*(arag_defi + nrag_defi) + not_(cond)*min_(rag_timp, arag_defi + nrag_defi)
 #    # TODO : check 2006 cf art 156 du CGI pour 2006
-#    # sur base 2003:
-#    # cf menage 3020938 pour le déficit agricole qui peut déduire et ménage
-#    # 3001872 qui ne peut pas déduire.
 #    def_agri_ant    = min_(max_(0,rag_timp - def_agri), f5sq)
-#
-#    ## B revenus industriels et commerciaux professionnels     
-#    #regime micro entreprise
-#    mbic_impv = abatv(f5ko,P) + abatv(f5lo,P) + abatv(f5mo,P)
-#    mbic_imps = abats(f5kp,P) + abats(f5lp,P) + abats(f5mp,P)
-#    mbic_pvct = f5kx + f5lx + f5mx
-#    mbic_mvlt = f5kr + f5lr + f5mr
-#    mbic_mvct = f5hu
-#    mbic_timp = mbic_impv + mbic_imps - mbic_mvlt
-#    
-#    #Régime du bénéfice réel bénéficiant de l'abattement CGA
-#    abic_impn = f5kc + f5lc + f5mc
-#    abic_imps = f5kd + f5ld + f5md
-#    abic_defn = f5kf + f5lf + f5mf
-#    abic_defs = f5kg + f5lg + f5mg
-#    abic_timp = abic_impn + abic_imps - (abic_defn + abic_defs)
-#    abic_defe = -min_(abic_timp,0) 
-#    # base 2003: cf ménage 3021218 pour l'imputation illimitée de ces déficits.
-#    
-#    #Régime du bénéfice réel ne bénéficiant pas de l'abattement CGA
-#    nbic_impn = f5ki + f5li + f5mi
-#    nbic_imps = f5kj + f5lj + f5mj
-#    nbic_defn = f5kl + f5ll + f5ml
-#    nbic_defs = f5km + f5lm + f5mm
-#    nbic_timp = (nbic_impn + nbic_imps) - (nbic_defn + nbic_defs)
-#    nbic_defe = -min_(nbic_timp,0) 
-#    # base 2003 cf ménage 3015286 pour l'imputation illimitée de ces déficits.
-#    
-#    #Abatemment artisant pécheur
-#    nbic_apch = f5ks + f5ls + f5ms # TODO : à intégrer qqpart
-#        
-#    
-#    ## C revenus industriels et commerciaux non professionnels 
-#    # (revenus accesoires du foyers en nomenclature INSEE)
-#    #regime micro entreprise
-#    macc_impv = abatv(f5no,P) + abatv(f5oo,P) + abatv(f5po,P)
-#    macc_imps = abats(f5np,P) + abats(f5op,P) + abats(f5pp,P)
-#    macc_pvct = f5nx + f5ox + f5px
-#    macc_mvlt = f5nr + f5or + f5pr
-#    macc_mvct = f5iu
-#    macc_timp = macc_impv + macc_imps - macc_mvlt
-#    
-#    #Régime du bénéfice réel bénéficiant de l'abattement CGA
-#    aacc_impn = f5nc + f5oc + f5pc
-#    aacc_imps = f5nd + f5od + f5pd
-#    aacc_defn = f5nf + f5of + f5pf
-#    aacc_defs = f5ng + f5og + f5pg
-#    aacc_timp = max_(0,aacc_impn + aacc_imps - (aacc_defn + aacc_defs))
-#    
-#    #Régime du bénéfice réel ne bénéficiant pas de l'abattement CGA
-#    nacc_impn = f5ni + f5oi + f5pi
-#    nacc_imps = f5nj + f5oj + f5pj
-#    nacc_defn = f5nl + f5ol + f5pl
-#    nacc_defs = f5nm + f5om + f5pm
-#    nacc_timp = max_(0,nacc_impn + nacc_imps - (nacc_defn + nacc_defs))
-#    # TODO : base 2003 comprendre pourquoi le ménage 3018590 n'est pas imposé sur 5nj.
-#    
-#    ## E revenus non commerciaux non professionnels 
-#    #regime déclaratif special ou micro-bnc
-#    mncn_impo = abatnc(f5ku,P) + abatnc(f5lu,P) + abatnc(f5mu,P)
-#    mncn_pvct = f5ky + f5ly + f5my
-#    mncn_mvlt = f5kw + f5lw + f5mw
-#    mncn_mvct = f5ju
-#    mncn_timp = mncn_impo - mncn_mvlt
-#    
-#    # TODO : 2006 
-#    # régime de la déclaration controlée 
-#    cncn_bene = f5sn + f5ns + f5os
-#    cncn_defi = f5sp + f5nu + f5ou + f5sr
-#    #total 11
-#    cncn_timp = max_(0,cncn_bene - cncn_defi) 
-#    # TODO : abatement jeunes créateurs 
-#    
-#    ## D revenus non commerciaux professionnels
-#    #regime déclaratif special ou micro-bnc
-#    mbnc_impo = abatnc(f5hq,P) + abatnc(f5iq,P) + abatnc(f5jq,P)
-#    mbnc_pvct = f5hv + f5iv + f5jv
-#    mbnc_mvlt = f5hs + f5is + f5js
-#    mbnc_mvct = f5kz
-#    mbnc_timp = mbnc_impo - mbnc_mvlt
-#    
-#    #regime de la déclaration contrôlée bénéficiant de l'abattement association agréée
-#    abnc_impo = f5qc + f5rc + f5sc
-#    abnc_defi = f5qe + f5re + f5se
-#    abnc_timp = abnc_impo - abnc_defi
-#    
-#    #regime de la déclaration contrôlée ne bénéficiant pas de l'abattement association agréée
-#    nbnc_impo = f5qi + f5ri + f5si 
-#    nbnc_defi = f5qk + f5rk + f5sk 
-#    nbnc_timp = nbnc_impo - nbnc_defi
-#    # cf base 2003 menage 3021505 pour les deficits
-#    
-#    ## Totaux
-#    atimp = arag_timp + abic_timp +  aacc_timp + abnc_timp
-#    ntimp = nrag_timp + nbic_timp +  nacc_timp + nbnc_timp
-#    
-#    majo_cga = max_(0,P.cga_taux2*(ntimp + frag_impo)) # pour ne pas avoir à
-#                                            # majorer les déficits
-#    #total 6
-#    rev_NS = frag_impo + frag_pvct + atimp + ntimp + majo_cga - def_agri - def_agri_ant 
-#    
-#    #revenu net après abatement
-#    # total 7
-#    rev_NS_mi = mbic_timp + macc_timp + mbnc_timp + mncn_timp 
-#        
-#    #plus value ou moins value à court terme
-#    #activité exercée à titre professionnel 
-#    # total 8
-#    pvct_pro = mbic_pvct - mbic_mvct + mbnc_pvct - mbnc_mvct
-#    #activité exercée à titre non professionnel
-#    #revenus industriels et commerciaux non professionnels 
-#    # total 9
-#    pvct_icnpro = min_(macc_pvct - macc_mvct, macc_timp) 
-#    #revenus non commerciaux non professionnels 
-#    # total 10
-#    pvct_ncnpro = min_(mncn_pvct - mncn_mvct, mncn_timp)
-#    
-#    RPNS = rev_NS + rev_NS_mi + pvct_pro + pvct_icnpro + pvct_ncnpro + cncn_timp
-#    
-#    return RPNS
+
+    def_agri = arag_defi + nrag_defi + f5sq
+
+    ## B revenus industriels et commerciaux professionnels     
+    # regime micro entreprise
+    mbic_timp = abat_rnps(mbic_impv, P.vente) + abat_rnps(mbic_imps, P.servi)
+    
+    # Régime du bénéfice réel bénéficiant de l'abattement CGA
+    abic_timp = abic_impn + abic_imps - (abic_defn + abic_defs)
+    
+    # Régime du bénéfice réel ne bénéficiant pas de l'abattement CGA
+    nbic_timp = (nbic_impn + nbic_imps) - (nbic_defn + nbic_defs)
+    
+    # Abatemment artisant pécheur
+    # nbic_apch = f5ks + f5ls + f5ms # TODO : à intégrer qqpart
+            
+    ## C revenus industriels et commerciaux non professionnels 
+    # (revenus accesoires du foyers en nomenclature INSEE)
+
+    #regime micro entreprise
+    macc_timp = abat_rnps(macc_impv, P.vente) + abat_rnps(macc_imps, P.servi) 
+    #Régime du bénéfice réel bénéficiant de l'abattement CGA
+    aacc_timp = max_(0, (aacc_impn + aacc_imps) - (aacc_defn + aacc_defs))    
+    #Régime du bénéfice réel ne bénéficiant pas de l'abattement CGA
+    nacc_timp = max_(0, (nacc_impn + nacc_imps) - (nacc_defn + nacc_defs))
+    
+    ## E revenus non commerciaux non professionnels 
+    #regime déclaratif special ou micro-bnc
+    mncn_timp = abat_rnps(mncn_impo, P.specialbnc)
+    
+    # régime de la déclaration controlée 
+    #total 11
+    cncn_timp = max_(0,cncn_bene - cncn_defi) 
+    # Abatement jeunes créateurs 
+    
+    ## D revenus non commerciaux professionnels
+    #regime déclaratif special ou micro-bnc
+    mbnc_timp = abat_rnps(mbnc_impo, P.specialbnc)
+    
+    #regime de la déclaration contrôlée bénéficiant de l'abattement association agréée
+    abnc_timp = abnc_impo - abnc_defi
+    
+    #regime de la déclaration contrôlée ne bénéficiant pas de l'abattement association agréée
+    nbnc_timp = nbnc_impo - nbnc_defi
+    
+    ## Totaux
+    atimp = arag_impg + abic_timp +  aacc_timp + abnc_timp
+    ntimp = nrag_impg + nbic_timp +  nacc_timp + nbnc_timp
+    
+    majo_cga = max_(0,_P.ir.rpns.cga_taux2*(ntimp + frag_impo)) # pour ne pas avoir à
+                                            # majorer les déficits
+    #total 6
+    rev_NS = frag_impo - def_agri + atimp + ntimp + majo_cga 
+    
+    #revenu net après abatement
+    # total 7
+    rev_NS_mi = mbic_timp + macc_timp + mbnc_timp + mncn_timp - rpns_mvlt
+        
+    RPNS = rev_NS + rev_NS_mi + rpns_pvct - rpns_mvct + cncn_timp
+    
+    return RPNS
 
 def _abat_spe(age, caseP, caseF, rng, nbN, _P, _option = {'age': [VOUS, CONJ]}):
     '''

@@ -1603,45 +1603,49 @@
         <VALUE valeur="104655" deb="2009-01-01" fin="2009-12-31"/>
         <VALUE valeur="106225" deb="2010-01-01" fin="2011-12-31"/>
       </CODE>
-      <NODE description="Régime microentreprise" code = "microentreprise">
-        <CODE description="Taux activité de vente" code="vente_taux" format = 'percent'>
-          <VALUE valeur="0.72" deb="2002-01-01" fin="2005-12-31"/>
-          <VALUE valeur="0.71" deb="2006-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Minimum activité de vente" code="vente_min" format = 'integer'>
-          <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Maximum activité de vente" code="vente_max" format = 'integer'>
-          <VALUE valeur="76300" deb="2002-01-01" fin="2008-12-31"/>
-          <VALUE valeur="80000" deb="2009-01-01" fin="2009-12-31"/>
-          <VALUE valeur="80300" deb="2010-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Taux activité de service" code="servi_taux" format = 'percent'>
-          <VALUE valeur="0.52" deb="2002-01-01" fin="2005-12-31"/>
-          <VALUE valeur="0.50" deb="2006-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Minimum activité de service" code="servi_min" format = 'integer'>
-          <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Maximum activité de service" code="servi_max" format = 'integer'>
-          <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31"/>
-          <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31"/>
-          <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31"/>
-        </CODE>
-      </NODE>
-      <NODE description="Régime spécial BNC" code = "specialbnc">
-        <CODE description="Taux" code="taux" format = 'percent'>
-          <VALUE valeur="0.37" deb="2002-01-01" fin="2005-12-31"/>
-          <VALUE valeur="0.34" deb="2006-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Minimum" code="min" format = 'integer'>
-          <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
-        </CODE>
-        <CODE description="Régime spécial BNC - Maximum" code="nc_abat_max" format = 'integer'>
-          <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31" code="nc_abat_max" />
-          <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31" code="nc_abat_max" />
-          <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31" code="nc_abat_max" />
-        </CODE>
+      <NODE description="Régime microentreprise/Spécial bnc" code = "microentreprise">
+        <NODE description="Activité de vente" code = "vente">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.72" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.71" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="76300" deb="2002-01-01" fin="2008-12-31"/>
+            <VALUE valeur="80000" deb="2009-01-01" fin="2009-12-31"/>
+            <VALUE valeur="80300" deb="2010-01-01" fin="2011-12-31"/>
+          </CODE>
+        </NODE>
+        <NODE description="Activité de service" code = "servi">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.52" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.50" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31"/>
+            <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31"/>
+            <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31"/>
+          </CODE>
+        </NODE>
+        <NODE description="Régime spécial BNC" code = "specialbnc">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.37" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.34" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31" code="nc_abat_max" />
+            <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31" code="nc_abat_max" />
+            <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31" code="nc_abat_max" />
+          </CODE>
+        </NODE>
       </NODE>
     </NODE>
     <NODE code = "charges_deductibles" description="Charges déductibles">

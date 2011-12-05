@@ -152,6 +152,7 @@ class Model(SystemSf):
     rpns_mvlt = Prestation(ir._rpns_mvlt)
     rpns_pvce = Prestation(ir._rpns_pvce)
     rpns_exon = Prestation(ir._rpns_exon)
+    rpns_i    = Prestation(ir._rpns_i)
     
     rev_cap_bar = Prestation(ir._rev_cap_bar, 'foy')
     rev_cap_lib = Prestation(ir._rev_cap_lib, 'foy')

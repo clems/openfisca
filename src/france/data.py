@@ -321,9 +321,9 @@ class InputTable(DataTable):
     nacc_imps = IntCol() # (f5nj, f5oj, f5pj)
     nacc_defn = IntCol() # (f5nl, f5ol, f5pl)
     nacc_defs = IntCol() # (f5nm, f5om, f5pm)
-    mncnp_impo = IntCol() # (f5ku, f5lu, f5mu)
-    cncnp_bene = IntCol() # (f5sn, f5ns, f5os)
-    cncnp_defi = IntCol() # (f5sp, f5nu, f5ou, f5sr)
+    mncn_impo = IntCol() # (f5ku, f5lu, f5mu)
+    cncn_bene = IntCol() # (f5sn, f5ns, f5os)
+    cncn_defi = IntCol() # (f5sp, f5nu, f5ou, f5sr)
 
     mbnc_exon = IntCol() # (f5hp, f5ip, f5jp)
     abnc_exon = IntCol() # (f5qb, f5rb, f5sb)
@@ -376,6 +376,7 @@ class InputTable(DataTable):
     gar_dom   = BoolCol()
 
     # to remove
+    wprm = FloatCol()
     etr = IntCol()     
     charges_deduc = IntCol()
     reductions = IntCol()
@@ -385,4 +386,4 @@ class InputTable(DataTable):
     aer = IntCol()
     ass = IntCol()
 #    birth = DateCol()
-    wprm = FloatCol()
+    f5sq = IntCol()
