@@ -24,7 +24,7 @@ This file is part of openFisca.
 from __future__ import division
 from france.data import CAT
 from numpy import maximum as max_, minimum as min_, logical_not as not_, zeros
-from Utils import Bareme, BarmMar
+from Utils import Bareme
 from parametres.paramData import Tree2Object
 
 class Object(object):
@@ -153,9 +153,9 @@ def _salbrut(sali, hsup, type_sal, _P):
     cad = cadre.inverse()
     fon = fonc.inverse()
 
-    brut_nca = BarmMar(sali, nca)
-    brut_cad = BarmMar(sali, cad)
-    brut_fon = BarmMar(sali, fon)
+    brut_nca = nca.calc(sali)
+    brut_cad = cad.calc(sali)
+    brut_fon = fon.calc(sali)
 
     salbrut = (brut_nca*(type_sal == CAT['noncadre']) + 
                brut_cad*(type_sal == CAT['cadre']) + 
@@ -181,7 +181,7 @@ def _cotpat(salbrut, hsup, type_sal, _P):
     for categ in CAT:
         iscat = (type_sal == categ[1])
         for bar in getattr(pat,categ[0]).__dict__.itervalues():
-            temp = - (iscat*BarmMar(salbrut, bar))
+            temp = - (iscat*bar.calc(salbrut))
             cotpat += temp
     return cotpat
 
@@ -200,7 +200,7 @@ def _cotsal(salbrut, hsup, type_sal, _P):
     for categ in CAT:
         iscat = (type_sal == categ[1])
         for bar in getattr(sal,categ[0]).__dict__.itervalues():
-            temp = - (iscat*BarmMar(salbrut-hsup, bar))
+            temp = - (iscat*bar.calc(salbrut-hsup))
             cotsal += temp
     return cotsal
 
@@ -210,7 +210,7 @@ def _csgsald(salbrut, hsup, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.act.deduc, plaf_ss)
-    return - BarmMar(salbrut - hsup, csg) 
+    return - csg.calc(salbrut - hsup) 
 
 def _csgsali(salbrut, hsup, _P):
     '''
@@ -218,7 +218,7 @@ def _csgsali(salbrut, hsup, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.act.impos, plaf_ss)
-    return  - BarmMar(salbrut - hsup, csg)
+    return  - csg.calc(salbrut - hsup)
 
 def _crdssal(salbrut, hsup, _P):
     '''
@@ -226,7 +226,7 @@ def _crdssal(salbrut, hsup, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     crds = scaleBaremes(_P.crds.act, plaf_ss)
-    return - BarmMar(salbrut - hsup, crds)
+    return - crds.calc(salbrut - hsup)
 
 
 def _sal_h_b(salbrut):
@@ -263,7 +263,7 @@ def _chobrut(choi, csg_taux_plein, _P):
     P = _P.csg.chom
     chom_plein = P.plein.deduc.inverse()
     chom_reduit = P.reduit.deduc.inverse()
-    chobrut = not_(csg_taux_plein)*BarmMar(choi, chom_reduit) +  csg_taux_plein*BarmMar(choi, chom_plein)
+    chobrut = not_(csg_taux_plein)*chom_reduit.calc(choi) +  csg_taux_plein*chom_plein.calc(choi)
     return chobrut
 
 def _csgchod(chobrut, csg_taux_plein, _P):
@@ -272,8 +272,8 @@ def _csgchod(chobrut, csg_taux_plein, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.chom, plaf_ss)
-    taux_plein = BarmMar(chobrut, csg.plein.deduc)
-    taux_reduit = BarmMar(chobrut, csg.reduit.deduc)
+    taux_plein = csg.plein.deduc.calc(chobrut)
+    taux_reduit = csg.reduit.deduc.calc(chobrut)
     csgchod = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
     return - csgchod
 
@@ -283,8 +283,8 @@ def _csgchoi(chobrut, csg_taux_plein, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.chom, plaf_ss)
-    taux_plein = BarmMar(chobrut, csg.plein.impos)
-    taux_reduit = BarmMar(chobrut, csg.reduit.impos)
+    taux_plein = csg.plein.impos.calc(chobrut)
+    taux_reduit = csg.reduit.impos.calc(chobrut)
     csgchoi = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
     return - csgchoi
 
@@ -294,7 +294,7 @@ def _crdscho(chobrut, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     crds = scaleBaremes(_P.crds.act, plaf_ss)
-    return - BarmMar(chobrut, crds)
+    return - crds.calc(chobrut)
 
 def _cho(chobrut, csgchod):
     return chobrut + csgchod
@@ -321,7 +321,7 @@ def _rstbrut(rsti, csg_taux_plein, _P):
     P = _P.csg.retraite
     rst_plein = P.plein.deduc.inverse()  # TODO rajouter la non  déductible dans param
     rst_reduit = P.reduit.deduc.inverse()  #
-    rstbrut = not_(csg_taux_plein)*BarmMar(rsti, rst_reduit) + csg_taux_plein*BarmMar(rsti, rst_plein)    
+    rstbrut = not_(csg_taux_plein)*rst_reduit.calc(rsti) + csg_taux_plein*rst_plein.calc(rsti, )    
     return rstbrut
 
 def _csgrstd(rstbrut, csg_taux_plein, _P):
@@ -330,8 +330,8 @@ def _csgrstd(rstbrut, csg_taux_plein, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.retraite, plaf_ss)
-    taux_plein = BarmMar(rstbrut, csg.plein.deduc)
-    taux_reduit = BarmMar(rstbrut, csg.reduit.deduc)
+    taux_plein = csg.plein.deduc.calc(rstbrut)
+    taux_reduit = csg.reduit.deduc.calc(rstbrut)
     csgrstd = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
     return - csgrstd
 
@@ -341,8 +341,8 @@ def _csgrsti(rstbrut, csg_taux_plein, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.retraite, plaf_ss)
-    taux_plein = BarmMar(rstbrut, csg.plein.impos)
-    taux_reduit = BarmMar(rstbrut, csg.reduit.impos)
+    taux_plein = csg.plein.impos.calc(rstbrut)
+    taux_reduit = csg.reduit.impos.calc(rstbrut)
     csgrsti = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
     return - csgrsti
 
@@ -352,7 +352,7 @@ def _crdsrst(rstbrut, _P):
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     crds = scaleBaremes(_P.crds.rst, plaf_ss)
-    return - BarmMar(rstbrut, crds)
+    return - crds.calc(rstbrut)
 
 def _rst(rstbrut, csgrstd):
     '''
@@ -385,7 +385,7 @@ def _ir_lps(base_csg, nbF, nbH, statmarit, _P):
     ac = couple*P.abatt_conj
     rc = couple*P.reduc_conj
 
-    return - max_(0, BarmMar(max_(base_csg - ae - ac, 0) , P.bareme)-re-rc) + ce
+    return - max_(0, P.bareme.calc(max_(base_csg - ae - ac, 0) )-re-rc) + ce
 
 
 ############################################################################

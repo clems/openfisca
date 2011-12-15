@@ -24,8 +24,6 @@ This file is part of openFisca.
 from __future__ import division
 from numpy import ( maximum as max_, minimum as min_, logical_xor as xor_, 
                     logical_not as not_, round)
-from Utils import BarmMar
-
 from france.data import QUIFOY, YEAR
 
 VOUS = QUIFOY['vous']
@@ -293,9 +291,12 @@ def _ir_brut(nbptr, rni, _P):
     Impot sur le revenu avant non imposabilité et plafonnement du quotien
     'foy'
     '''
-    P = _P.ir.bareme
-
-    return nbptr*BarmMar(rni/nbptr, P) # TODO : partir d'ici, petite différence avec Matlab
+    bar = _P.ir.bareme
+    bar.t_x()
+    print nbptr*bar.calc(rni/nbptr)
+    bar._linear_taux_moy = True
+    print nbptr*bar.calc(rni/nbptr)
+    return nbptr*bar.calc(rni/nbptr) # TODO : partir d'ici, petite différence avec Matlab
 
 def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
     '''
@@ -303,7 +304,7 @@ def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celd
     '''
     P = _P.ir
     I = ir_brut
-    A = BarmMar(rni/nb_adult,P.bareme)
+    A = P.bareme.calc(rni/nb_adult)
     A = nb_adult*A    
 
     aa0 = (nbptr-nb_adult)*2           #nombre de demi part excédant nbadult
@@ -438,8 +439,8 @@ def _tehr(rfr, nb_adult, _P):
     Taxe exceptionnelle sur les hauts revenus
     'foy'
     '''
-    P = _P.ir.tehr
-    return BarmMar(rfr/nb_adult, P)*nb_adult
+    bar = _P.ir.tehr
+    return bar.calc(rfr/nb_adult)*nb_adult
 
 def _credits_impot(ppe):
     '''
