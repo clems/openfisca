@@ -165,8 +165,7 @@ class Model(SystemSf):
     adhcga   = Prestation(ri._adhcga, 'foy')
     creaen   = Prestation(ri._creaen, 'foy', start=date(2006,1,1))
     ecpess   = Prestation(ri._ecpess, 'foy')
-    scelli_2009   = Prestation(ri._scelli_2009, 'foy', start=date(2009,1,1), end=date(2009,12,31))
-    scelli_2010   = Prestation(ri._scelli_2010, 'foy', start=date(2010,1,1), end=date(2010,12,31))
+    scelli   = Prestation(ri._scelli, 'foy', start=date(2009,1,1), end=date(2010,12,31))
     locmeu   = Prestation(ri._locmeu, 'foy', start=date(2009,1,1), end=date(2010,12,31))
     doment   = Prestation(ri._doment, 'foy')
     domsoc   = Prestation(ri._domsoc, 'foy')
@@ -209,7 +208,7 @@ class Model(SystemSf):
     drbail = Prestation(ci._drbail, 'foy')
     garext = Prestation(ci._garext, 'foy', start=date(2005,1,1))
     preetu = Prestation(ci._preetu, 'foy', start=date(2005,1,1))
-    saldom = Prestation(ci._saldom, 'foy', start=date(2007,1,1))
+    saldom2 = Prestation(ci._saldom2, 'foy', start=date(2007,1,1))
     inthab = Prestation(ci._inthab, 'foy', start=date(2007,1,1))
     assloy = Prestation(ci._assloy, 'foy', start=date(2005,1,1))
     autent = Prestation(ci._autent, 'foy', start=date(2009,1,1))
@@ -337,7 +336,6 @@ class Model(SystemSf):
     rsa_act = Prestation(ms._rsa_act, 'fam', start = date(2009, 7, 1))
     api  = Prestation(ms._api, 'fam')
     ppe_cumul_rsa_act  = Prestation(ms._ppe_cumul_rsa_act ,'foy', start = date(2009, 7, 1)) # TODO inclure dans totaux
-
     
     aefa = Prestation(ms._aefa, 'fam')
 

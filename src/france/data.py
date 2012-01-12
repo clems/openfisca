@@ -409,9 +409,20 @@ class InputTable(DataTable):
     # Investissements locatif neufs : Dispositif Scellier
     f7hj = IntCol()
     f7hk = IntCol()
+    f7hn = IntCol()
+    f7ho = IntCol()
+    f7hl = IntCol()
+    f7hm = IntCol()
+    f7hr = IntCol()
+    f7hs = IntCol()
+    f7la = IntCol()
 
     # Investissement en vue de la location meublée non professionnelle dans certains établissements ou résidences
     f7ij = IntCol()
+    f7il = IntCol()
+    f7im = IntCol()
+    f7ik = IntCol()
+    f7is = IntCol()
     
     # Investissements locatifs dans les résidences de tourisme situées dans une zone de 
     # revitalisation rurale

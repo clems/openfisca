@@ -25,7 +25,7 @@ from __future__ import division
 from numpy import minimum as min_, maximum as max_, logical_not as not_, zeros
 
 def _credit(creimp, accult, percvm, direpa, mecena, prlire, aidper,
-           quaenv, drbail, garext, preetu, saldom, inthab, assloy, 
+           quaenv, drbail, garext, preetu, saldom2, inthab, assloy, 
            autent, acqgpl, divide, aidmob, jeunes, _P):
     if _P.datesim.year == 2002:
         niches = (creimp + accult + prlire + aidper + acqgpl + drbail)
@@ -43,18 +43,18 @@ def _credit(creimp, accult, percvm, direpa, mecena, prlire, aidper,
                   quaenv + acqgpl + drbail + garext + preetu + assloy + aidmob + jeunes)
     elif _P.datesim.year == 2007:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + acqgpl + drbail + garext + preetu + saldom + inthab + assloy + 
+                  quaenv + acqgpl + drbail + garext + preetu + saldom2 + inthab + assloy + 
                   aidmob + jeunes)
     elif _P.datesim.year == 2008:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom + inthab + assloy + aidmob + 
+                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + aidmob + 
                   jeunes)
     elif _P.datesim.year == 2009:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom + inthab + assloy + autent)
+                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + autent)
     elif _P.datesim.year == 2010:
         niches = (creimp + accult + percvm + direpa + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom + inthab + assloy + 
+                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + 
                   autent)
     return niches
 
@@ -286,7 +286,7 @@ def _preetu(f7uk, f7vo, f7td, _P):
     elif _P.datesim.year >=2008:
         return P.taux*min_(f7uk, P.max) + P.taux*min_(f7td, max1)
 
-def _saldom(nb_pac2, f7db, f7dg, f7dl, f7dq, _P):
+def _saldom2(nb_pac2, f7db, f7dg, f7dl, f7dq, _P):
     '''
     Crédit d’impôt emploi d’un salarié à domicile (cases 7DB, 7DG)
     2007-
