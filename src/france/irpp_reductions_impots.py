@@ -36,7 +36,7 @@ taille = 0
 
 def _reductions(ip_net, donapd, dfppce, cotsyn, resimm, patnat, sofipe, saldom, intagr, 
                prcomp, spfcpi, mohist, sofica, cappme, repsoc, invfor, deffor, 
-               daepad, rsceha, invlst, domlog, adhcga, creaen, ecpess, scelli, 
+               daepad, rsceha, invlst, domlog, adhcga, creaen, ecpess, scelli_2009, scelli_2010, 
                locmeu, doment, domsoc, intemp, garext, assvie, invrev, intcon,
                ecodev, _P):
     '''
@@ -73,12 +73,12 @@ def _reductions(ip_net, donapd, dfppce, cotsyn, resimm, patnat, sofipe, saldom, 
     elif _P.datesim.year == 2009:
         total = (donapd + dfppce + cotsyn + resimm + sofipe + ecodev + saldom + intagr + 
                 prcomp + spfcpi + mohist + sofica + cappme + repsoc + invfor + deffor + 
-                daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli + 
+                daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli_2009 + 
                 locmeu + doment)
     elif _P.datesim.year == 2010:
         total = (donapd + dfppce + cotsyn + resimm + patnat + sofipe + saldom + intagr + 
                 prcomp + spfcpi + mohist + sofica + cappme + repsoc + invfor + deffor + 
-                daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli + 
+                daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli_2010 + 
                 locmeu + doment + domsoc)
     return min_(ip_net,total)    
 
@@ -483,15 +483,21 @@ def _ecpess(f7ea, f7eb, f7ec, f7ed, f7ef, f7eg, _P):
             P.lyc*(f7ec + f7ed/2) +
             P.sup*(f7ef + f7eg/2) )
 
-def _scelli(f7hj, f7hk, _P):
+def _scelli_2009(f7hj, f7hk, _P):
     '''
     Investissements locatif neufs : Dispositif Scellier (cases 7HJ et 7HK)
-    2009-
-    TODO check: notice dirige vers bulletin officiel des impôts 5B17-09 du 15 mai 2009
-         check: 2010 ?
+    2009
     '''
     P = _P.ir.reductions_impots.scelli
-    return (P.taux1*max_(P.max,f7hj)/9 + P.taux2*max_(P.max,f7hk)/9)
+    return (P.taux1*min_(P.max,f7hj)/9 + P.taux2*min_(P.max,f7hk)/9)
+
+def _scelli_2010(f7hj, f7hk, _P):
+    '''
+    Investissements locatif neufs : Dispositif Scellier (cases 7HJ et 7HK)
+    2010
+    '''
+    P = _P.ir.reductions_impots.scelli
+    return (P.taux1*min_(P.max,f7hj)/9 + P.taux2*min_(P.max,f7hk)/9)
 
 def _locmeu(f7ij, _P):
     '''
@@ -500,7 +506,7 @@ def _locmeu(f7ij, _P):
     TODO check 2010 ?
     '''
     P = _P.ir.reductions_impots.locmeu
-    return P.taux*max_(P.max,f7ij)/9
+    return P.taux*min_(P.max,f7ij)/9
     
 def _doment(f7ur, f7oz, f7pz, f7qz, f7rz, f7sz):
     '''
