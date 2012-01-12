@@ -293,9 +293,6 @@ def _ir_brut(nbptr, rni, _P):
     '''
     bar = _P.ir.bareme
     bar.t_x()
-    print nbptr*bar.calc(rni/nbptr)
-    bar._linear_taux_moy = True
-    print nbptr*bar.calc(rni/nbptr)
     return nbptr*bar.calc(rni/nbptr) # TODO : partir d'ici, petite différence avec Matlab
 
 def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
