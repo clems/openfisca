@@ -225,8 +225,6 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     al_acc = 0*acce
     ## APL (tous)
     al = al_loc + al_acc
-    # les allocations logmeent sont sumis à la crds
-    # al = (al_loc + al_acc)*(1-P.fam.af.crds)
     return 12*al
 
 def _alf(al, al_pac, zone_apl, _P):
@@ -254,6 +252,12 @@ def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
 def _apl(al):
     #TODO: Pour les logements conventionné (surtout des HLM)
     return al*0
+
+def _crds_lgtm(al, _P):
+    '''
+    Calcule la CRDS des allocations logement
+    '''
+    return -al*_P.fam.af.crds
 
 def _uc(agem, _option = {'agem': ALL}):
     '''

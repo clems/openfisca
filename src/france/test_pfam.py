@@ -29,25 +29,28 @@ from france.data import InputTable
     
 if __name__ == '__main__':
     import datetime
-    date = datetime.date(2010,01,01)
+    date = datetime.date(2003,01,01)
     reader = XmlReader('../data/param.xml', date)
     P = Tree2Object(reader.tree)
 
-    f = '../castypes/test ASI .ofct'
+    f = '../castypes/sans-titre.ofct'
     scenario = Scenario()
     scenario.openFile(f)
         
-    inputs = InputTable(10)
+    inputs = InputTable()
     inputs.populate_from_scenario(scenario)
     inputs.gen_index(['men', 'foy', 'fam'])
 
     model = Model(P)
-    model.set_inputs(inputs)
-#    print inputs.age.get_value()
-
+    model.set_date(date)
     
-    model.calculate('af_nbenf')
-    model.calculate('af')
+    model.set_inputs(inputs)
+    model.calculate('af') 
+    print 'af ', model.af.get_value()
+
+    model.calculate('apje')
+    print model.apje.get_value()
+    
     model.calculate('cf_temp')
     model.calculate('asf')
     model.calculate('ars')
@@ -63,24 +66,27 @@ if __name__ == '__main__':
     
     model.calculate('ape')
     model.calculate('apje')  
+
+ 
+#    print 'ape ', model.ape.get_value()
+#    print 'apje ', model.apje.get_value()
+
    
-    # Allocations logement
-    model.calculate('al')  
-    model.calculate('alf')
-    model.calculate('als') 
-    model.calculate('alset')  
-    
-    # RSA/RMI
-    model.calculate('rmi')
-    model.calculate('rsa')
-    model.calculate('api')
-    model.calculate('ppe_cumul_rsa_act')
-    model.calculate('aefa')
-   
-    ## AAH
-    model.calculate('br_aah')
-    model.calculate('aah')
-    model.calculate('caah')
-    print 'br_aah ', model.br_aah.get_value()
-    print 'aah ', model.aah.get_value()
-    print 'caah', model.caah.get_value()
+#    # Allocations logement
+#    model.calculate('al')  
+#    model.calculate('alf')
+#    model.calculate('als') 
+#    model.calculate('alset')  
+#    
+#    # RSA/RMI
+#    model.calculate('rmi')
+#    model.calculate('rsa')
+#    model.calculate('api')
+#    model.calculate('ppe_cumul_rsa_act')
+#    model.calculate('aefa')
+#   
+#    ## AAH
+#    model.calculate('br_aah')
+#    model.calculate('aah')
+#    model.calculate('caah')
+#    print 'br_aah ', model.br_aah.get_value()
