@@ -335,7 +335,7 @@ class Model(SystemSf):
     rsa  = Prestation(ms._rsa, 'fam')
     rsa_act = Prestation(ms._rsa_act, 'fam', start = date(2009, 7, 1))
     api  = Prestation(ms._api, 'fam')
-    ppe_cumul_rsa_act  = Prestation(ms._ppe_cumul_rsa_act ,'foy', start = date(2009, 7, 1)) # TODO inclure dans totaux
+    ppe_cumul_rsa_act  = Prestation(ms._ppe_cumul_rsa_act ,'foy')
     
     aefa = Prestation(ms._aefa, 'fam')
 
