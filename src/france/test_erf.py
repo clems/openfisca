@@ -26,7 +26,6 @@ import os
 import numpy as np
 from scipy import stats
 from pylab import hist, setp, figure, show
-import os
 
 from parametres.paramData import XmlReader, Tree2Object
 from france.model import Model
@@ -45,7 +44,7 @@ if __name__ == '__main__':
     #print os.listdir('../../../cas/')
     
     # cas MBJ 
-    filename = '../../../../../Documents/cas/data/final.csv'
+    filename = 'C:/Users/Utilisateur/Desktop/calmar/final.csv'
     # maison MBJ 
     #filename = '../../../cas/final.csv'
     
@@ -55,29 +54,16 @@ if __name__ == '__main__':
 
     inputs.ident.set_value(inputs.idmen.get_value()*100+inputs.noi.get_value(), inputs.index['ind'])
 
-    print 'sali shape', inputs.sali.get_value().shape
-    print 'sali sum', inputs.sali.get_value().sum()
-    print 'sali weigthed sum', sum(inputs.sali.get_value()*inputs.wprm.get_value())
-
-    print 'choi shape', inputs.choi.get_value().shape
-    print 'choi sum', inputs.choi.get_value().sum()
-    print 'choi weigthed sum', sum(inputs.choi.get_value()*inputs.wprm.get_value())
-
-    print 'rsti shape', inputs.rsti.get_value().shape
-    print 'rsti sum', inputs.rsti.get_value().sum()
-    print 'rsti weigthed sum', sum(inputs.rsti.get_value()*inputs.wprm.get_value())
-
 #    marge=dict(sali=np.array(497498908810.0), 
 #               choi=np.array(24346459438.0), 
 #               rsti=np.array(193174835599.0))
 
 
-    marge=dict(sali=np.array(500000000000.0),
-               choi=np.array(25000000000.0), 
-               rsti=np.array(200000000000.0))
-#    
-    print marge
-    param=dict(method='logit', up=3, lo=.33)
+    marge = {'sali': 500000000000,
+             'choi':  25000000000, 
+             'rsti': 200000000000}
+
+    param = {'method': 'logit', 'up':3, 'lo':.33}
     
     model = Model(P)
     model.set_inputs(inputs)
