@@ -59,11 +59,25 @@ if __name__ == '__main__':
     print 'sali sum', inputs.sali.get_value().sum()
     print 'sali weigthed sum', sum(inputs.sali.get_value()*inputs.wprm.get_value())
 
-#    marge=dict(sali=np.array(497498908810.0))
+    print 'choi shape', inputs.choi.get_value().shape
+    print 'choi sum', inputs.choi.get_value().sum()
+    print 'choi weigthed sum', sum(inputs.choi.get_value()*inputs.wprm.get_value())
 
-    marge=dict(sali=np.array(5000000000000.0))
+    print 'rsti shape', inputs.rsti.get_value().shape
+    print 'rsti sum', inputs.rsti.get_value().sum()
+    print 'rsti weigthed sum', sum(inputs.rsti.get_value()*inputs.wprm.get_value())
+
+#    marge=dict(sali=np.array(497498908810.0), 
+#               choi=np.array(24346459438.0), 
+#               rsti=np.array(193174835599.0))
+
+
+    marge=dict(sali=np.array(500000000000.0),
+               choi=np.array(25000000000.0), 
+               rsti=np.array(200000000000.0))
+#    
     print marge
-    param=dict(method='logit', up=1000, lo=.001)
+    param=dict(method='logit', up=3, lo=.33)
     
     model = Model(P)
     model.set_inputs(inputs)
@@ -71,30 +85,32 @@ if __name__ == '__main__':
     inputs.gen_index(['men', 'fam', 'foy'])
     inputs.calibrate(marge,param=param)
 
-    print 'sali shape', inputs.sali.get_value().shape
     print 'sali weigthed sum', sum(inputs.sali.get_value()*inputs.wprm.get_value())
     print 'sali w. s. after calib', sum(inputs.sali.get_value()*inputs.pondfin.get_value())
     
-    print inputs.wprm.get_value()
-    print inputs.pondfin.get_value()
+    print 'choi weigthed sum', sum(inputs.choi.get_value()*inputs.wprm.get_value())
+    print 'choi w. s. after calib', sum(inputs.choi.get_value()*inputs.pondfin.get_value())
+    
+    print 'rsti weigthed sum', sum(inputs.rsti.get_value()*inputs.wprm.get_value())
+    print 'rsti w. s. after calib', sum(inputs.rsti.get_value()*inputs.pondfin.get_value())
     
     weight_ratio = inputs.pondfin.get_value()/inputs.wprm.get_value()
     
-    print 'large ratios: ',  weight_ratio.sorted()
-    print 'low ratios : ' ,  weight_ratio.sorted()
+    print 'low ratios: ',  np.sort(weight_ratio)[1:5]
+    print 'large ratios : ' ,  np.sort(weight_ratio)[-5:]
 
     n, bins, patches = hist(weight_ratio, 100, normed=1, histtype='stepfilled')
     setp(patches, 'facecolor', 'g', 'alpha', 0.75)
     show()
 
 #    model.calculate('nbptr')
-#    model.calculate('irpp')
-#    model.calculate('af')
+    model.calculate('irpp')
+#            model.calculate('af')
 #    model.calculate('cf')
 #    print stats.itemfreq(inputs.statmarit.get_value())
 #    print stats.itemfreq(model.nbptr.get_value())
 #    print sum(model.af.get_value()*inputs.wprm.get_value())/1e9
 #    print sum(model.cf.get_value()*inputs.wprm.get_value())/1e9
-#    print sum(model.irpp.get_value()*inputs.wprm.get_value())/1e9
-
+    print sum(model.irpp.get_value()*inputs.wprm.get_value())/1e9
+    print sum(model.irpp.get_value()*inputs.pondfin.get_value())/1e9
 #    model.as_csv('out.csv')
