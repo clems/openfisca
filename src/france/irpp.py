@@ -975,8 +975,8 @@ def _ppe_coef_tp(ppe_du_sa, ppe_du_ns, ppe_tp_sa, ppe_tp_ns, _P):
     P = _P.ir.credits_impot.ppe
     frac_sa = ppe_du_sa/P.TP_nbh
     frac_ns = ppe_du_ns/P.TP_nbj
-    tp = (ppe_tp_sa == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
-    return tp + not_(tp)*(frac_sa + frac_ns) 
+    tp = ppe_tp_sa | ppe_tp_ns |(frac_sa + frac_ns >= 1)
+    return tp + not_(tp)*(frac_sa + frac_ns)
     
 def _ppe_base(ppe_rev, ppe_coef_tp, ppe_coef):
     out = ppe_rev/(ppe_coef_tp + (ppe_coef_tp==0))*ppe_coef
