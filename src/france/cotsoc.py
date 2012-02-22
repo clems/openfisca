@@ -24,7 +24,7 @@ This file is part of openFisca.
 from __future__ import division
 from france.data import CAT
 from numpy import maximum as max_, minimum as min_, logical_not as not_, zeros
-from Utils import Bareme
+from core.utils import Bareme
 from parametres.paramData import Tree2Object
 
 class Object(object):
