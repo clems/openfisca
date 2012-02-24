@@ -22,7 +22,8 @@ This file is part of openFisca.
 """
 
 from datetime import date
-from core.systemsf import SystemSf, Prestation
+from core.description import ModelDescription
+from core.columns import Prestation
 import france.cotsoc as cs
 import france.irpp as ir
 import france.irpp_charges_deductibles as cd
@@ -32,7 +33,7 @@ import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
 
-class Model(SystemSf):
+class ModelFrance(ModelDescription):
     mhsup = Prestation(cs._mhsup)
     alv   = Prestation(ir._alv)
     ############################################################

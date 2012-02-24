@@ -126,7 +126,7 @@ def _af_base(af_nbenf, _P):
     af_1enf = round(bmaf * P.af.taux.enf1, 2)
     af_2enf = round(bmaf * P.af.taux.enf2, 2)
     af_enf_supp = round(bmaf * P.af.taux.enf3, 2)
-    af_base = (af_nbenf >= 1) * af_1enf + (af_nbenf >= 2) * af_2enf + max_(af_nbenf - 2, 0) * af_enf_supp
+    af_base = (af_nbenf >= 1)*af_1enf + (af_nbenf >= 2)*af_2enf + max_(af_nbenf - 2, 0)*af_enf_supp
     return 12 * af_base  # annualisé
     
 def _af_majo(age, smic55, _P, _option={'age': ENFS, 'smic55': ENFS}):
