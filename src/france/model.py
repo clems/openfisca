@@ -32,6 +32,7 @@ import france.irpp_credits_impots as ci
 import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
+import france.common as cm
 
 class ModelFrance(ModelDescription):
     mhsup = Prestation(cs._mhsup)
@@ -372,8 +373,32 @@ class ModelFrance(ModelDescription):
     ############################################################
     # Unité de consommation du ménage
     ############################################################
-    uc = Prestation(lg._uc, 'men', label = u"Unités de consommation")
+    uc = Prestation(cm._uc, 'men', label = u"Unités de consommation")
 
+    ############################################################
+    # Catégories
+    ############################################################
+    
+    typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
+
+    ############################################################
+    # Totaux
+    ############################################################
+
+    revdisp = Prestation(cm._revdisp)
+    rev_trav = Prestation(cm._rev_trav)
+    pen = Prestation(cm._pen)
+    chonet = Prestation(cm._chonet)
+    rstnet = Prestation(cm._rstnet)
+    cotsoc_bar = Prestation(cm._cotsoc_bar)
+    cotsoc_lib = Prestation(cm._cotsoc_lib)
+    rev_cap = Prestation(cm._rev_cap)
+    psoc = Prestation(cm._psoc)
+    pfam = Prestation(cm._pfam)
+    paje = Prestation(cm._paje)
+    mini = Prestation(cm._mini)
+    logt = Prestation(cm._logt)
+    impo = Prestation(cm._impo)
     ############################################################
     # Gestion des variations de législation
     ############################################################
