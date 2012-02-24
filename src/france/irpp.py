@@ -176,9 +176,7 @@ def _deficit_rcm(f2aa, f2al, f2am, f2an):
     return f2aa + f2al + f2am + f2an
 
 def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2gr, f2tr, _P):
-    '''
-    REVENUS DES VALEURS ET CAPITAUX MOBILIERS
-    '''
+    ''' REVENUS DES VALEURS ET CAPITAUX MOBILIERS '''
     P = _P.ir.rvcm
     if _P.datesim.year > 2004: f2gr = 0
 
@@ -212,18 +210,14 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2gr,
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
 
 def _rfr_rvcm(f2dc, f2fu, _P):
-    '''
-    Réintégration des abattements pour le revenu fiscal de référence
-    '''
+    ''' Réintégration des abattements pour le revenu fiscal de référence '''
     P = _P.ir.rvcm
     ## TODO: manque le sous total i121 (dans la fonction _rev_cat_rvcm)
     i121 = 0
     return max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
 
 def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
-    '''
-    REVENUS FONCIERS
-    '''    
+    ''' REVENUS FONCIERS '''    
     P = _P.ir.microfoncier
     ## Calcul du revenu catégoriel
     a13 = f4ba + f4be - P.taux*f4be*(f4be <= P.max)
@@ -248,9 +242,7 @@ def _rev_cat_rpns(rpns_i, _option = {'rpns_i': ALL}):
     return out
 
 def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
-    '''
-    Revenus Categoriels
-    '''
+    ''' Revenus Categoriels '''
 #    AUTRE = TSPR + RVCM + RFON
     return rev_cat_tspr + rev_cat_rvcm + rev_cat_rfon + rev_cat_rpns
 
@@ -259,28 +251,20 @@ def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
 ###############################################################################
 
 def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
-    '''
-    Déficits antérieurs
-    '''
+    ''' Déficits antérieurs '''
     return f6fa + f6fb + f6fc + f6fd + f6fe + f6fl
 
 def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
-    '''
-    Revenu brut global (Total 17)
-    '''
+    ''' Revenu brut global (Total 17) '''
     # sans les revenus au quotient
     return max_(0, alloc + rev_cat + f6gh - deficit_ante)
 
 def _csg_deduc(rbg, f6de):
-    '''
-    CSG déductible
-    '''
+    ''' CSG déductible '''
     return min_(f6de, max_(rbg, 0))
 
 def _rng(rbg, csg_deduc, charges_deduc):
-    '''
-    Revenu net global (total 20)
-    '''
+    ''' Revenu net global (total 20) '''
     return max_(0, rbg - csg_deduc - charges_deduc)
 
 def _rni(rng, abat_spe):
@@ -297,9 +281,7 @@ def _ir_brut(nbptr, rni, _P):
     return nbptr*bar.calc(rni/nbptr) # TODO : partir d'ici, petite différence avec Matlab
 
 def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
-    '''
-    Impôt après plafonnement du quotient familial et réduction complémentaire
-    '''
+    ''' Impôt après plafonnement du quotient familial et réduction complémentaire '''
     P = _P.ir
     I = ir_brut
     A = P.bareme.calc(rni/nb_adult)
