@@ -611,12 +611,9 @@ class InputTable(ModelDescription):
 
     # to remove
     wprm = FloatCol()
-    pondfin = FloatCol()
-    ident = IntCol()
     etr = IntCol()     
     coloc = BoolCol()
     csg_taux_plein = IntCol(default = 1)
     aer = IntCol()
     ass = IntCol()
-#    birth = DateCol()
     f5sq = IntCol()

@@ -369,12 +369,14 @@ def _br_rmi(br_rmi_pf, br_rmi_ms, br_rmi_i, _P,
 def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     Nombre de personne à charge au sens du Rmi ou du Rsa
+    'fam'
     '''
     return nb_par + nb_enf(age, smic55, 0, 24)  # TODO limite d'âge dans paramètres
 
 def _forf_log(so, rmi_nbp, _P):
     '''
     Forfait logement intervenant dans le calcul du Rmi ou du Rsa
+    'fam'
     '''
     # calcul du forfait logement annuel si le ménage touche des allocations logements
     P = _P.minim
@@ -387,7 +389,8 @@ def _forf_log(so, rmi_nbp, _P):
 
 def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P, _option = {'age' : [CHEF, PART]}):
     '''
-    Rsa socle / Rmi 
+    Rsa socle / Rmi
+    'fam'
     '''
     P = _P.minim
     # RSA socle TODO mécanisme similaire à l'API: Pour les personnes ayant la charge 
@@ -413,7 +416,8 @@ def _rmi(rsa_socle, forf_log, br_rmi):
 
 def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PART]}): 
     ''' 
-    Cacule le montant du RSA 
+    Cacule le montant du RSA
+    'fam'
     '''
     P = _P.minim.rmi 
     RSA = max_(0,rsa_socle + P.pente*(ra_rsa[CHEF] + ra_rsa[PART]) - forf_log - br_rmi)
