@@ -22,9 +22,9 @@ This file is part of openFisca.
 """
 
 from __future__ import division
-from numpy import minimum as min_, maximum as max_, logical_not as not_, zeros
+from numpy import minimum as min_, maximum as max_, logical_not as not_
 
-def _credit(creimp, accult, percvm, direpa, mecena, prlire, aidper,
+def _credits_impot(creimp, accult, percvm, direpa, mecena, prlire, aidper,
            quaenv, drbail, garext, preetu, saldom2, inthab, assloy, 
            autent, acqgpl, divide, aidmob, jeunes, _P):
     if _P.datesim.year == 2002:
@@ -36,8 +36,6 @@ def _credit(creimp, accult, percvm, direpa, mecena, prlire, aidper,
     elif _P.datesim.year == 2005:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
                   quaenv + acqgpl + drbail + garext + preetu + assloy + aidmob + jeunes)
-        print aidmob
-        print niches
     elif _P.datesim.year == 2006:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
                   quaenv + acqgpl + drbail + garext + preetu + assloy + aidmob + jeunes)
@@ -247,7 +245,6 @@ def _acqgpl(f7up, f7uq, _P):
     P = _P.ir.credits_impot.acqgpl
 
     if 2002 <= _P.datesim.year <= 2007:
-        print f7up*P.mont_up + f7uq*P.mont_uq
         return f7up*P.mont_up + f7uq*P.mont_uq
 
 def _drbail(f4tq, _P):
@@ -369,7 +366,7 @@ def _jeunes(age, nbptr, rfr, marpac, _P):
     '''
     Crédit d'impôt en faveur des jeunes
     2005-2008
-    TODO
+    TODO: What is rev?
     rfr de l'année où jeune de moins de 26 à travaillé six mois
     '''
     P = _P.ir.credits_impot.jeunes

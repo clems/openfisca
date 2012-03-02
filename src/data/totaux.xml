@@ -91,7 +91,7 @@
       <NODE desc= "CRDS (allocation logement)" shortname="CRDS log." code="crds_lgtm" color = "229,48,56"/>
     </NODE>
   </NODE>
-  <NODE desc= "Prime pour l'emploi" shortname="PPE" code = "ppe_cumul_rsa_act" color = "182,34,131"/>
+  <NODE desc= "Prime pour l'emploi" shortname="PPE" code = "ppe" color = "182,34,131"/>
   <NODE desc= "Impôts directs" shortname="Impôts directs" code = "impo" color = "232,79,95">
     <NODE desc= "Impôt sur le revenu" shortname="IRPP" code = "irpp" color = "232,79,95"/>
   </NODE>	

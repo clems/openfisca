@@ -124,7 +124,7 @@ def _aspa_elig(age, inv, activite, _P):
     'ind'
     '''
     P = _P.minim.aspa
-    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3) 
+    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3)
     return out
 
 def _asi_elig(aspa_elig, inv, activite):
@@ -423,11 +423,6 @@ def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PA
 def _rsa_act(rsa, rmi):    
     return rsa - rmi
         
-def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
-#   On retranche le RSA activité de la PPE
-    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ],0)
-    return ppe 
-    
 def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):
     '''
     Allocation de parent isolé
