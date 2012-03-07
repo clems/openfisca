@@ -422,17 +422,11 @@ def _tehr(rfr, nb_adult, _P):
     bar = _P.ir.tehr
     return bar.calc(rfr/nb_adult)*nb_adult
 
-def _credits_impot(credit, ppe):
-    '''
-    Crédits d'impôts
-    '''
-    return ppe + credit
-
-def _irpp(iai, credits_impot, tehr, ppe):
+def _irpp(iai, credits_impot, tehr):
     '''
     Montant avant seuil de recouvrement (hors ppe)
     '''
-    return  -(iai - credits_impot + ppe + tehr)
+    return  -(iai - credits_impot + tehr)
 
 ###############################################################################
 ## Autres totaux utiles pour la suite
@@ -971,9 +965,9 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
     P = _P.ir.credits_impot.ppe
     return (ppe_rev >= P.seuil1)&(ppe_coef_tp!=0)
 
-def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
+def _ppe_brute(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''
-    Prime pour l'emploi
+    Prime pour l'emploi (avant éventuel dispositif de cumul avec le RSA)
     'foy'
     '''
     P = _P.ir.credits_impot.ppe
@@ -1038,38 +1032,9 @@ def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac,
     
     return ppe_tot
 
+def _ppe(ppe_brute, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
+#   On retranche le RSA activité de la PPE
+    ppe = max_(ppe_brute - rsa_act[VOUS] - rsa_act[CONJ],0)
+    return ppe 
+    
 
-#def Charges_deductibles(self, P):
-#    '''
-#    Charges déductibles
-#    '''
-#    table = population
-#
-#    table.openReadMode()
-#    niches1, niches2, ind_rfr = charges_deductibles.niches(_P.datesim.year)
-#    charges_deductibles.charges_calc(self, P, table, niches1, niches2, ind_rfr)
-#
-#    ## stockage des pensions dans les individus
-#    zalvf = charges_deductibles.penali(self, P, table)
-#    table.close_()
-#
-#    table.openWriteMode()
-#    table.setColl('alv', -zalvf, table = 'output')
-#    table.close_()
-
-
-
-#def Credits(self, P, table):
-#    '''
-#    Imputations (crédits d'impôts)
-#    '''
-#    table.openReadMode()
-#    niches = credits_impots.niches(_P.datesim.year)
-#    reducs = zeros(taille)
-#    for niche in niches:
-#        reducs += niche(self, P, table)
-#    table.close_()
-#
-#    ppe = Ppe(P.ppe)
-#
-#    return reducs + ppe

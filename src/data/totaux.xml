@@ -75,7 +75,7 @@
       <NODE desc= "CRDS (prestations familiales)" shortname="CRDS fam." code="crds_pfam" color = "229,48,56"/>
     </NODE>
     <NODE desc= "Minima sociaux" shortname="Min. sociaux" code = "mini" color = "240,138,76">
-      <NODE desc= "Minimum vieillesse" shortname="Min. viellesse" code='mv' color = "249,193,148"/>
+      <NODE desc= "Minimum vieillesse" shortname="Min. viellesse" code='aspa' color = "249,193,148"/>
       <NODE desc= "Allocation adulte handicapé" shortname="AAH" code='aah' color = "244,160,80"/>
       <NODE desc= "Complément de l'allocation adulte handicapé" shortname="CAAH" code='caah' color = "244,160,80"/>
       <NODE desc= "Allocation supplémentaire d'invalidité" shortname="ASI" code='asi' color = "244,160,80"/>
@@ -91,7 +91,7 @@
       <NODE desc= "CRDS (allocation logement)" shortname="CRDS log." code="crds_lgtm" color = "229,48,56"/>
     </NODE>
   </NODE>
-  <NODE desc= "Prime pour l'emploi" shortname="PPE" code = "ppe_cumul_rsa_act" color = "182,34,131"/>
+  <NODE desc= "Prime pour l'emploi" shortname="PPE" code = "ppe" color = "182,34,131"/>
   <NODE desc= "Impôts directs" shortname="Impôts directs" code = "impo" color = "232,79,95">
     <NODE desc= "Impôt sur le revenu" shortname="IRPP" code = "irpp" color = "232,79,95"/>
   </NODE>	

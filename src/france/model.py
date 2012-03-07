@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from datetime import date
 from core.description import ModelDescription
-from core.columns import Prestation
+from core.columns import Prestation, BoolPresta
 import france.cotsoc as cs
 import france.irpp as ir
 import france.irpp_charges_deductibles as cd
@@ -32,6 +32,7 @@ import france.irpp_credits_impots as ci
 import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
+import france.common as cm
 
 class ModelFrance(ModelDescription):
     mhsup = Prestation(cs._mhsup)
@@ -83,10 +84,10 @@ class ModelFrance(ModelDescription):
     # Impôt sur le revenu
     ############################################################
 
-    marpac = Prestation(ir._marpac, 'foy')
-    celdiv = Prestation(ir._celdiv, 'foy')
-    veuf = Prestation(ir._veuf, 'foy')
-    jveuf = Prestation(ir._jveuf, 'foy')
+    marpac = BoolPresta(ir._marpac, 'foy')
+    celdiv = BoolPresta(ir._celdiv, 'foy')
+    veuf = BoolPresta(ir._veuf, 'foy')
+    jveuf = BoolPresta(ir._jveuf, 'foy')
     nbptr = Prestation(ir._nbptr, 'foy', label = u"Nombre de parts")
     rbg = Prestation(ir._rbg, 'foy', label = u"Revenu brut global")
 
@@ -113,7 +114,7 @@ class ModelFrance(ModelDescription):
     rni = Prestation(ir._rni, 'foy', label = u"Revenu net imposable")
     
     abat_spe = Prestation(ir._abat_spe, 'foy', label = u"Abattements spéciaux")
-    alloc = Prestation(ir._alloc, 'foy', label = u"Allocation familiale pour l'ir")
+    alloc    = Prestation(ir._alloc, 'foy', label = u"Allocation familiale pour l'ir")
     deficit_ante = Prestation(ir._deficit_ante, 'foy', label = u"Déficit global antérieur")
 
     rev_sal = Prestation(ir._rev_sal)
@@ -189,15 +190,17 @@ class ModelFrance(ModelDescription):
     imp_lib = Prestation(ir._imp_lib, 'foy')
     
     
-    # crédits d'impots
-    ppe_coef = Prestation(ir._ppe_coef)
-    ppe_base = Prestation(ir._ppe_base)
+    # Prime pour l'emploi
+    ppe_coef    = Prestation(ir._ppe_coef)
+    ppe_base    = Prestation(ir._ppe_base)
     ppe_coef_tp = Prestation(ir._ppe_coef_tp)
-    ppe_elig = Prestation(ir._ppe_elig, 'foy')
-    ppe_elig_i = Prestation(ir._ppe_elig_i)
-    ppe_rev = Prestation(ir._ppe_rev)
-    ppe = Prestation(ir._ppe, 'foy')
+    ppe_elig    = BoolPresta(ir._ppe_elig, 'foy')
+    ppe_elig_i  = BoolPresta(ir._ppe_elig_i)
+    ppe_rev     = Prestation(ir._ppe_rev)
+    ppe_brute   = Prestation(ir._ppe_brute, 'foy')
+    ppe  = Prestation(ir._ppe,'foy')
     
+    # Autres crédits d'impôts
     creimp = Prestation(ci._creimp, 'foy')
     accult = Prestation(ci._accult, 'foy')
     percvm = Prestation(ci._percvm, 'foy', start=date(2010,1,1))
@@ -220,8 +223,7 @@ class ModelFrance(ModelDescription):
     jeunes = Prestation(ci._jeunes, 'foy', start=date(2005,1,1), end=date(2008,12,31))
     jeunes.set_disabled()
     
-    credit = Prestation(ci._credit, 'foy')
-    credits_impot = Prestation(ir._credits_impot, 'foy')
+    credits_impot = Prestation(ci._credits_impot, 'foy')
     
     irpp = Prestation(ir._irpp, 'foy')
 
@@ -252,15 +254,15 @@ class ModelFrance(ModelDescription):
     # Prestations familiales
     ############################################################
     
-    etu      = Prestation(pf._etu, label = u"Indicatrice individuelle étudiant")
-    biact    = Prestation(pf._biact, 'fam', label = u"Indicatrice de biactivité")
-    concub   = Prestation(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
-    maries   = Prestation(pf._maries, 'fam') 
+    etu      = BoolPresta(pf._etu, label = u"Indicatrice individuelle étudiant")
+    biact    = BoolPresta(pf._biact, 'fam', label = u"Indicatrice de biactivité")
+    concub   = BoolPresta(pf._concub, 'fam', label = u"Indicatrice de vie en couple") 
+    maries   = BoolPresta(pf._maries, 'fam') 
     nb_par   = Prestation(pf._nb_par, 'fam', label = u"Nombre de parents")
-    smic55   = Prestation(pf._smic55, label = u"Indicatrice individuelle d'un salaire supérieur à 55% du smic")
-    isol     = Prestation(pf._isol, 'fam')
+    smic55   = BoolPresta(pf._smic55, label = u"Indicatrice individuelle d'un salaire supérieur à 55% du smic")
+    isol     = BoolPresta(pf._isol, 'fam')
 
-    div  = Prestation(pf._div)
+    div      = Prestation(pf._div)
     rev_coll = Prestation(pf._rev_coll)
     br_pf_i  = Prestation(pf._br_pf_i, label ='Base ressource individuele des prestations familiales')
     br_pf    = Prestation(pf._br_pf, 'fam', label ='Base ressource des prestations familiales')
@@ -272,7 +274,7 @@ class ModelFrance(ModelDescription):
     af       = Prestation(pf._af, 'fam', label = u"Allocations familiales")
     
     cf_temp  = Prestation(pf._cf, 'fam', label = u"Complément familial avant d'éventuels cumuls")
-    asf_elig = Prestation(pf._asf_elig)
+    asf_elig = BoolPresta(pf._asf_elig)
     asf      = Prestation(pf._asf, 'fam', label = u"Allocation de soutien familial")
 
     ars            = Prestation(pf._ars, 'fam', label = u"Allocation de rentrée scolaire")
@@ -283,8 +285,8 @@ class ModelFrance(ModelDescription):
 
     paje_nais      = Prestation(pf._paje_nais, 'fam', label = u"Allocation de naissance de la PAJE", start=date(2004,1,1))
     paje_clca      = Prestation(pf._paje_clca, 'fam', label = u"PAJE - Complément de libre choix d'activité", start=date(2004,1,1))
-    paje_clca_taux_plein   = Prestation(pf._paje_clca_taux_plein, 'fam', label = u"Indicatrice Clca taux plein", start=date(2004,1,1))
-    paje_clca_taux_partiel = Prestation(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel", start=date(2004,1,1))
+    paje_clca_taux_plein   = BoolPresta(pf._paje_clca_taux_plein, 'fam', label = u"Indicatrice Clca taux plein", start=date(2004,1,1))
+    paje_clca_taux_partiel = BoolPresta(pf._paje_clca_taux_partiel, 'fam', label = u"Indicatrice Clca taux partiel", start=date(2004,1,1))
     paje_colca     = Prestation(pf._paje_colca, 'fam', label = u"PAJE - Complément optionnel de libre choix d'activité", start=date(2004,1,1))
     paje_clmg      = Prestation(pf._paje_clmg, 'fam', label = u"PAJE - Complément de libre choix du mode de garde", start=date(2004,1,1))
     paje           = Prestation(pf._paje, 'fam', label = u"PAJE - Ensemble des prestations", start=date(2004,1,1))
@@ -336,7 +338,6 @@ class ModelFrance(ModelDescription):
     rsa  = Prestation(ms._rsa, 'fam')
     rsa_act = Prestation(ms._rsa_act, 'fam', start = date(2009, 7, 1))
     api  = Prestation(ms._api, 'fam')
-    ppe_cumul_rsa_act  = Prestation(ms._ppe_cumul_rsa_act ,'foy')
     
     aefa = Prestation(ms._aefa, 'fam')
 
@@ -348,18 +349,18 @@ class ModelFrance(ModelDescription):
     br_mv   = Prestation(ms._br_mv, 'fam', label = u"Base ressources du minimum vieillesse/ASPA")
     
     asi_aspa_nb_alloc = Prestation(ms._asi_aspa_nb_alloc, 'fam')
-    asi_aspa_elig = Prestation(ms._asi_aspa_elig, 'fam')
-    asi_elig = Prestation(ms._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")
+    asi_aspa_elig = BoolPresta(ms._asi_aspa_elig, 'fam')
+    asi_elig = BoolPresta(ms._asi_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation supplémentaire d'invalidité")
     asi_coexist_aspa = Prestation(ms._asi_coexist_aspa, 'fam', label = u"Allocation supplémentaire d'invalidité quand un adulte de la famille perçoit l'ASPA")
     asi_pure         = Prestation(ms._asi_pure, 'fam', label = u"Allocation supplémentaire d'invalidité quand aucun adulte de la famille ne perçoit l'ASPA") 
     asi     = Prestation(ms._asi, 'fam', label = u"Allocation supplémentaire d'invalidité", start=date(2007, 1, 1))
     # En 2007, Transformation du MV et de L'ASI en ASPA et ASI. La prestation ASPA calcule bien l'ancien MV
     # mais TODO manque l'ancienne ASI
     
-    aspa_elig = Prestation(ms._aspa_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
+    aspa_elig = BoolPresta(ms._aspa_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
     aspa_coexist_asi  = Prestation(ms._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
     aspa_pure         = Prestation(ms._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
-    mv     = Prestation(ms._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
+    aspa              = Prestation(ms._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
     
     ############################################################
     # Allocation adulte handicapé
@@ -372,8 +373,32 @@ class ModelFrance(ModelDescription):
     ############################################################
     # Unité de consommation du ménage
     ############################################################
-    uc = Prestation(lg._uc, 'men', label = u"Unités de consommation")
+    uc = Prestation(cm._uc, 'men', label = u"Unités de consommation")
 
+    ############################################################
+    # Catégories
+    ############################################################
+    
+    typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
+
+    ############################################################
+    # Totaux
+    ############################################################
+
+    revdisp = Prestation(cm._revdisp)
+    rev_trav = Prestation(cm._rev_trav)
+    pen = Prestation(cm._pen)
+    chonet = Prestation(cm._chonet)
+    rstnet = Prestation(cm._rstnet)
+    cotsoc_bar = Prestation(cm._cotsoc_bar)
+    cotsoc_lib = Prestation(cm._cotsoc_lib)
+    rev_cap = Prestation(cm._rev_cap)
+    psoc = Prestation(cm._psoc)
+    pfam = Prestation(cm._pfam)
+    paje = Prestation(cm._paje)
+    mini = Prestation(cm._mini)
+    logt = Prestation(cm._logt)
+    impo = Prestation(cm._impo)
     ############################################################
     # Gestion des variations de législation
     ############################################################

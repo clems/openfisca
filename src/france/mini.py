@@ -124,7 +124,7 @@ def _aspa_elig(age, inv, activite, _P):
     'ind'
     '''
     P = _P.minim.aspa
-    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3) 
+    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3)
     return out
 
 def _asi_elig(aspa_elig, inv, activite):
@@ -275,12 +275,12 @@ def _br_rmi_pf(af_base, cf, asf, paje_base, paje_clca, paje_colca, apje, ape, _P
         out =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
     return out
 
-def _br_rmi_ms(mv, asi, aah, caah):
+def _br_rmi_ms(aspa, asi, aah, caah):
     '''
     Minima sociaux inclus dans la base ressource RSA/RMI
     'ind'
     '''
-    return mv + asi + aah + caah
+    return aspa + asi + aah + caah
 
 def _br_rmi_i(ra_rsa, cho, rst, alr, rto, rev_cap_bar, rev_cap_lib, rfon_ms, div_ms):
     '''
@@ -369,12 +369,14 @@ def _br_rmi(br_rmi_pf, br_rmi_ms, br_rmi_i, _P,
 def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     Nombre de personne à charge au sens du Rmi ou du Rsa
+    'fam'
     '''
     return nb_par + nb_enf(age, smic55, 0, 24)  # TODO limite d'âge dans paramètres
 
 def _forf_log(so, rmi_nbp, _P):
     '''
     Forfait logement intervenant dans le calcul du Rmi ou du Rsa
+    'fam'
     '''
     # calcul du forfait logement annuel si le ménage touche des allocations logements
     P = _P.minim
@@ -387,7 +389,8 @@ def _forf_log(so, rmi_nbp, _P):
 
 def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P, _option = {'age' : [CHEF, PART]}):
     '''
-    Rsa socle / Rmi 
+    Rsa socle / Rmi
+    'fam'
     '''
     P = _P.minim
     # RSA socle TODO mécanisme similaire à l'API: Pour les personnes ayant la charge 
@@ -413,7 +416,8 @@ def _rmi(rsa_socle, forf_log, br_rmi):
 
 def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PART]}): 
     ''' 
-    Cacule le montant du RSA 
+    Cacule le montant du RSA
+    'fam'
     '''
     P = _P.minim.rmi 
     RSA = max_(0,rsa_socle + P.pente*(ra_rsa[CHEF] + ra_rsa[PART]) - forf_log - br_rmi)
@@ -423,11 +427,6 @@ def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PA
 def _rsa_act(rsa, rmi):    
     return rsa - rmi
         
-def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
-#   On retranche le RSA activité de la PPE
-    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ],0)
-    return ppe 
-    
 def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):
     '''
     Allocation de parent isolé
@@ -509,12 +508,12 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     aefa = max_(aefa_maj,aefa)   
     return aefa 
 
-def _br_aah(br_pf, asi, mv, _P): 
+def _br_aah(br_pf, asi, aspa, _P): 
     '''
     Base ressources de l'allocation adulte handicapé
     'fam'
     '''
-    br_aah = br_pf + asi + mv
+    br_aah = br_pf + asi + aspa
     return br_aah
 
 def _aah(br_pf_i, br_aah, inv, age, smic55, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART], 'smic55': [CHEF, PART]}):
