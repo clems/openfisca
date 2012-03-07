@@ -275,12 +275,12 @@ def _br_rmi_pf(af_base, cf, asf, paje_base, paje_clca, paje_colca, apje, ape, _P
         out =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
     return out
 
-def _br_rmi_ms(mv, asi, aah, caah):
+def _br_rmi_ms(aspa, asi, aah, caah):
     '''
     Minima sociaux inclus dans la base ressource RSA/RMI
     'ind'
     '''
-    return mv + asi + aah + caah
+    return aspa + asi + aah + caah
 
 def _br_rmi_i(ra_rsa, cho, rst, alr, rto, rev_cap_bar, rev_cap_lib, rfon_ms, div_ms):
     '''
@@ -508,12 +508,12 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
     aefa = max_(aefa_maj,aefa)   
     return aefa 
 
-def _br_aah(br_pf, asi, mv, _P): 
+def _br_aah(br_pf, asi, aspa, _P): 
     '''
     Base ressources de l'allocation adulte handicapé
     'fam'
     '''
-    br_aah = br_pf + asi + mv
+    br_aah = br_pf + asi + aspa
     return br_aah
 
 def _aah(br_pf_i, br_aah, inv, age, smic55, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART], 'smic55': [CHEF, PART]}):

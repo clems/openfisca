@@ -150,7 +150,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     bmaf = P.fam.af.bmaf_n_2
         
     ## aides au logement pour les locataires
-    # loyer;
+    # loyer mensuel;
     L1 = loyer
     # loyer plafond;
     lp_taux = (not_(coloc))*1 + coloc*P.al.loyers_plafond.colocation
@@ -166,7 +166,7 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     L2 = Lz1*(zone_apl==1) + Lz2*(zone_apl==2) + Lz3*(zone_apl==3)
     # loyer retenu
     L = min_(L1,L2)
-    
+
     # forfait de charges
     P_fc = P.al.forfait_charges
     C = not_(coloc)*(P_fc.fc1 + al_pac*P_fc.fc2) + \
@@ -224,17 +224,18 @@ def _al(concub, br_al, so, loyer, coloc, isol, al_pac, zone_apl, _P):
     ## APL pour les accédants à la propriété
     al_acc = 0*acce
     ## APL (tous)
-    al = al_loc + al_acc
-    return 12*al
+    al = 12*(al_loc + al_acc)
 
-def _alf(al, al_pac, zone_apl, _P):
+    return al
+
+def _alf(al, al_pac):
     '''
     Allocation logement familiale
     '''    
     alf   = (al_pac>=1)*al 
     return alf
      
-def _als(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
+def _als(al, al_pac, etu, _option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale
     '''    
@@ -242,7 +243,7 @@ def _als(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
     return als
      
      
-def _alset(etu, al, al_pac, zone_apl, _P ,_option = {'etu': [CHEF, PART]}):
+def _alset(al, al_pac, etu, _option = {'etu': [CHEF, PART]}):
     '''
     Allocation logement sociale étudiante
     '''    

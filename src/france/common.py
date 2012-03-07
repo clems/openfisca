@@ -113,9 +113,9 @@ def _paje(paje_base, paje_nais, paje_clca, paje_colca, paje_clmg):
     ''' Prestation d'accueil du jeune enfant '''
     return paje_base + paje_nais + paje_clca + paje_colca + paje_clmg
 
-def _mini(mv, aah, caah, asi, rsa, aefa, api):
+def _mini(aspa, aah, caah, asi, rsa, aefa, api, ass):
     ''' Minima sociaux '''
-    return mv + aah + caah + asi + rsa + aefa + api
+    return aspa + aah + caah + asi + rsa + aefa + api + ass
 
 def _logt(apl, als, alf, alset, crds_lgtm):
     ''' Prestations logement '''

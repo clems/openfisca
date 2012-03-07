@@ -56,20 +56,20 @@ class InputTable(ModelDescription):
     alr = IntCol() # (f1ao, f1bo, f1co, f1do, f1eo)
     
     hsup = IntCol()
-    inv = BoolCol()
-    alt = BoolCol()
-    cho_ld = BoolCol() # (f1ai, f1bi, f1ci, f1di, f1ei)
+    inv = BoolCol(label = u'invalide')
+    alt = BoolCol(label = u'garde alternée')
+    cho_ld = BoolCol(label = 'chômage de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
     ppe_tp_sa = BoolCol() # (f1ax, f1bx, f1cx, f1dx, f1qx)
     ppe_tp_ns = BoolCol() # (f5nw, f5ow, f5pw)
     ppe_du_sa = IntCol() # (f1av, f1bv, f1cv, f1dv, f1qv)
     ppe_du_ns = IntCol() # (f5nv, f5ov, f5pv)
     jour_xyz = IntCol(default = 360)
-    age = AgesCol()
-    agem = AgesCol()
+    age = AgesCol(u'âge')
+    agem = AgesCol(u'âge (en mois)')
     
-    zone_apl = IntCol()
-    loyer = IntCol()
-    so = IntCol()
+    zone_apl = IntCol(default = 2)
+    loyer = IntCol() # Loyer mensuel
+    so = IntCol(u"statut d'occupation")
     activite = IntCol()
     boursier = BoolCol()
     code_postal = IntCol()
@@ -137,9 +137,7 @@ class InputTable(ModelDescription):
 
     # non accessible (from previous years)
     f2gr = IntCol() 
-    
-
-    
+        
     f3vc = IntCol()
     f3vd = IntCol()
     f3ve = IntCol()
@@ -613,7 +611,7 @@ class InputTable(ModelDescription):
     wprm = FloatCol()
     etr = IntCol()     
     coloc = BoolCol()
-    csg_taux_plein = IntCol(default = 1)
+    csg_taux_plein = BoolCol(default = True)
     aer = IntCol()
     ass = IntCol()
     f5sq = IntCol()

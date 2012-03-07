@@ -360,7 +360,7 @@ class ModelFrance(ModelDescription):
     aspa_elig = BoolPresta(ms._aspa_elig, label = u"Indicatrice individuelle d'éligibilité à l'allocation de solidarité aux personnes agées")
     aspa_coexist_asi  = Prestation(ms._aspa_coexist_asi, 'fam', label = u"Allocation de solidarité aux personnes agées quand un adulte de la famille perçoit l'ASI")
     aspa_pure         = Prestation(ms._aspa_pure, 'fam', label = u"Allocation de solidarité aux personnes agées quand aucun adulte de la famille ne perçoit l'ASI") 
-    mv     = Prestation(ms._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
+    aspa              = Prestation(ms._aspa, 'fam', label = u"Allocation de solidarité aux personnes agées")
     
     ############################################################
     # Allocation adulte handicapé
