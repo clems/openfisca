@@ -1594,53 +1594,59 @@
 	<VALUE valeur="0"      deb="2006-01-01" fin="2011-12-31"/>
       </CODE>
       <CODE description="Déficit agricole///%cf art 156 du CGI" code="def_agri_seuil" format = 'integer'>
-	<VALUE valeur="53360" deb="2002-01-01" fin="2003-12-31"/>
-	<VALUE valeur="60000" deb="2004-01-01" fin="2004-12-31"/>
-	<VALUE valeur="61080" deb="2005-01-01" fin="2005-12-31"/>
-	<VALUE valeur="100000" deb="2006-01-01" fin="2006-12-31"/>
-	<VALUE valeur="101300" deb="2007-01-01" fin="2007-12-31"/>
-	<VALUE valeur="104238" deb="2008-01-01" fin="2008-12-31"/>
-	<VALUE valeur="104655" deb="2009-01-01" fin="2009-12-31"/>
-	<VALUE valeur="106225" deb="2010-01-01" fin="2011-12-31"/>
+        <VALUE valeur="53360" deb="2002-01-01" fin="2003-12-31"/>
+        <VALUE valeur="60000" deb="2004-01-01" fin="2004-12-31"/>
+        <VALUE valeur="61080" deb="2005-01-01" fin="2005-12-31"/>
+        <VALUE valeur="100000" deb="2006-01-01" fin="2006-12-31"/>
+        <VALUE valeur="101300" deb="2007-01-01" fin="2007-12-31"/>
+        <VALUE valeur="104238" deb="2008-01-01" fin="2008-12-31"/>
+        <VALUE valeur="104655" deb="2009-01-01" fin="2009-12-31"/>
+        <VALUE valeur="106225" deb="2010-01-01" fin="2011-12-31"/>
       </CODE>
-      <NODE description="Régime microentreprise" code = "microentreprise">
-	<CODE description="Taux activité de vente" code="vente_taux" format = 'percent'>
-	  <VALUE valeur="0.72" deb="2002-01-01" fin="2005-12-31"/>
-	  <VALUE valeur="0.71" deb="2006-01-01" fin="2011-12-31"/>
-	</CODE>
-	<CODE description="Minimum activité de vente" code="vente_min" format = 'integer'>
-	  <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
-	</CODE>
-	<CODE description="Maximum activité de vente" code="vente_max" format = 'integer'>
-	  <VALUE valeur="76300" deb="2002-01-01" fin="2008-12-31"/>
-	  <VALUE valeur="80000" deb="2009-01-01" fin="2009-12-31"/>
-	  <VALUE valeur="80300" deb="2010-01-01" fin="2011-12-31"/>
-	</CODE>
-	<CODE description="Taux activité de service" code="servi_taux" format = 'percent'>
-	  <VALUE valeur="0.52" deb="2002-01-01" fin="2005-12-31"/>
-	  <VALUE valeur="0.50" deb="2006-01-01" fin="2011-12-31"/>
-	</CODE>
-	<CODE description="Minimum activité de service" code="servi_min" format = 'integer'>
-	  <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
-	</CODE>
-	<CODE description="Maximum activité de service" code="servi_max" format = 'integer'>
-	  <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31"/>
-	  <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31"/>
-	  <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31"/>
-	</CODE>
+      <NODE description="Régime microentreprise/Spécial bnc" code = "microentreprise">
+        <NODE description="Activité de vente" code = "vente">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.72" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.71" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="76300" deb="2002-01-01" fin="2008-12-31"/>
+            <VALUE valeur="80000" deb="2009-01-01" fin="2009-12-31"/>
+            <VALUE valeur="80300" deb="2010-01-01" fin="2011-12-31"/>
+          </CODE>
+        </NODE>
+        <NODE description="Activité de service" code = "servi">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.52" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.50" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31"/>
+            <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31"/>
+            <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31"/>
+          </CODE>
+        </NODE>
+        <NODE description="Régime spécial BNC" code = "specialbnc">
+          <CODE description="Taux" code="taux" format = 'percent'>
+            <VALUE valeur="0.37" deb="2002-01-01" fin="2005-12-31"/>
+            <VALUE valeur="0.34" deb="2006-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Minimum" code="min" format = 'integer'>
+            <VALUE valeur="305" deb="2002-01-01" fin="2011-12-31"/>
+          </CODE>
+          <CODE description="Maximum" code="max" format = 'integer'>
+            <VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31" code="nc_abat_max" />
+            <VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31" code="nc_abat_max" />
+            <VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31" code="nc_abat_max" />
+          </CODE>
+        </NODE>
       </NODE>
-      <CODE description="Régime spécial BNC - Taux" code="nc_abat_taux" format = 'percent'>
-	<VALUE valeur="0.37" deb="2002-01-01" fin="2005-12-31" code="nc_abat_taux" />
-	<VALUE valeur="0.34" deb="2006-01-01" fin="2011-12-31" code="nc_abat_taux" />
-      </CODE>
-      <CODE description="Régime spécial BNC - Minimum" code="nc_abat_min" format = 'integer'>
-	<VALUE valeur="305" deb="2002-01-01" fin="2011-12-31" code="nc_abat_min" />
-      </CODE>
-      <CODE description="Régime spécial BNC - Maximum" code="nc_abat_max" format = 'integer'>
-	<VALUE valeur="27000" deb="2002-01-01" fin="2008-12-31" code="nc_abat_max" />
-	<VALUE valeur="32000" deb="2009-01-01" fin="2009-12-31" code="nc_abat_max" />
-	<VALUE valeur="32100" deb="2010-01-01" fin="2011-12-31" code="nc_abat_max" />
-      </CODE>
     </NODE>
     <NODE code = "charges_deductibles" description="Charges déductibles">
       <NODE code = "penalim" description="Pensions alimentaires">
@@ -2317,7 +2323,7 @@
 	</CODE>
       </NODE>
     </NODE>
-    <NODE code = "credits_impots" description="Crédits d'impôts">
+    <NODE code = "credits_impot" description="Crédits d'impôt">
       <NODE code = "divide" description="Dividendes">
 	<CODE description="Plafond" code="max" format = 'integer'>
 	  <VALUE valeur="115" deb="2005-01-01" fin="2009-12-31"/>
@@ -2960,6 +2966,9 @@
 	</CODE>
 	<CODE description="Taux pour les personnes inactives percevant l'allocation de base de la PAJE" code="avecab_tx_partiel2" >
 	  <VALUE valeur="0.3603" deb="2004-01-01" fin="2011-12-31" />
+	</CODE>
+	<CODE description="Durée (en mois) de versement pour le premier enfant" code="duree1" >
+	  <VALUE valeur="6" deb="2004-01-01" fin="2011-12-31" />
 	</CODE>
       </NODE>
       <NODE description="Complément de libre choix du mode de garde" code="clmg" >
