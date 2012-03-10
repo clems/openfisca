@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import (floor, maximum as max_, where, logical_not as not_)
-from france.data import QUIFAM, QUIFOY, YEAR
+from france.data import QUIFAM, QUIFOY
 from france.pfam import nb_enf, age_en_mois_benjamin
 
 CHEF = QUIFAM['chef']
@@ -67,47 +67,13 @@ def _br_mv(br_mv_i, _option = {'br_mv_i': [CHEF, PART]}):
     br_mv = br_mv_i[CHEF] + br_mv_i[PART]
     return br_mv
 
-def _mv(aspa_elig, nb_par, br_mv, _P, 
-        _option = {'age': [CHEF, PART], 'inv': [CHEF, PART], 'actvite': [CHEF, PART]}):
-    '''
-    Minimum vieillesse - Allocation de solidarité aux personnes agées (ASPA)
-    '''
-    # age minimum (CSS R815-2)
-    # base ressource R815-25: 
-    #   - retraite, pensions et rentes,
-    #   - allocation spéciale (L814-1);
-    #   - allocation aux mères de famille (L813)
-    #   - majorations pour conjoint à charge des retraites
-    #   - pas de prise en compte des allocations logement, des prestations
-    #   familiales, de la rente viagère rapatriée...
-    # majoration si le conjoint à lui aussi plus de 65 ans, ou 60 si inapte;
-    # TODO: ajouter taux de la majoration pour 3 enfants 10% (D811-12) ?
-    #       P.aspa.maj_3enf = 0.10;
-    P = _P.minim
-
-    eligC = aspa_elig[CHEF] 
-    eligP = aspa_elig[PART]
-    
-    elig2 = eligC & eligP
-    elig1 = not_(elig2) & (eligC |eligP)
-        
-    depassement = elig1*(nb_par==1)*max_(0, br_mv + P.aspa.montant_seul - P.aspa.plaf_seul )/12 \
-        +  elig1*(nb_par==2)*max_(0, br_mv + P.aspa.montant_seul - P.aspa.plaf_couple )/12 \
-        +  elig2*max_(0, br_mv + P.aspa.montant_couple - P.aspa.plaf_couple )/12
-    
-    mv = max_(0,elig1*P.aspa.montant_seul + elig2*P.aspa.montant_couple -  depassement) 
-
-    # TODO ASI avant fusion ASI ASPA
-    # TODO voir comment fusionner avec nouvelle aspa ?
-
-    return 12*mv # annualisé
 
 #    Bloc ASPA/ASI
 #    Allocation de solidarité aux personnes agées (ASPA)
 #    et Allocation supplémentaire d'invalidité (ASI)
 
 # ASPA crée le 1er janvier 2006
-# TODO Allocation supplémentaire avant le 1er janvier 2006
+# TODO Allocation supplémentaire avant la loi de  2006 (entrée en vigueur au 1er janvier 2007)
 
 # ASPA:    
 # Anciennes allocations du minimum vieillesse remplacées par l'ASPA
@@ -140,13 +106,25 @@ def _mv(aspa_elig, nb_par, br_mv, _P,
 #        Changement au 1er janvier 2009 seulement pour les personnes seules !       
 #        P.aspa.plaf_couple = P.asi.plaf_couple mais P.aspa.plaf_seul = P.asi.plaf_seul 
 
+#    Minimum vieillesse - Allocation de solidarité aux personnes agées (ASPA) 
+# age minimum (CSS R815-2)
+# base ressource R815-25: 
+#   - retraite, pensions et rentes,
+#   - allocation spéciale (L814-1);
+#   - allocation aux mères de famille (L813)
+#   - majorations pour conjoint à charge des retraites
+#   - pas de prise en compte des allocations logement, des prestations
+#   familiales, de la rente viagère rapatriée...
+# TODO: ajouter taux de la majoration pour 3 enfants 10% (D811-12) ?
+#       P.aspa.maj_3enf = 0.10;
+
 def _aspa_elig(age, inv, activite, _P):
     '''
     Eligibitié individuelle à l'ASPA
     'ind'
     '''
     P = _P.minim.aspa
-    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3) 
+    out = ((age >= P.age_min) | ((age >=P.age_ina) &  inv)) & (activite==3)
     return out
 
 def _asi_elig(aspa_elig, inv, activite):
@@ -163,14 +141,20 @@ def _aspa_pure(aspa_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option 
     '''
     Calcule l'ASPA lorsqu'il y a un ou deux bénéficiaire de l'ASPA et aucun bénéficiaire de l'ASI
     '''
+    # La notion de couple change au 1er janvier 2007 (réforme de 2006)
+    if _P.datesim.year >= 2007:
+        couple = marpac
+    else: 
+        couple = maries
+    
     P = _P.minim
     elig1 = ( (asi_aspa_nb_alloc==1) & ( aspa_elig[CHEF] | aspa_elig[PART]) )
-    elig2 = (aspa_elig[CHEF] & aspa_elig[PART])*maries
+    elig2 = (aspa_elig[CHEF] & aspa_elig[PART])*couple
     elig  = elig1 | elig2
 
     montant_max        = elig1*P.aspa.montant_seul + elig2*P.aspa.montant_couple
     ressources         = elig*(br_mv + montant_max) 
-    plafond_ressources = elig1*(P.aspa.plaf_seul*not_(marpac) + P.aspa.plaf_couple*marpac) + elig2*P.aspa.plaf_couple
+    plafond_ressources = elig1*(P.aspa.plaf_seul*not_(couple) + P.aspa.plaf_couple*couple) + elig2*P.aspa.plaf_couple
     depassement        = ressources - plafond_ressources 
     
     montant_servi_aspa   = max_(montant_max - depassement, 0)/12
@@ -200,7 +184,7 @@ def _asi_pure(asi_elig, marpac, maries, asi_aspa_nb_alloc, br_mv, _P, _option = 
     # Faute de mieux, on verse l'asi à la famille plutôt qu'aux individus
     # asi[CHEF] = asi_elig[CHEF]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
     # asi[PART] = asi_elig[PART]*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2)
-    return 12*(asi_elig[CHEF]++ asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2) # annualisé
+    return 12*(asi_elig[CHEF] + asi_elig[PART])*montant_servi_asi*(elig1*1 + elig2/2 + elig3/2) # annualisé
 
 def _asi_aspa_elig(aspa_elig, asi_elig, _option = {'asi_elig': [CHEF, PART], 'aspa_elig': [CHEF, PART]}):
     '''
@@ -279,24 +263,24 @@ def _ra_rsa(sal, hsup, rpns, etr):
     '''
     return sal + hsup + rpns + etr
 
-def _br_rmi_pf(af_base, cf, asf, paje_base, paje_clca, paje_colca, _P):
+def _br_rmi_pf(af_base, cf, asf, paje_base, paje_clca, paje_colca, apje, ape, _P):
     '''
     Prestations familiales inclues dans la base ressource RSA/RMI
     'ind'
     '''
     P = _P.minim
-#    if YEAR < 2004:
-#        out =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
-#    else: 
-    out =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
+    if _P.datesim.year < 2004:
+        out =  P.rmi.pfInBRrmi*(af_base + cf + asf + apje + ape)    
+    else: 
+        out =  P.rmi.pfInBRrmi*(af_base + cf + asf + paje_base + paje_clca + paje_colca)
     return out
 
-def _br_rmi_ms(mv, asi, aah, caah):
+def _br_rmi_ms(aspa, asi, aah, caah):
     '''
     Minima sociaux inclus dans la base ressource RSA/RMI
     'ind'
     '''
-    return mv + asi + aah + caah
+    return aspa + asi + aah + caah
 
 def _br_rmi_i(ra_rsa, cho, rst, alr, rto, rev_cap_bar, rev_cap_lib, rfon_ms, div_ms):
     '''
@@ -385,12 +369,14 @@ def _br_rmi(br_rmi_pf, br_rmi_ms, br_rmi_i, _P,
 def _rmi_nbp(age, smic55, nb_par , _P, _option = {'age': ENFS, 'smic55': ENFS}):
     '''
     Nombre de personne à charge au sens du Rmi ou du Rsa
+    'fam'
     '''
     return nb_par + nb_enf(age, smic55, 0, 24)  # TODO limite d'âge dans paramètres
 
 def _forf_log(so, rmi_nbp, _P):
     '''
     Forfait logement intervenant dans le calcul du Rmi ou du Rsa
+    'fam'
     '''
     # calcul du forfait logement annuel si le ménage touche des allocations logements
     P = _P.minim
@@ -403,7 +389,8 @@ def _forf_log(so, rmi_nbp, _P):
 
 def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P, _option = {'age' : [CHEF, PART]}):
     '''
-    Rsa socle / Rmi 
+    Rsa socle / Rmi
+    'fam'
     '''
     P = _P.minim
     # RSA socle TODO mécanisme similaire à l'API: Pour les personnes ayant la charge 
@@ -429,7 +416,8 @@ def _rmi(rsa_socle, forf_log, br_rmi):
 
 def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PART]}): 
     ''' 
-    Cacule le montant du RSA 
+    Cacule le montant du RSA
+    'fam'
     '''
     P = _P.minim.rmi 
     RSA = max_(0,rsa_socle + P.pente*(ra_rsa[CHEF] + ra_rsa[PART]) - forf_log - br_rmi)
@@ -439,11 +427,6 @@ def _rsa(rsa_socle, ra_rsa, forf_log, br_rmi, _P, _option = {'ra_rsa': [CHEF, PA
 def _rsa_act(rsa, rmi):    
     return rsa - rmi
         
-def _ppe_cumul_rsa_act(ppe, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
-#   On retranche le RSA activité de la PPE
-    ppe = max_(ppe - rsa_act[VOUS] - rsa_act[CONJ],0)
-    return ppe 
-    
 def _api(agem, age, smic55, isol, forf_log, br_rmi, af_majo, rsa, _P, _option = {'age': ENFS, 'agem': ENFS, 'smic55': ENFS}):
     '''
     Allocation de parent isolé
@@ -519,18 +502,18 @@ def _aefa(age, smic55, af_nbenf, nb_par, ass ,aer, api, rsa, _P, _option = {'age
               + nbPAC*P.aefa.tx_supp*(nb_par<=2)
               + nbPAC*P.aefa.tx_3pac*max_(nbPAC-2,0))
     
-    if YEAR==2008: aefa += condition*P.aefa.forf2008
+    if _P.datesim.year==2008: aefa += condition*P.aefa.forf2008
                
     aefa_maj  = P.aefa.mon_seul*maj
     aefa = max_(aefa_maj,aefa)   
     return aefa 
 
-def _br_aah(br_pf, asi, mv, _P): 
+def _br_aah(br_pf, asi, aspa, _P): 
     '''
     Base ressources de l'allocation adulte handicapé
     'fam'
     '''
-    br_aah = br_pf + asi + mv
+    br_aah = br_pf + asi + aspa
     return br_aah
 
 def _aah(br_pf_i, br_aah, inv, age, smic55, concub, af_nbenf, _P, _option = {'inv': [CHEF, PART], 'age': [CHEF, PART], 'br_pf_i': [CHEF, PART], 'smic55': [CHEF, PART]}):
@@ -627,7 +610,7 @@ def _caah(aah, asi, br_aah, al, _P):
 
     P = _P.minim 
     elig_cpl = ((aah>0) | (asi>0))    # TODO: éligibilité logement indépendant
-    if YEAR >= 2006: 
+    if _P.datesim.year >= 2006: 
         compl = elig_cpl*max_(P.caah.grph-(aah+br_aah)/12,0)
     else : compl = P.caah.cpltx*P.aah.montant*elig_cpl
         # En fait perdure jusqu'en 2008 
@@ -647,7 +630,7 @@ def _caah(aah, asi, br_aah, al, _P):
 #Choix entre la majoration ou la garantie de ressources
 #La majoration pour la vie autonome n'est pas cumulable avec la garantie de ressources pour les personnes handicapées.
 #La personne qui remplit les conditions d'octroi de ces deux avantages doit choisir de bénéficier de l'un ou de l'autre.
-    if YEAR >= 2006:        
+    if _P.datesim.year >= 2006:        
         elig_mva = (al>0)*( (aah>0) | (asi>0))   # TODO: complêter éligibilité
         mva = P.caah.mva*elig_mva*0
     else: mva = 0      
@@ -697,4 +680,7 @@ def _ass(br_pf, cho, concub, _P, _option = {'cho': [CHEF, PART]}):
               + (revenus>plaf)*max_(plaf+montant_mensuel-revenus,0))
     
     return 12*ass  # annualisé
+    
+    
+# TODO surle rsa hors rmi et api ?    def crds_mini():
     

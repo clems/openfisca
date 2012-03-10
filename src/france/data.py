@@ -21,7 +21,8 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from core.datatable import DataTable, IntCol, EnumCol, BoolCol, AgesCol, FloatCol
+from core.description import ModelDescription
+from core.columns import IntCol, EnumCol, BoolCol, AgesCol, FloatCol
 from core.utils import Enum
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
@@ -29,9 +30,7 @@ QUIFAM = Enum(['chef', 'part', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7',
 QUIMEN = Enum(['pref', 'cref', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
 CAT    = Enum(['noncadre', 'cadre', 'fonc'])
 
-YEAR = 2010
-
-class InputTable(DataTable):
+class InputTable(ModelDescription):
     '''
     Socio-economic data
     Donnée d'entrée de la simulation à fournir à partir d'une enquète ou 
@@ -57,20 +56,20 @@ class InputTable(DataTable):
     alr = IntCol() # (f1ao, f1bo, f1co, f1do, f1eo)
     
     hsup = IntCol()
-    inv = BoolCol()
-    alt = BoolCol()
-    cho_ld = BoolCol() # (f1ai, f1bi, f1ci, f1di, f1ei)
+    inv = BoolCol(label = u'invalide')
+    alt = BoolCol(label = u'garde alternée')
+    cho_ld = BoolCol(label = 'chômage de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
     ppe_tp_sa = BoolCol() # (f1ax, f1bx, f1cx, f1dx, f1qx)
     ppe_tp_ns = BoolCol() # (f5nw, f5ow, f5pw)
     ppe_du_sa = IntCol() # (f1av, f1bv, f1cv, f1dv, f1qv)
     ppe_du_ns = IntCol() # (f5nv, f5ov, f5pv)
     jour_xyz = IntCol(default = 360)
-    age = AgesCol()
-    agem = AgesCol()
+    age = AgesCol(u'âge')
+    agem = AgesCol(u'âge (en mois)')
     
-    zone_apl = IntCol()
-    loyer = IntCol()
-    so = IntCol()
+    zone_apl = IntCol(default = 2)
+    loyer = IntCol() # Loyer mensuel
+    so = IntCol(u"statut d'occupation")
     activite = IntCol()
     boursier = BoolCol()
     code_postal = IntCol()
@@ -138,9 +137,7 @@ class InputTable(DataTable):
 
     # non accessible (from previous years)
     f2gr = IntCol() 
-    
-
-    
+        
     f3vc = IntCol()
     f3vd = IntCol()
     f3ve = IntCol()
@@ -193,6 +190,32 @@ class InputTable(DataTable):
     
     # Déductions diverses
     f6dd = IntCol()
+    
+    # Épargne retraite - PERP, PRÉFON, COREM et CGOS
+    f6ps = IntCol()
+    f6rs = IntCol()
+    f6ss = IntCol()
+    f6pt = IntCol()
+    f6rt = IntCol()
+    f6st = IntCol()
+    f6pu = IntCol()
+    f6ru = IntCol()
+    f6su = IntCol()
+    
+    # Souscriptions en faveur du cinéma ou de l’audiovisuel
+    f6aa = IntCol()
+    
+    # Souscriptions au capital des SOFIPÊCHE
+    f6cc = IntCol()
+    
+    # Investissements DOM-TOM dans le cadre d’une entreprise <= 2005
+    # ou Versements sur un compte épargne codéveloppement 
+    f6eh = IntCol()
+    
+    # Pertes en capital consécutives à la souscription au capital de sociétés 
+    # nouvelles ou de sociétés en difficulté
+    f6da = IntCol()
+    
     
     # Dépenses de grosses réparations effectuées par les nus propriétaires
     f6cb = IntCol()
@@ -282,6 +305,215 @@ class InputTable(DataTable):
     f7wj = IntCol()
     f7wl = IntCol()
     
+    # Investissements dans les DOM-TOM dans le cadre d'une entrepise
+    f7ur = IntCol()
+    f7oz = IntCol()
+    f7pz = IntCol()
+    f7qz = IntCol()
+    f7rz = IntCol()
+    f7sz = IntCol()
+    
+    # Aide aux créateurs et repreneurs d'entreprises
+    f7fy = IntCol()
+    f7gy = IntCol()
+    f7jy = IntCol()
+    f7hy = IntCol()
+    f7ky = IntCol()
+    f7iy = IntCol()
+    f7ly = IntCol()
+    f7my = IntCol()
+
+    # Travaux de restauration immobilière
+    f7ra = IntCol()
+    f7rb = IntCol()
+    
+    # Assurance-vie
+    f7gw = IntCol()
+    f7gx = IntCol()
+    # f7gy = IntCol() existe ailleurs
+
+    # Investissements locatifs dans le secteur de touristique            
+    f7xc = IntCol()
+    f7xd = IntCol()
+    f7xe = IntCol()
+    f7xf = IntCol()
+    f7xg = IntCol()
+    f7xh = IntCol()
+    f7xi = IntCol()
+    f7xj = IntCol()
+    f7xk = IntCol()
+    f7xl = IntCol()
+    f7xm = IntCol()
+    f7xn = IntCol()
+    f7xo = IntCol()
+    
+    # Souscriptions au capital des PME
+    f7cf = IntCol()
+    f7cl = IntCol()
+    f7cm = IntCol()
+    f7cn = IntCol()
+    f7cu = IntCol()
+
+    # Souscription au capital d’une SOFIPECHE 
+    f7gs = IntCol()
+
+    # Investissements OUTRE-MER dans le secteur du logement et autres secteurs d’activité    
+    f7ua = IntCol()
+    f7ub = IntCol()
+    f7uc = IntCol()
+    f7ui = IntCol()
+    f7uj = IntCol()
+    f7qb = IntCol()
+    f7qc = IntCol()
+    f7qd = IntCol()
+    f7ql = IntCol()
+    f7qt = IntCol()
+    f7qm = IntCol()
+    
+    # Souscription de parts de fonds communs de placement dans l'innovation, 
+    # de fonds d'investissement de proximité    
+    f7gq = IntCol()
+    f7fq = IntCol()
+    f7fm = IntCol()
+    
+    # Souscriptions au capital de SOFICA
+    f7gn = IntCol()
+    f7fn = IntCol()
+
+    # Intérèts d'emprunts pour reprises de société
+    f7fh = IntCol()         
+
+    # Frais de comptabilité et d'adhésion à un CGA ou AA         
+    f7ff = IntCol()
+    f7fg = IntCol()
+    
+    # Travaux de conservation et de restauration d’objets classés monuments historiques
+    f7nz = IntCol()
+    
+    # Dépenses de protections du patrimoine naturel
+    f7ka = IntCol()
+
+    # Intérêts d'emprunts
+    f7wg = IntCol()
+    
+    # Intérêts des prêts à la consommation (case UH)
+    f7uh = IntCol()
+    
+    # Investissements forestiers
+    f7un = IntCol()
+    
+    # Intérêts pour paiement différé accordé aux agriculteurs
+    f7um = IntCol()
+
+    # Investissements locatif neufs : Dispositif Scellier
+    f7hj = IntCol()
+    f7hk = IntCol()
+    f7hn = IntCol()
+    f7ho = IntCol()
+    f7hl = IntCol()
+    f7hm = IntCol()
+    f7hr = IntCol()
+    f7hs = IntCol()
+    f7la = IntCol()
+
+    # Investissement en vue de la location meublée non professionnelle dans certains établissements ou résidences
+    f7ij = IntCol()
+    f7il = IntCol()
+    f7im = IntCol()
+    f7ik = IntCol()
+    f7is = IntCol()
+    
+    # Investissements locatifs dans les résidences de tourisme situées dans une zone de 
+    # revitalisation rurale
+    f7gs = IntCol()
+    f7gt = IntCol()
+    f7xg = IntCol()
+    f7gu = IntCol()
+    f7gv = IntCol()
+    
+    # Avoir fiscaux et crédits d'impôt     
+    # f2ab déjà disponible
+    f8ta = IntCol()
+    f8tb = IntCol()
+    f8tf = IntCol()
+    f8tg = IntCol()
+    f8th = IntCol()
+    f8tc = IntCol()
+    f8td = IntCol()
+    f8te = IntCol()
+    f8to = IntCol()
+    f8tp = IntCol()
+    f8uz = IntCol()
+    f8tz = IntCol()
+    f8wa = IntCol()
+    f8wb = IntCol()
+    f8wc = IntCol()
+    f8wd = IntCol()
+    f8we = IntCol()
+    f8wr = IntCol()
+    f8ws = IntCol()
+    f8wt = IntCol()
+    f8wu = IntCol()
+    f8wv = IntCol()
+    f8wx = IntCol()
+    f8wy = IntCol()
+    
+    # Acquisition de biens culturels
+    f7uo = IntCol()
+
+    
+    # Mécénat d'entreprise    
+    f7us = IntCol()
+
+    # Crédits d’impôt pour dépenses en faveur de la qualité environnementale
+    # f7wf = IntCol() déjà disponible
+    # f7wh = IntCol() déjà disponible
+    # f7wk = IntCol() déjà disponible
+    # f7wq = IntCol() déjà disponible
+    f7sb = IntCol()
+    f7sd = IntCol()
+    f7se = IntCol()
+    f7sh = IntCol()
+    # f7wg = IntCol() déjà disponible
+    f7sc = IntCol()
+    
+    # Crédit d'impôt pour dépense d'acquisition ou de transformation d'un véhicule GPL ou mixte
+    f7up = IntCol()
+    f7uq = IntCol()
+
+    # Crédit d'impôt aide à la mobilité
+    f1ar = IntCol()
+    f1br = IntCol()
+    f1cr = IntCol()
+    f1dr = IntCol()
+    f1er = IntCol()
+
+    # Crédit d’impôt directive « épargne » (case 2BG)
+    f2bg = IntCol()
+    
+    # Crédit d’impôt représentatif de la taxe additionnelle au droit de bail
+    f4tq = IntCol()
+    
+
+    # Crédits d’impôt pour dépenses en faveur de l’aide aux personnes
+    # f7wf
+    # f7wi
+    # f7wj
+    # f7wl
+    f7sf = IntCol()
+    f7si = IntCol()
+    
+    # Frais de garde des enfants à l’extérieur du domicile 
+    f4ga = IntCol()
+    f4gb = IntCol()
+    f4gc = IntCol()
+    f4ge = IntCol()
+    f4gf = IntCol()
+    f4gg = IntCol()
+
+    # Auto-entrepreneur : versements d’impôt sur le revenu 
+    f8uy = IntCol()
+
     # Revenus des professions non salariées
     frag_exon = IntCol() # (f5hn, f5in, f5jn)
     frag_impo = IntCol() # (f5ho, f5io, f5jo)    
@@ -378,12 +610,8 @@ class InputTable(DataTable):
     # to remove
     wprm = FloatCol()
     etr = IntCol()     
-    charges_deduc = IntCol()
-    reductions = IntCol()
-    rfr_cd = IntCol()
     coloc = BoolCol()
-    csg_taux_plein = IntCol(default = 1)
+    csg_taux_plein = BoolCol(default = True)
     aer = IntCol()
     ass = IntCol()
-#    birth = DateCol()
     f5sq = IntCol()

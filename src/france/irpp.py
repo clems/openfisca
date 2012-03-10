@@ -20,11 +20,11 @@ This file is part of openFisca.
     You should have received a copy of the GNU General Public License
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 from __future__ import division
 from numpy import ( maximum as max_, minimum as min_, logical_xor as xor_, 
-                    logical_not as not_, round)
-from france.data import QUIFOY, YEAR
+                     logical_not as not_, round) 
+
+from france.data import QUIFOY
 
 VOUS = QUIFOY['vous']
 CONJ = QUIFOY['conj']
@@ -175,12 +175,10 @@ def _rev_cat_tspr(tspr, _option = {'tspr': ALL}):
 def _deficit_rcm(f2aa, f2al, f2am, f2an):
     return f2aa + f2al + f2am + f2an
 
-def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr, _P):
-    '''
-    REVENUS DES VALEURS ET CAPITAUX MOBILIERS
-    '''
+def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2gr, f2tr, _P):
+    ''' REVENUS DES VALEURS ET CAPITAUX MOBILIERS '''
     P = _P.ir.rvcm
-    if YEAR > 2004: f2gr = 0
+    if _P.datesim.year > 2004: f2gr = 0
 
     ## Calcul du revenu catégoriel
     #1.2 Revenus des valeurs et capitaux mobiliers
@@ -212,18 +210,14 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2tr,
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
 
 def _rfr_rvcm(f2dc, f2fu, _P):
-    '''
-    Réintégration des abattements pour le revenu fiscal de référence
-    '''
+    ''' Réintégration des abattements pour le revenu fiscal de référence '''
     P = _P.ir.rvcm
     ## TODO: manque le sous total i121 (dans la fonction _rev_cat_rvcm)
     i121 = 0
     return max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
 
 def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
-    '''
-    REVENUS FONCIERS
-    '''    
+    ''' REVENUS FONCIERS '''    
     P = _P.ir.microfoncier
     ## Calcul du revenu catégoriel
     a13 = f4ba + f4be - P.taux*f4be*(f4be <= P.max)
@@ -248,9 +242,7 @@ def _rev_cat_rpns(rpns_i, _option = {'rpns_i': ALL}):
     return out
 
 def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
-    '''
-    Revenus Categoriels
-    '''
+    ''' Revenus Categoriels '''
 #    AUTRE = TSPR + RVCM + RFON
     return rev_cat_tspr + rev_cat_rvcm + rev_cat_rfon + rev_cat_rpns
 
@@ -259,28 +251,20 @@ def _rev_cat(rev_cat_tspr, rev_cat_rvcm, rev_cat_rfon, rev_cat_rpns):
 ###############################################################################
 
 def _deficit_ante(f6fa, f6fb, f6fc, f6fd, f6fe, f6fl):
-    '''
-    Déficits antérieurs
-    '''
+    ''' Déficits antérieurs '''
     return f6fa + f6fb + f6fc + f6fd + f6fe + f6fl
 
 def _rbg(alloc, rev_cat, deficit_ante, f6gh, _P):
-    '''
-    Revenu brut global (Total 17)
-    '''
+    ''' Revenu brut global (Total 17) '''
     # sans les revenus au quotient
     return max_(0, alloc + rev_cat + f6gh - deficit_ante)
 
 def _csg_deduc(rbg, f6de):
-    '''
-    CSG déductible
-    '''
+    ''' CSG déductible '''
     return min_(f6de, max_(rbg, 0))
 
 def _rng(rbg, csg_deduc, charges_deduc):
-    '''
-    Revenu net global (total 20)
-    '''
+    ''' Revenu net global (total 20) '''
     return max_(0, rbg - csg_deduc - charges_deduc)
 
 def _rni(rng, abat_spe):
@@ -293,15 +277,11 @@ def _ir_brut(nbptr, rni, _P):
     '''
     bar = _P.ir.bareme
     bar.t_x()
-    print nbptr*bar.calc(rni/nbptr)
-    bar._linear_taux_moy = True
-    print nbptr*bar.calc(rni/nbptr)
+#    bar._linear_taux_moy = True
     return nbptr*bar.calc(rni/nbptr) # TODO : partir d'ici, petite différence avec Matlab
 
 def _ir_plaf_qf(ir_brut, rni, nb_adult, nb_pac, nbptr, marpac, veuf, jveuf, celdiv, caseE, caseF, caseG, caseH, caseK, caseN, caseP, caseS, caseT, caseW, nbF, nbG, nbH, nbI, nbR, _P):
-    '''
-    Impôt après plafonnement du quotient familial et réduction complémentaire
-    '''
+    ''' Impôt après plafonnement du quotient familial et réduction complémentaire '''
     P = _P.ir
     I = ir_brut
     A = P.bareme.calc(rni/nb_adult)
@@ -421,7 +401,7 @@ def _plus_values(f3vg, f3vh, f3vl, f3vm, f3vi, f3vf, f3vd, rpns_pvce, _P):
            P.pea*f3vm +
            P.taux3*f3vi +
            P.taux4*f3vf )
-    if YEAR >= 2008:
+    if _P.datesim.year >= 2008:
         # revenus taxés à un taux proportionnel
         rdp += f3vd
         out += P.taux1*f3vd
@@ -442,18 +422,11 @@ def _tehr(rfr, nb_adult, _P):
     bar = _P.ir.tehr
     return bar.calc(rfr/nb_adult)*nb_adult
 
-def _credits_impot(ppe):
-    '''
-    Crédits d'impôts
-    '''
-    # TODO: ajouter les autres crédits d'impôts
-    return ppe
-
-def _irpp(iai, credits_impot, tehr, ppe):
+def _irpp(iai, credits_impot, tehr):
     '''
     Montant avant seuil de recouvrement (hors ppe)
     '''
-    return  -(iai - credits_impot + ppe + tehr)
+    return  -(iai - credits_impot + tehr)
 
 ###############################################################################
 ## Autres totaux utiles pour la suite
@@ -484,11 +457,11 @@ def _rev_cap_bar(f2dc, f2gr, f2ch, f2ts, f2go, f2tr, f2fu, avf):
     '''
     return f2dc + f2gr + f2ch + f2ts + f2go + f2tr + f2fu - avf
 
-def _rev_cap_lib(f2da, f2dh, f2ee):
+def _rev_cap_lib(f2da, f2dh, f2ee, _P):
     '''
     Revenu du capital imposé au prélèvement libératoire
     '''
-    if YEAR <=2007: out = f2dh + f2ee
+    if _P.datesim.year <=2007: out = f2dh + f2ee
     else: out = f2da + f2dh + f2ee
     return out
 
@@ -503,7 +476,7 @@ def _imp_lib(f2da, f2dh, f2ee, _P):
     Prelèvement libératoire sur les revenus du capital
     '''
     P = _P.ir.rvcm.prelevement_liberatoire
-    if YEAR <=2007: 
+    if _P.datesim.year <=2007: 
         out = - (P.assvie*f2dh + P.autre*f2ee )
     else:
         out = - (P.action*f2da + P.assvie*f2dh + P.autre*f2ee )
@@ -978,9 +951,8 @@ def _ppe_coef_tp(ppe_du_sa, ppe_du_ns, ppe_tp_sa, ppe_tp_ns, _P):
     P = _P.ir.credits_impot.ppe
     frac_sa = ppe_du_sa/P.TP_nbh
     frac_ns = ppe_du_ns/P.TP_nbj
-    # TODO: changer ppe_tp_sa en ppe_tp_sa
-    tp = (ppe_tp_sa == 1)|(ppe_tp_ns == 1)|(frac_sa + frac_ns >= 1)
-    return tp + not_(tp)*(frac_sa + frac_ns) 
+    tp = ppe_tp_sa | ppe_tp_ns |(frac_sa + frac_ns >= 1)
+    return tp + not_(tp)*(frac_sa + frac_ns)
     
 def _ppe_base(ppe_rev, ppe_coef_tp, ppe_coef):
     out = ppe_rev/(ppe_coef_tp + (ppe_coef_tp==0))*ppe_coef
@@ -991,11 +963,11 @@ def _ppe_elig_i(ppe_rev, ppe_coef_tp, _P):
     eligibilité individuelle à la ppe
     '''
     P = _P.ir.credits_impot.ppe
-    return (ppe_rev >= P.seuil1)&(_ppe_coef_tp!=0)
+    return (ppe_rev >= P.seuil1)&(ppe_coef_tp!=0)
 
-def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
+def _ppe_brute(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac, marpac, celdiv, veuf, caseT, caseL, nbH, _P, _option = {'ppe_elig_i': ALL, 'ppe_base': ALL, 'ppe_rev': ALL, 'ppe_coef_tp': ALL}):
     '''
-    Prime pour l'emploi
+    Prime pour l'emploi (avant éventuel dispositif de cumul avec le RSA)
     'foy'
     '''
     P = _P.ir.credits_impot.ppe
@@ -1060,53 +1032,9 @@ def _ppe(ppe_elig, ppe_elig_i, ppe_rev, ppe_base, ppe_coef, ppe_coef_tp, nb_pac,
     
     return ppe_tot
 
-
-
-
-#def Charges_deductibles(self, P):
-#    '''
-#    Charges déductibles
-#    '''
-#    table = population
-#
-#    table.openReadMode()
-#    niches1, niches2, ind_rfr = charges_deductibles.niches(YEAR)
-#    charges_deductibles.charges_calc(self, P, table, niches1, niches2, ind_rfr)
-#
-#    ## stockage des pensions dans les individus
-#    zalvf = charges_deductibles.penali(self, P, table)
-#    table.close_()
-#
-#    table.openWriteMode()
-#    table.setColl('alv', -zalvf, table = 'output')
-#    table.close_()
-
-#def Reductions(self, IPnet, P, table):
-#    ''' 
-#    Réductions d'impôts
-#    '''
-#    table.openReadMode()
-#    niches = reductions_impots.niches(YEAR)
-#    reducs = zeros(taille)
-#    for niche in niches:
-#        reducs += niche(self, P, table)
-#         
-#    table.close_()
-#    return min_(reducs, IPnet)
-
-
-#def Credits(self, P, table):
-#    '''
-#    Imputations (crédits d'impôts)
-#    '''
-#    table.openReadMode()
-#    niches = credits_impots.niches(YEAR)
-#    reducs = zeros(taille)
-#    for niche in niches:
-#        reducs += niche(self, P, table)
-#    table.close_()
-#
-#    ppe = Ppe(P.ppe)
-#
-#    return reducs + ppe
+def _ppe(ppe_brute, rsa_act, _option = {'rsa_act': [VOUS, CONJ]} ):
+#   On retranche le RSA activité de la PPE
+    ppe = max_(ppe_brute - rsa_act[VOUS] - rsa_act[CONJ],0)
+    return ppe 
+    
 

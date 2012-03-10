@@ -24,7 +24,7 @@ This file is part of openFisca.
 from __future__ import division
 from france.data import CAT
 from numpy import maximum as max_, minimum as min_, logical_not as not_, zeros
-from Utils import Bareme
+from core.utils import Bareme
 from parametres.paramData import Tree2Object
 
 class Object(object):
@@ -89,7 +89,12 @@ def _prelsoc_cap_bar(rev_cap_bar, _P):
     Calcule le prélèvement social sur les revenus du captial soumis au barème
     '''
     P = _P.prelsoc
-    total = P.base + P.add + P.rsa
+    if _P.datesim.year < 2006:
+        total = P.base 
+    elif _P.datesim.year < 2009:    
+        total = P.base + P.add
+    else:    
+        total = P.base + P.add + P.rsa
     return - rev_cap_bar*total
 
 # revenus du capital soumis au prélèvement libératoire
@@ -110,7 +115,12 @@ def _prelsoc_cap_lib(rev_cap_lib, _P):
     Calcule le prélèvement social sur les revenus du captial soumis au prélèvement libératoire
     '''
     P = _P.prelsoc
-    total = P.base + P.add + P.rsa
+    if _P.datesim.year < 2006:
+        total = P.base 
+    elif _P.datesim.year < 2009:    
+        total = P.base + P.add
+    else:    
+        total = P.base + P.add + P.rsa
     return - rev_cap_lib*total
 
 
@@ -128,14 +138,14 @@ def _prelsoc_cap_lib(rev_cap_lib, _P):
 ## Salaires
 ############################################################################
 
-def _salbrut(sali, hsup, type_sal, _P):
+def _salbrut(sali, hsup, type_sal, _defaultP):
     '''
     Calcule le salaire brut à partir du salaire net
     '''
-    plaf_ss = 12*_P.cotsoc.gen.plaf_ss
+    plaf_ss = 12*_defaultP.cotsoc.gen.plaf_ss
 
-    sal = scaleBaremes(_P.cotsoc.sal, plaf_ss)
-    csg = scaleBaremes(_P.csg       , plaf_ss)
+    sal = scaleBaremes(_defaultP.cotsoc.sal, plaf_ss)
+    csg = scaleBaremes(_defaultP.csg       , plaf_ss)
     
     sal.noncadre.__dict__.update(sal.commun.__dict__)
     sal.cadre.__dict__.update(sal.commun.__dict__)

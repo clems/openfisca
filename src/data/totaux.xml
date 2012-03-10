@@ -72,9 +72,10 @@
         <NODE desc= "Paje - Complément de libre choix du mode de garde" shortname="CLCMG" code='paje_clmg'/>
       </NODE>
       <NODE desc= "Allocation de soutien familial" shortname="ASF" code="asf" color = "77,144,34"/>
+      <NODE desc= "CRDS (prestations familiales)" shortname="CRDS fam." code="crds_pfam" color = "229,48,56"/>
     </NODE>
     <NODE desc= "Minima sociaux" shortname="Min. sociaux" code = "mini" color = "240,138,76">
-      <NODE desc= "Minimum vieillesse" shortname="Min. viellesse" code='mv' color = "249,193,148"/>
+      <NODE desc= "Minimum vieillesse" shortname="Min. viellesse" code='aspa' color = "249,193,148"/>
       <NODE desc= "Allocation adulte handicapé" shortname="AAH" code='aah' color = "244,160,80"/>
       <NODE desc= "Complément de l'allocation adulte handicapé" shortname="CAAH" code='caah' color = "244,160,80"/>
       <NODE desc= "Allocation supplémentaire d'invalidité" shortname="ASI" code='asi' color = "244,160,80"/>
@@ -87,6 +88,7 @@
       <NODE desc= "Allocation logement social" shortname="ALS" code= 'als' color="255,239,103"/>
       <NODE desc= "Allocation de logement familiale" shortname="ALF" code= 'alf' color="255,233,28"/>
       <NODE desc= "Allocation logement étudiant" shortname="AL étudiant" code='alset' color="247,221,0" />
+      <NODE desc= "CRDS (allocation logement)" shortname="CRDS log." code="crds_lgtm" color = "229,48,56"/>
     </NODE>
   </NODE>
   <NODE desc= "Prime pour l'emploi" shortname="PPE" code = "ppe" color = "182,34,131"/>
