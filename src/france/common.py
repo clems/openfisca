@@ -69,9 +69,26 @@ def _typ_men(isol, af_nbenf):
             7*(isol & _3_kid) ) # Famille monoparentale trois enfants et plus
             
     
-def _revdisp(rev_trav, pen, rev_cap, ir_lps, psoc, ppe, impo):
-    '''Revenu disponible'''
+def _revdisp_i(rev_trav, pen, rev_cap, ir_lps, psoc, ppe, impo):
+    '''Revenu disponible - individuel'''
     return rev_trav + pen + rev_cap + ir_lps + psoc + ppe + impo
+
+def _revdisp(revdisp_i, _option = {'revdisp_i': ALL}):
+    '''
+    Revenu disponible - ménage
+    'men'
+    '''
+    r = 0
+    for rev in revdisp_i.itervalues():
+        r += rev
+    return r
+
+def _nivvie(revdisp, uc):
+    '''
+    Niveau de vie du ménage
+    'men'
+    '''
+    return revdisp/uc
 
 def _rev_trav(sal_net, rag, ric, rnc):
     '''Revenu du travail'''

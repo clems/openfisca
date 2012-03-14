@@ -385,7 +385,9 @@ class ModelFrance(ModelDescription):
     # Totaux
     ############################################################
 
-    revdisp = Prestation(cm._revdisp)
+    revdisp_i = Prestation(cm._revdisp_i, label = u"Revenu disponible individuel")
+    revdisp = Prestation(cm._revdisp, 'men', label = u"Revenu disponible du ménage")
+    nivvie = Prestation(cm._nivvie, 'men', label = u"Niveau de vie du ménage")
     rev_trav = Prestation(cm._rev_trav)
     pen = Prestation(cm._pen)
     chonet = Prestation(cm._chonet)
