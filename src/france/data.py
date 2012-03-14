@@ -250,7 +250,7 @@ class InputTable(ModelDescription):
     f7db = IntCol()
     f7df = IntCol()
     f7dq = IntCol()
-    f7dg = IntCol()
+    f7dg = BoolCol()
     f7dl = IntCol()
     
     # Intérêt des emprunts contractés pour l'acquisition ou la construction de l'habitation principale
