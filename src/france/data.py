@@ -615,3 +615,7 @@ class InputTable(ModelDescription):
     aer = IntCol()
     ass = IntCol()
     f5sq = IntCol()
+    tu99 = IntCol()
+    tau99 = IntCol()
+    reg   = IntCol()
+    pol99 = IntCol()
