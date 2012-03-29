@@ -58,7 +58,7 @@ class InputTable(ModelDescription):
     hsup = IntCol()
     inv = BoolCol(label = u'invalide')
     alt = BoolCol(label = u'garde alternée')
-    cho_ld = BoolCol(label = 'chômage de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
+    cho_ld = BoolCol(label = 'chômeur de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
     ppe_tp_sa = BoolCol() # (f1ax, f1bx, f1cx, f1dx, f1qx)
     ppe_tp_ns = BoolCol() # (f5nw, f5ow, f5pw)
     ppe_du_sa = IntCol() # (f1av, f1bv, f1cv, f1dv, f1qv)
@@ -607,6 +607,20 @@ class InputTable(ModelDescription):
     ass_mat   = BoolCol()
     gar_dom   = BoolCol()
 
+# zones apl and calibration 
+    tu99 = IntCol()
+    tau99 = IntCol()
+    reg   = IntCol()
+    pol99 = IntCol()
+    cstotpragr = IntCol()
+    naf16pr = IntCol()
+    typmen15 = IntCol()
+    ageq  = IntCol()
+    nbinde = IntCol()
+    ddipl = IntCol()
+    act5 = IntCol()
+    wprm_init = FloatCol()
+
     # to remove
     wprm = FloatCol()
     etr = IntCol()     
@@ -615,7 +629,3 @@ class InputTable(ModelDescription):
     aer = IntCol()
     ass = IntCol()
     f5sq = IntCol()
-    tu99 = IntCol()
-    tau99 = IntCol()
-    reg   = IntCol()
-    pol99 = IntCol()

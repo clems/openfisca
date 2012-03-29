@@ -33,6 +33,8 @@ import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
 import france.common as cm
+import france.calage as cl
+
 
 class ModelFrance(ModelDescription):
     mhsup = Prestation(cs._mhsup)
@@ -380,6 +382,7 @@ class ModelFrance(ModelDescription):
     ############################################################
     
     typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
+    nb_ageq0 = Prestation(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
 
     ############################################################
     # Totaux
