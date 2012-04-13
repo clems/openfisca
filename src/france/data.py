@@ -67,7 +67,7 @@ class InputTable(ModelDescription):
     age = AgesCol(label = u"âge")
     agem = AgesCol(label = u"âge (en mois)")
     
-    zone_apl = IntCol(default = 2)
+    zone_apl = EnumCol(default = 2)
     loyer = IntCol() # Loyer mensuel
     so = EnumCol(label = u"statut d'occupation")
     activite = IntCol()
