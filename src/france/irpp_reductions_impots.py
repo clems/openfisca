@@ -47,6 +47,8 @@ def _reductions(ip_net, donapd, dfppce, cotsyn, resimm, patnat, sofipe, saldom, 
                 invfor + garext + daepad + rsceha + assvie + invrev + domlog + adhcga + 
                 ecpess + doment)
     elif _P.datesim.year == 2003:
+        print invrev
+        
         total = (donapd + dfppce + saldom + cotsyn + prcomp + spfcpi + cappme + intemp + 
                 repsoc + invfor + garext + daepad + rsceha + assvie + invrev + domlog + 
                 adhcga + ecpess + doment)
@@ -399,9 +401,9 @@ def _invrev(marpac, f7gs, f7gt, f7xg, f7gu, f7gv, _P):
     TODO 1/4 codé en dur
     '''
     P = _P.ir.reductions_impots.invrev
-    return ( P.taux_gs*max_(f7gs, P.seuil_gs*(1+marpac))/4 +
-             P.taux_gu*max_(f7gu, P.seuil_gu*(1+marpac))/4 +
-             P.taux_xg*max_(f7xg, P.seuil_xg*(1+marpac))/4 +
+    return ( P.taux_gs*min_(f7gs, P.seuil_gs*(1+marpac))/4 +
+             P.taux_gu*min_(f7gu, P.seuil_gu*(1+marpac))/4 +
+             P.taux_xg*min_(f7xg, P.seuil_xg*(1+marpac))/4 +
              P.taux_gt*f7gt + P.taux_gt*f7gv )
 
 def _invlst(marpac, f7xc, f7xd, f7xe, f7xf, f7xg, f7xh, f7xi, f7xj, f7xk, f7xl, f7xm, f7xn, f7xo, _P):
