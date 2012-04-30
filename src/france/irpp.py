@@ -126,12 +126,14 @@ def _sal_net(rev_sal, cho_ld, fra, _P):
 def _rev_pen(alr, rst):
     '''
     Revenu imposé comme des pensions (retraites, pensions alimentaires, etc.)
+    'ind'
     '''
     return alr + rst
 
 def _pen_net(rev_pen, _P):
     '''
     Pensions après abattements
+    'ind'
     '''
     P = _P.ir.tspr.abatpen
 #    problème car les pensions sont majorées au niveau du foyer
@@ -141,6 +143,21 @@ def _pen_net(rev_pen, _P):
 #    Plus d'abatement de 20% en 2006
 
     return max_(0, rev_pen - round(max_(P.taux*rev_pen , P.min)))
+
+def _abat_sal_pen(sal_net, pen_net, _P):
+    '''
+    Abattement de 20% sur les salaires
+    'ind'
+    '''
+    P = _P.ir.tspr.abatsalpen
+    return min_(P.taux*max_(sal_net + pen_net, 0), P.max)
+
+def _sal_pen_net(sal_net, pen_net, abat_sal_pen):
+    '''
+    Salaires et pensions après abattement de 20% sur les salaires
+    'ind'
+    '''
+    return sal_net + pen_net - abat_sal_pen
 
 def _rto(f1aw, f1bw, f1cw, f1dw):
     '''
@@ -155,11 +172,12 @@ def _rto_net(f1aw, f1bw, f1cw, f1dw, _P):
     P = _P.ir.tspr.abatviag
     return round(P.taux1*f1aw + P.taux2*f1bw + P.taux3*f1cw + P.taux4*f1dw )
 
-def _tspr(sal_net, pen_net, rto_net):
+def _tspr(sal_pen_net, rto_net):
     '''
     Traitemens salaires pensions et rentes individuelles
+    'ind'
     '''
-    return sal_net + pen_net + rto_net
+    return sal_pen_net + rto_net
 
 def _rev_cat_tspr(tspr, _option = {'tspr': ALL}):
     '''
