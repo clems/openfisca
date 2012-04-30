@@ -223,7 +223,6 @@ class ModelFrance(ModelDescription):
     aidmob = Prestation(ci._aidmob, 'foy', start=date(2005,1,1), end=date(2008,12,31))
     
     jeunes = Prestation(ci._jeunes, 'foy', start=date(2005,1,1), end=date(2008,12,31))
-    jeunes.set_disabled()
     
     credits_impot = Prestation(ci._credits_impot, 'foy')
     

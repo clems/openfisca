@@ -83,7 +83,7 @@ def _cd2(ecodev, sofipe, cinema, _P):
     niches2 : niches après le rbg_int
     niches3 : indices des niches à ajouter au revenu fiscal de référence
     '''
-    if _P.datesim.year in (2002, 2005):
+    if _P.datesim.year in (2002, 2003, 2004, 2005):
         niches2 = sofipe + cinema
     elif _P.datesim.year == 2006:
         niches2 = sofipe

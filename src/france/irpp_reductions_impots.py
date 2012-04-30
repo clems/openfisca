@@ -436,7 +436,8 @@ def _domlog(f7ua, f7ub, f7uc, f7ui, f7uj, f7qb, f7qc, f7qd, f7ql, f7qt, f7qm, _P
     2002-2009
     TODO: Plafonnement sur la notice
     '''
-    P = _P.ir.reductions_impots.domlog
+    if _P.datesim.year <=2007:
+        P = _P.ir.reductions_impots.domlog
     if _P.datesim.year <= 2002:
         return P.taux1*f7uj + P.taux2*(f7uc + f7ub + f7uc) 
     elif _P.datesim.year <= 2004:

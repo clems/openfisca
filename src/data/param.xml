@@ -2245,17 +2245,17 @@
 	</CODE>
       </NODE>
       <NODE code = "domlog" description="Investissement OUTRE-MER dans le secteur du logement (à compléter)">
-	<CODE description="Premier taux" code="taux1" format = 'percent'>
-	  <VALUE valeur="0.08" deb="2002-01-01" fin="2007-12-31"/>
-	</CODE>
-	<CODE description="Second taux" code="taux2" format = 'percent'>
-	  <VALUE valeur="0.05" deb="2002-01-01" fin="2007-12-31"/>
-	</CODE>
+        <CODE description="Premier taux" code="taux1" format = 'percent'>
+          <VALUE valeur="0.08" deb="2002-01-01" fin="2007-12-31"/>
+        </CODE>
+        <CODE description="Second taux" code="taux2" format = 'percent'>
+          <VALUE valeur="0.05" deb="2002-01-01" fin="2007-12-31"/>
+        </CODE>
       </NODE>
       <NODE code = "adhcga" description="Frais de comptabilité et d'adhésion CGA">
-	<CODE description="Plafond par exploitation" code="max" format = 'integer'>
-	  <VALUE valeur="915" deb="2002-01-01" fin="2010-12-31"/>
-	</CODE>
+        <CODE description="Plafond par exploitation" code="max" format = 'integer'>
+          <VALUE valeur="915" deb="2002-01-01" fin="2010-12-31"/>
+        </CODE>
       </NODE>
       <NODE code = "creaen" description="Aides aux créateurs d'entreprises (à compléter)">
 	<CODE description="Aides aux créateurs d'entreprises" code="base" format = 'integer'>
