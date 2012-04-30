@@ -370,7 +370,7 @@ def _decote(ir_plaf_qf, _P):
 
 def _nat_imp(rni, nbptr, _P):
     '''
-    Renvoie 1 si le foyer est imposable, 0 sinon
+    Renvoie True si le foyer est imposable, False sinon
     '''
     P = _P.ir.non_imposable
     seuil = P.seuil + (nbptr - 1)*P.supp
