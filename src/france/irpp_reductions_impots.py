@@ -47,8 +47,6 @@ def _reductions(ip_net, donapd, dfppce, cotsyn, resimm, patnat, sofipe, saldom, 
                 invfor + garext + daepad + rsceha + assvie + invrev + domlog + adhcga + 
                 ecpess + doment)
     elif _P.datesim.year == 2003:
-        print invrev
-        
         total = (donapd + dfppce + saldom + cotsyn + prcomp + spfcpi + cappme + intemp + 
                 repsoc + invfor + garext + daepad + rsceha + assvie + invrev + domlog + 
                 adhcga + ecpess + doment)
