@@ -23,42 +23,18 @@ This file is part of openFisca.
 """
 
 from __future__ import division
-import csv, pickle 
+import pickle
+from pandas import read_csv
 import numpy as np
 
 communeDict = {}
-fileName = 'zone_apl_2006.csv'
 
-reader = csv.reader(open(fileName), delimiter = ";")
+
+with open('zone_apl_2006.csv') as zone_csv:
+    Z = read_csv(zone_csv, delimiter = ";")
 
 #% PSDC99          population sans double compte 99
 #% Pop_mun_2006    population municipale 2006
-
-row_is_header = True
-nrows = 0 
-for row in reader:
-    if row_is_header:
-        header_list = row
-        row_is_header = False
-    else:
-        nrows += 1
-
-row_is_header = True
-for header in header_list:    
-    header_index = header_list.index(header)            
-    row_is_header = True
-    reader = csv.reader(open(fileName), delimiter = ";")
-    data_index = 0
-    for row in reader:
-        if row_is_header is not True:
-            communeDict[header][data_index] = int(row[header_index])
-            data_index += 1
-            
-        if row_is_header:
-            communeDict[header] = np.zeros(nrows, dtype= np.int32)
-            row_is_header = False
-            data_index = 0
-
 
 #% M.POL99 de 1 à  4
 #% REG de    11 à 94
@@ -69,29 +45,31 @@ for header in header_list:
 
 # Build code an array of unique combnation of POL99, REG, TAU99, TU99
 # zcode adds Z in front of code
-unsorted_zcode = (communeDict['Zone']      + 
-                  1e1*communeDict['TU99']  + 
-                  1e2*communeDict['TAU99'] + 
-                  1e4*communeDict['REG']   + 
-                  1e6*communeDict['POL99'])
-unsorted_code = np.floor(unsorted_zcode/10)
+Z.unsorted_zcode = (Z['Zone']      + 
+                    1e1*Z['TU99']  + 
+                    1e2*Z['TAU99'] + 
+                    1e4*Z['REG']   + 
+                    1e6*Z['POL99'] )
+Z.unsorted_code = np.floor(Z.unsorted_zcode/10)
 
-#% On élimine les doublons
-zcode = np.unique(np.sort(unsorted_zcode))
+print Z
+
+# On élimine les doublons
+zcode = np.unique(np.sort(Z.unsorted_zcode))
 code_vec = np.floor(zcode/10)
 unique_code_vec, code_indices, code_inverse = np.unique(code_vec, return_index=True, return_inverse=True)
 
 zone={}
-pop = communeDict['Pop_mun_2006']
+pop = Z.Pop_mun_2006
 for code, code_index in zip(unique_code_vec, code_indices):
     if (code_vec == code).sum() == 1: # unambiguous choice
         zone[int(code)] = int(np.mod(zcode[code_index],10));        
     else:
         zone[int(code)] = {}
         prob = np.zeros(3)
-        total_pop = pop[unsorted_code == code].sum()
+        total_pop = pop[Z.unsorted_code == code].sum()
         for i in [1,2,3]:
-            indices = ((unsorted_code == code) & ((np.mod(unsorted_zcode,10))==i)) 
+            indices = ((Z.unsorted_code == code) & ((np.mod(Z.unsorted_zcode,10))==i)) 
             prob[i-1] = pop[indices].sum()/total_pop            
             zone[int(code)].update({i: prob[i-1]})
 print zone
@@ -101,9 +79,3 @@ outputFile = open("zone_apl_imputation_data", 'wb')
 pickle.dump(zone, outputFile)
 outputFile.close()
 
-        #for code in zone.keys():
-#    if code == 382000:
-#        print code
-#        print zone[code]
-#        print isinstance(zone[code], int)
-#        print zone[code][1]
