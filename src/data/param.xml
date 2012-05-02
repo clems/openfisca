@@ -8,10 +8,10 @@
 	    <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
 	  </ASSIETTE>
 	  <SEUIL>
-	    <VALUE valeur="0" deb="2005-01-01" fin="2011-12-31"/>
+	    <VALUE valeur="0" deb="2001-01-01" fin="2011-12-31"/>
 	  </SEUIL>
 	  <TAUX>
-	    <VALUE valeur=".051" deb="2005-01-01" fin="2011-12-31"/>
+	    <VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
 	  </TAUX>
 	</TRANCHE>
 	<TRANCHE code="tranche1">	            
@@ -21,10 +21,10 @@
 	    <VALUE valeur="1" deb="2011-01-01" fin="2011-12-31"/>
 	  </ASSIETTE>
 	  <SEUIL>
-	    <VALUE valeur="4" deb="2005-01-01" fin="2011-12-31"/>
+	    <VALUE valeur="4" deb="2001-01-01" fin="2011-12-31"/>
 	  </SEUIL>
 	  <TAUX>
-	    <VALUE valeur=".051" deb="2005-01-01" fin="2011-12-31"/>
+	    <VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
 	  </TAUX>
 	</TRANCHE>
       </BAREME>
