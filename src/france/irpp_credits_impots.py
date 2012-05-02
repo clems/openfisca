@@ -369,6 +369,7 @@ def _jeunes(age, nbptr, rfr, marpac, _P):
     TODO: What is rev?
     rfr de l'année où jeune de moins de 26 à travaillé six mois
     '''
+    rev = 0
     P = _P.ir.credits_impot.jeunes
     elig = (age > P.age) * ( rfr > P.rfr_plaf*(marpac*P.rfr_mult + not_(marpac)) + max_(0,nbptr-2)*.5*P.rfr_maj)
     montant = (P.min >= rev > P.int)*P.montant + ( P.int >= rev >= P.max )*P.taux

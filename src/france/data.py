@@ -58,18 +58,18 @@ class InputTable(ModelDescription):
     hsup = IntCol()
     inv = BoolCol(label = u'invalide')
     alt = BoolCol(label = u'garde alternée')
-    cho_ld = BoolCol(label = 'chômage de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
+    cho_ld = BoolCol(label = 'chômeur de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
     ppe_tp_sa = BoolCol() # (f1ax, f1bx, f1cx, f1dx, f1qx)
     ppe_tp_ns = BoolCol() # (f5nw, f5ow, f5pw)
     ppe_du_sa = IntCol() # (f1av, f1bv, f1cv, f1dv, f1qv)
     ppe_du_ns = IntCol() # (f5nv, f5ov, f5pv)
     jour_xyz = IntCol(default = 360)
-    age = AgesCol(u'âge')
-    agem = AgesCol(u'âge (en mois)')
+    age = AgesCol(label = u"âge")
+    agem = AgesCol(label = u"âge (en mois)")
     
-    zone_apl = IntCol(default = 2)
+    zone_apl = EnumCol(default = 2)
     loyer = IntCol() # Loyer mensuel
-    so = IntCol(u"statut d'occupation")
+    so = EnumCol(label = u"statut d'occupation")
     activite = IntCol()
     boursier = BoolCol()
     code_postal = IntCol()
@@ -250,7 +250,7 @@ class InputTable(ModelDescription):
     f7db = IntCol()
     f7df = IntCol()
     f7dq = IntCol()
-    f7dg = IntCol()
+    f7dg = BoolCol()
     f7dl = IntCol()
     
     # Intérêt des emprunts contractés pour l'acquisition ou la construction de l'habitation principale
@@ -606,6 +606,20 @@ class InputTable(ModelDescription):
     empl_dir  = BoolCol() 
     ass_mat   = BoolCol()
     gar_dom   = BoolCol()
+
+# zones apl and calibration 
+    tu99 = EnumCol()
+    tau99 = EnumCol()
+    reg   = EnumCol()
+    pol99 = EnumCol()
+    cstotpragr = EnumCol()
+    naf16pr = EnumCol()
+    typmen15 = EnumCol()
+    ageq  = EnumCol()
+    nbinde = EnumCol()
+    ddipl = EnumCol()
+    act5 = EnumCol()
+    wprm_init = FloatCol()
 
     # to remove
     wprm = FloatCol()
