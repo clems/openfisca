@@ -33,6 +33,8 @@ import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
 import france.common as cm
+import france.calage as cl
+
 
 class ModelFrance(ModelDescription):
     mhsup = Prestation(cs._mhsup)
@@ -121,6 +123,8 @@ class ModelFrance(ModelDescription):
     sal_net = Prestation(ir._sal_net)
     rev_pen = Prestation(ir._rev_pen)
     pen_net = Prestation(ir._pen_net)
+    abat_sal_pen = Prestation(ir._abat_sal_pen, start=date(2002,1,1), end = date(2005,12,31))
+    sal_pen_net = Prestation(ir._sal_pen_net)
     rto     = Prestation(ir._rto,     label = u'Rentes viagères (rentes à titre onéreux)')
     rto_net = Prestation(ir._rto_net, label = u'Rentes viagères après abattements')
     tspr    = Prestation(ir._tspr)
@@ -221,7 +225,6 @@ class ModelFrance(ModelDescription):
     aidmob = Prestation(ci._aidmob, 'foy', start=date(2005,1,1), end=date(2008,12,31))
     
     jeunes = Prestation(ci._jeunes, 'foy', start=date(2005,1,1), end=date(2008,12,31))
-    jeunes.set_disabled()
     
     credits_impot = Prestation(ci._credits_impot, 'foy')
     
@@ -380,12 +383,15 @@ class ModelFrance(ModelDescription):
     ############################################################
     
     typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
+    nb_ageq0 = Prestation(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
 
     ############################################################
     # Totaux
     ############################################################
 
-    revdisp = Prestation(cm._revdisp)
+    revdisp_i = Prestation(cm._revdisp_i, label = u"Revenu disponible individuel")
+    revdisp = Prestation(cm._revdisp, 'men', label = u"Revenu disponible du ménage")
+    nivvie = Prestation(cm._nivvie, 'men', label = u"Niveau de vie du ménage")
     rev_trav = Prestation(cm._rev_trav)
     pen = Prestation(cm._pen)
     chonet = Prestation(cm._chonet)

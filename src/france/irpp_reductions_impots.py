@@ -399,9 +399,9 @@ def _invrev(marpac, f7gs, f7gt, f7xg, f7gu, f7gv, _P):
     TODO 1/4 codé en dur
     '''
     P = _P.ir.reductions_impots.invrev
-    return ( P.taux_gs*max_(f7gs, P.seuil_gs*(1+marpac))/4 +
-             P.taux_gu*max_(f7gu, P.seuil_gu*(1+marpac))/4 +
-             P.taux_xg*max_(f7xg, P.seuil_xg*(1+marpac))/4 +
+    return ( P.taux_gs*min_(f7gs, P.seuil_gs*(1+marpac))/4 +
+             P.taux_gu*min_(f7gu, P.seuil_gu*(1+marpac))/4 +
+             P.taux_xg*min_(f7xg, P.seuil_xg*(1+marpac))/4 +
              P.taux_gt*f7gt + P.taux_gt*f7gv )
 
 def _invlst(marpac, f7xc, f7xd, f7xe, f7xf, f7xg, f7xh, f7xi, f7xj, f7xk, f7xl, f7xm, f7xn, f7xo, _P):
@@ -436,7 +436,8 @@ def _domlog(f7ua, f7ub, f7uc, f7ui, f7uj, f7qb, f7qc, f7qd, f7ql, f7qt, f7qm, _P
     2002-2009
     TODO: Plafonnement sur la notice
     '''
-    P = _P.ir.reductions_impots.domlog
+    if _P.datesim.year <=2007:
+        P = _P.ir.reductions_impots.domlog
     if _P.datesim.year <= 2002:
         return P.taux1*f7uj + P.taux2*(f7uc + f7ub + f7uc) 
     elif _P.datesim.year <= 2004:
