@@ -30,6 +30,7 @@ QUIFAM = Enum(['chef', 'part', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7',
 QUIMEN = Enum(['pref', 'cref', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
 CAT    = Enum(['noncadre', 'cadre', 'fonc'])
 
+
 class InputTable(ModelDescription):
     '''
     Socio-economic data
