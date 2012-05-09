@@ -29,11 +29,13 @@ import france.irpp as ir
 import france.irpp_charges_deductibles as cd
 import france.irpp_reductions_impots as ri
 import france.irpp_credits_impots as ci
+import france.isf as isf
 import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
 import france.common as cm
 import france.calage as cl
+
 
 
 class ModelFrance(ModelDescription):
@@ -252,6 +254,13 @@ class ModelFrance(ModelDescription):
     rev_cap_bar = Prestation(ir._rev_cap_bar, 'foy')
     rev_cap_lib = Prestation(ir._rev_cap_lib, 'foy')
     avf = Prestation(ir._avf, 'foy')
+    
+    ############################################################
+    # Impôt de solidarité sur la fortune
+    ############################################################
+    
+    patrimoine = Prestation(isf._patrimoine, 'foy')
+    # inclure aussi les dates si nécessaire start=date(2007,1,1)
     
     ############################################################
     # Prestations familiales

@@ -37,7 +37,7 @@
 	  </SEUIL>
 	  <TAUX>
 	    <VALUE valeur="0.0075" deb="2002-01-01" fin="2011-12-31"/>
-	    <VALUE valeur="0.0025" deb="20012-01-01" fin="2012-12-31"/>
+	    <VALUE valeur="0.0025" deb="2012-01-01" fin="2012-12-31"/>
 	  </TAUX>
 	</TRANCHE>
 	<TRANCHE code="tranche3">
@@ -73,7 +73,7 @@
 	    <VALUE valeur="0.005" deb="2012-01-01" fin="2012-12-31"/>
 	  </TAUX>
 	</TRANCHE>
-    
+
 	<TRANCHE code="tranche5">
 	  <SEUIL>
 	    <VALUE valeur="6900000" deb="2002-01-01" fin="2004-12-31"/>
@@ -104,7 +104,42 @@
 	  </TAUX>
 	</TRANCHE>    
   </BAREME>
-  
+  <NODE description="seuil pour immeubles non bâtis" code="?" >
+      <CODE description="seuil de barême biens ruraux llt" code="fractsup1" format="integer">
+        <VALUE valeur="76000" deb="2004-01-01" fin="2005-12-31" />
+        <VALUE valeur= "101897" deb="2011-01-01" fin="2011-12-31" />
+        </CODE>
+      <CODE description="seuil de barême parts de groupements fonciers" code="fractsup2" format="integer">
+        <VALUE valeur="76000" deb="2004-01-01" fin="2005-12-31"/> 	
+        <VALUE valeur="101897" deb="2004-01-01" fin="2011-12-31"/>
+      </CODE> 
 </NODE>
-
-
+<NODE description="plafonnement" code="?" >
+	<CODE description="seuil pour calcul du plafonnement" code="seuil1" format="integer">
+        <VALUE valeur="10970" deb="2004-01-01" fin="2004-12-31" />
+        <VALUE valeur="11157" deb="2005-01-01" fin="2005-12-31" />
+        <VALUE valeur="11325" deb="2006-01-01" fin="2006-12-31" />
+        <VALUE valeur="11530" deb="2007-01-01" fin="2007-12-31" />
+        <VALUE valeur="11660" deb="2008-01-01" fin="2008-12-31" />
+        <VALUE valeur="11995" deb="2009-01-01" fin="2009-12-31" />
+        <VALUE valeur="12050" deb="2010-01-01" fin="2010-12-31" />
+        <VALUE valeur="12255" deb="2011-01-01" fin="2011-12-31" />
+   	</CODE>
+	<CODE description="seuil pour calcul du plafonnement" code="seuil2" format="integer">
+        <VALUE valeur="21940" deb="2004-01-01" fin="2004-12-31" />
+        <VALUE valeur="22314" deb="2005-01-01" fin="2005-12-31" />
+        <VALUE valeur="22650" deb="2006-01-01" fin="2006-12-31" />
+        <VALUE valeur="23060" deb="2007-01-01" fin="2007-12-31" />
+        <VALUE valeur="23320" deb="2008-01-01" fin="2008-12-31" />
+        <VALUE valeur="23990" deb="2009-01-01" fin="2009-12-31" />
+        <VALUE valeur="24100" deb="2010-01-01" fin="2010-12-31" />
+        <VALUE valeur="24510" deb="2011-01-01" fin="2011-12-31" />
+    </CODE>
+	<NODE description="borne supérieur pour investissement PME" code="?" >
+		<CODE description="seuil pour calcul du plafonnement" code="bornemax" format="integer">
+        	<VALUE valeur="50000" deb="2009-01-01" fin="2010-12-31" />
+        	<VALUE valeur="45000" deb="2011-01-01" fin="2011-12-31" />
+    	</CODE>    
+	</NODE>
+</NODE>
+     

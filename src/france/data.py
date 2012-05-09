@@ -621,6 +621,49 @@ class InputTable(ModelDescription):
     act5 = EnumCol()
     wprm_init = FloatCol()
 
+## ISF ##
+    
+## Immeubles bâtis ##
+    ab= IntCol()
+    ac= IntCol()
+## non bâtis ##
+    bc= IntCol()
+    be= IntCol()
+    bh= IntCol()
+    bk= IntCol() 
+## droits sociaux- valeurs mobilières-liquidités- autres meubles ##
+
+    cl= IntCol()
+    cb= IntCol()
+    cd= IntCol()
+    ce= IntCol()
+    cf= IntCol()
+    cg= IntCol()
+    co= IntCol()
+    
+## montant des éxonérations afférentes aux droits et titres ci-dessous ##
+
+    ch= IntCol()
+    ci= IntCol()
+    cj= IntCol()
+    ck= IntCol()
+    
+## réductions ##
+    mt= IntCol()
+    ne= IntCol()
+    mv= IntCol()
+    nf= IntCol()
+    mx= IntCol()
+    na= IntCol()
+    nc= IntCol()
+
+## revenus et produits de l'année- montant acquitté hors de France ##
+    pt= IntCol()
+    rs= IntCol()
+    
+## passifs et autres réduc ##
+    gh= IntCol()
+    
     # to remove
     wprm = FloatCol()
     etr = IntCol()     

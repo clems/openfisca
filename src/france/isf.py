@@ -20,152 +20,117 @@ This file is part of openFisca.
     You should have received a copy of the GNU General Public License
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import division
+from numpy import ( maximum as max_, minimum as min_) 
 
-def _isf(assiette_isf, _P):
-    bar = _P.isf.bareme
-    return bar.calc(assiette_isf)
-
-
-
-def _assiette_isf(patrimoine, abat,):
-    pass
-
-## situation de famille ##
-def _nb_adult(marpac, celdiv, veuf):
-    return 2*marpac + 1*(celdiv | veuf)
-
-def _nb_pac(nbF, nbJ, nbR):
-    return nbF + nbJ + nbR
-        
-def _marpac(statmarit):
-    '''
-    Marié (1) ou Pacsé (5)
-    'foy'
-    '''
-    return (statmarit == 1) | (statmarit == 5)
-
-def _celdiv(statmarit):
-    '''
-    Célibataire (2) ou divorcé (3)
-    'foy'
-    '''
-    return (statmarit == 2) | (statmarit == 3)
-
-def _veuf(statmarit):
-    '''
-    Veuf (4)
-    'foy'
-    '''
-    return statmarit == 4
-
-def _jveuf(statmarit):
-    '''
-    Jeune Veuf
-    'foy'
-    '''
-    return statmarit == 6
-
-def 
-
-## qualification de biens professionnels exonérés ##
-
-
-
-## immeubles bâtis- Annexe 1 ##
- def résidenceprincipale= ab
- def autresimmeubles= ac
 
 ## immeubles non bâtis, part de groupement ##
- def boisforêts= bc
- return bc*0.25= bd
+def _forets(bc):
+    return bc*0.25
  
- def bienrurauxllt= be 
- ''' bien ruraux loués à long terme'''
- return be-fractsup ## aller chercher fractsup- en fonction de la date, dans les parzm? ##
- if be-fractsup<=0 
- return bf= 0.25*be
- else 
- return bf+bg= (be-fractsup)*0.50+ fractsup*0.25
+# def fractsup ##
+def _ruraux(be, _P): 
+    ''' bien ruraux loués à long terme'''
+    seuil = _P.isf.nonbat.seuil
+    return min_(be, seuil)*0.25 + max_(be-seuil,0)*0.5  
  
- def pgfagaf= bh
- '''part de groupements forestiers- agricoles fonciers'''
- return be-fractsup
- if bh-fractsup<=0 
- return bi= 0.25*bh
- else 
- return bi+bj=(bh-fractsup)*0.50+ fractsup*0.25
+def _grp_agr(bh, _P):
+    '''part de groupements forestiers- agricoles fonciers'''
+    seuil = _P.isf.nonbat.seuil
+    return min_(bh, seuil)*0.25 + max_(bh-seuil,0)*0.5  
 
-
-def autresbiens= bk
-''' autres biens '''
-    
 ## droits sociaux- valeurs mobilières- liquidités- autres meubles ##
 
-def padsms= cl2
-''' parts ou actions détenues par les salariés et mandataires sociaux'''
-    return cm= cl*0.25
+def _actions_sal(cl2): ## non présent en 2005##
+    ''' parts ou actions détenues par les salariés et mandataires sociaux'''
+    return  cl2*0.25  # TODO: inclure dans param
+## 0,25 en 2011, 0,5 en 2005##
 
-def pasec= cb 
-''' parts ou actions de sociétés avec engagement de 6 ans conservation minimum'''
-    return cc= cb*0.25
+def _actions_conserv(cb):
+    ''' parts ou actions de sociétés avec engagement de 6 ans conservation minimum'''
+    return cb*0.25 # TODO: inclure dans param
 
-def dssfa= cd 
-''' droits sociaux de sociétés dans lesquelles vous avez exercez une fonction ou activité'''
-    return cd
-
-def autresvaleursmob= ce
-'''autres valeurs mobilières'''
-    return ce
-
-def liquidités= cf
-''' liquidités'''
-    return cf
-
-def autresbienmeubles= cg
-''' autres bien meubles dont contrat d'assurance vie'''
-    return co 
-    return cg ## comment s'intercale les deux, voir annexe##
+def _autres_bien_meubles(cg, co):
+    '''
+    autres bien meubles dont contrat d'assurance vie
+    '''
+    return cg 
 
 ## pas besoin d'ajouter le montant des exonérations ##
 
-def patrimoine = ab+ ac+ bd+ bf+ bg + bi + bj + bk + cm + cc + cd+ ce + cf+ cg 
- def forfaitmobilier= ef
- def totpatrimoine = de+ ef 
- 
- ## passifs et autres réductions ## 
-  def gh
-  ''' passifs et autres réductions'''
-      
- def assiette-isf
- return totpatrimoine- gh 
-    
+def _patrimoine(ab, ac, forets, ruraux, grp_agr, bk, actions_sal, actions_conserv, droits_soc, autres_val_mob, liquidites, autres_biens_meubles):
+    # ab résidence principale
+    # ac autres immeubles
+    # cd droits sociaux de sociétés dans lesquelles vous avez exercez une fonction ou activité
+    # ce autres valeurs mobilières
+    # cf  liquidités
+    return autres_biens_meubles + liquidites + autres_val_mob + ab + ac + forets + ruraux + grp_agr + bk + actions_sal + actions_conserv + droits_soc
 
+def _forf_mob(ef, patrimoine):
+    return (ef != 0)*ef + (ef==0)*patrimoine*0.05 # TODO: inclure dans param
+  
+def _ass_isf(patrimoine, forf_mob, gh):
+    return forf_mob + patrimoine - gh 
+    
 ## calcul de l'impôt par application du barème ##
 
+def _isf_iai(ass_isf, _P):
+    bar = _P.isf.bareme
+    bar.t_x()
+    return bar.calc(ass_isf)
+
 ## réductions pour personnes à charges ##
- def reduc (nb_pac):
- return nb_pac * 150
- def reduc2 (nb? )= ## garde alternée##
- return nb*75
- 
- def impareduc
-  calc.bar(assiette-isf)
+def _reduc_pac(nb_pac, nbH):
+    return nb_pac*150*(nb_pac-nbH)+ nb_pac*75*nbH  # TODO: inclure dans param
+
+## réductions pour investissements dans les PME ##
+def _inv_pme(mt, ne, mv, nf, mx, na):
+    inv_dir_soc = mt*0.75 + ne*0.5
+    holdings = mv*0.75 + nf*0.5
+    fip = mx*0.5
+    fcpi= na*0.5
+    return holdings + fip + fcpi + inv_dir_soc
+
+def _org_int_gen(nc):
+    return nc*0.75
+
+def _mai(isf_iai, inv_pme, org_int_gen, reduc_pac, _P ) :
+    '''
+    montant de l'impôt avant imputation
+    '''
+    borne_max = _P.isf.pme.max
+    return isf_iai - min_(inv_pme + org_int_gen, borne_max) - reduc_pac
   
+## calcul du plafonnement ##
   
-  ## calcul du plafonnement ##
-  
- 
+def _tot_impot(irpp, mai ):
+    return irpp + mai
 
+def _revetproduits(sal_net, pen_net, rto_net, rfr_rvcm, fon) :   # TODO:  à vérifier !
+    pt = sal_net + pen_net + rto_net + rfr_rvcm # TODO: à finir
+    return pt*0.85 
 
+def _plafonnement(totaldesimpots, revetproduits): 
+    return totaldesimpots - revetproduits
 
+def _limitationplaf (mai, plafonnement, _P):
+    '''
+    limitation du plafonnement
+    '''
+    P = _P.isf.plaf
+    return (mai<= P.seuil1)*plafonnement + (P.seuil1 <= mai <= P.seuil2)*min_(_plafonnement, P.seuil1) + (mai >= P.seuil2)*min_(mai*0.5, _plafonnement)  
+    
+     
+    
+def _isfapresplafonnement(_mai, _limitationplaf):
+        return _mai - _limitationplaf
+    
 
+## montant net à payer ##
+def _isf(rs, mai, isfapresplafonnement):
+    return _isfapresplafonnement - rs 
+    
+## 
 
-
-## imputation de l'impôt sur la fortune acquitté hors de France) ##
-
-
-
-## inclure les exonérations##
-## bouclier fiscal##
 
 
