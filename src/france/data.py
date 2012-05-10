@@ -624,7 +624,7 @@ class InputTable(ModelDescription):
 ## ISF ##
     
 ## Immeubles bâtis ##
-    ab= IntCol()
+    ab= IntCol(3000000) ##  valeur résidence principale avant abattement ##
     ac= IntCol()
 ## non bâtis ##
     bc= IntCol()
@@ -633,20 +633,16 @@ class InputTable(ModelDescription):
     bk= IntCol() 
 ## droits sociaux- valeurs mobilières-liquidités- autres meubles ##
 
-    cl= IntCol()
+    cl2= IntCol()
     cb= IntCol()
     cd= IntCol()
     ce= IntCol()
-    cf= IntCol()
+    cf2= IntCol()
     cg= IntCol()
     co= IntCol()
     
-## montant des éxonérations afférentes aux droits et titres ci-dessous ##
-
-    ch= IntCol()
-    ci= IntCol()
-    cj= IntCol()
-    ck= IntCol()
+## TODO:
+    ef=IntCol()    
     
 ## réductions ##
     mt= IntCol()
@@ -657,8 +653,7 @@ class InputTable(ModelDescription):
     na= IntCol()
     nc= IntCol()
 
-## revenus et produits de l'année- montant acquitté hors de France ##
-    pt= IntCol()
+##  montant impôt acquitté hors de France ##
     rs= IntCol()
     
 ## passifs et autres réduc ##

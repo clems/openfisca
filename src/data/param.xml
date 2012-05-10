@@ -3874,10 +3874,10 @@
     </NODE>
   </NODE>
   <NODE description="Impôt de solidarité sur la fortune (ISF)" code = "isf">
-  <BAREME description="Impôt de solidarité" code="isf">
+  <BAREME description="Impôt de solidarité" code="bareme">
     <TRANCHE code="tranche0">
 	  <SEUIL>
-	    <VALUE valeur="0" deb="2001-01-01" fin="2012-12-31"/>
+	  	<VALUE valeur="0" deb="2001-01-01" fin="2012-12-31"/>
 	  </SEUIL>
 	  <TAUX>
 	    <VALUE valeur="0" deb="2001-01-01" fin="2012-12-31"/>
@@ -3976,13 +3976,53 @@
 	  </TAUX>
 	</TRANCHE>    
   </BAREME>
-  <NODE description="seuil pour immeubles non bâtis" code="nonbat" >
-      <CODE description="seuil de barême biens ruraux llt" code="seuil" format="integer">
-        <VALUE valeur="76000" deb="2004-01-01" fin="2005-12-31" />
-        <VALUE valeur= "101897" deb="2011-01-01" fin="2011-12-31" />
-      </CODE>
+  <NODE description="Immeubles bâtis" code="res_princ" >
+  		<CODE description="Taux d'abattement résidence principale" code="taux" format = 'percent'>
+	  	  <VALUE valeur="0.20" deb="2004-01-01" fin="2007-12-31"/>
+	  	  <VALUE valeur="0.30" deb="2008-01-01" fin="2010-12-31"/>
+	     </CODE>
+  </NODE>  
+  <NODE description="immeubles non bâtis" code="nonbat" >
+  		<CODE description="Taux bois et forêts" code="taux_f" format = 'percent'>
+	  	  <VALUE valeur="0.25" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE>
+  		 <CODE description="Seuil biens ruraux" code="seuil" format="integer">
+        	<VALUE valeur="76000" deb="2004-01-01" fin="2010-12-31" />
+        	<VALUE valeur= "101897" deb="2011-01-01" fin="2011-12-31" />
+         </CODE>
+         <CODE description="Taux biens ruraux" code="taux_r1" format = 'percent'>
+	  		<VALUE valeur="0.25" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE>
+	     <CODE description="Taux biens ruraux" code="taux_r2" format = 'percent'>
+	  		<VALUE valeur="0.5" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE> 
   </NODE>
-  <NODE description="Plafonnement" code="plaf" >
+   <NODE description="droits sociaux" code="droits_soc" > ## parts actions détenus par salariés et mandataires sociaux intro en 2006 ##
+  		<CODE description="Taux parts et actions salariés mandataires" code="taux1" format = 'percent'>
+	  		<VALUE valeur="0.25" deb="2006-01-01" fin="2011-12-31"/>
+	     </CODE>
+	     <CODE description="Taux parts et actions conservation 6 ans minimum"  code="taux2" format = 'percent'>
+	 		 <VALUE valeur="0.5" deb="2002-01-01" fin="2005-12-31"/>
+	 	     <VALUE valeur="0.25" deb="2006-01-01" fin="2011-12-31"/>
+	     </CODE>
+      </NODE>
+  <NODE description="Taux forfait mobilier" code="forf_mob" >
+  		<CODE description="Taux forfait mobilier" code="taux" format = 'percent'>
+	  <VALUE valeur="0.25" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE>
+  </NODE>
+  <NODE description="réductions pour personnes à charges" code="reduc_pac" >
+  		<CODE description="réduction pac sans garde alternée" code="reduc_1" format = 'integer'>
+	  <VALUE valeur="150" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE>
+	     <CODE description="réduction pac avec garde alternée" code="reduc_2" format = 'integer'>
+	  <VALUE valeur="75" deb="2002-01-01" fin="2011-12-31"/>
+	     </CODE>
+  </NODE>
+  <NODE description="Plafonnement" code="plaf">
+  	 <CODE description= "Taux appliqué quand isfavantplafonnement supérieur à seuil2" code="taux" format = 'percent'>
+	    <VALUE valeur="0.5" deb="2002-01-01" fin="2011-12-31"/>
+    </CODE>
 	<CODE description="seuil pour calcul du plafonnement" code="seuil1" format="integer">
       <VALUE valeur="10970" deb="2004-01-01" fin="2004-12-31" />
       <VALUE valeur="11157" deb="2005-01-01" fin="2005-12-31" />
@@ -4009,7 +4049,17 @@
       <VALUE valeur="50000" deb="2009-01-01" fin="2010-12-31" />
       <VALUE valeur="45000" deb="2011-01-01" fin="2011-12-31" />
     </CODE>    
+    <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux1" format = 'percent'>
+	  <VALUE valeur="0.5" deb="2002-01-01" fin="2011-12-31"/>
+	</CODE>
+    <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux2" format="percent">
+	  <VALUE valeur="0.75" deb="2002-01-01" fin="2011-12-31"/>
+	</CODE>
+  </NODE>
+  <NODE description="Taux appliqué aux revenus et produits de l'année pour bouclier fiscal" code="bouclier" >
+	<CODE description="Taux appliqué aux revenus et produits de l'année pour bouclier fiscal" code="taux" format = 'percent'>
+	  <VALUE valeur="0.85" deb="2002-01-01" fin="2011-12-31"/>
+	</CODE>
   </NODE>
 </NODE>
-  
 </NODE>
