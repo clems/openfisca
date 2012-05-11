@@ -50,9 +50,14 @@ def _grp_agr(bh, _P):
 ## droits sociaux- valeurs mobilières- liquidités- autres meubles ##
 
 def _actions_sal(cl2, _P): ## non présent en 2005##
-    P= _P.isf.droits_soc
-    ''' parts ou actions détenues par les salariés et mandataires sociaux'''
-    return  cl2*P.taux1  
+    ''' 
+    parts ou actions détenues par les salariés et mandataires sociaux
+    '''
+    P = _P.isf.droits_soc
+    if _P.datesim.year < 2006: ## check 
+        pass
+    else:
+        return  cl2*P.taux1  
 
 def _actions_conserv(cb, _P):
     P= _P.isf.droits_soc
@@ -96,17 +101,25 @@ def _reduc_pac(nb_pac, nbH, _P):
     return P.reduc_1*(nb_pac)+ P.reduc_2*nbH  
 
 ## réductions pour investissements dans les PME -à partir de 2008!  ## 
-## ces réductions ne sont accessibles qu'à partir de 2008- avec le logiciel, elles le sont à toutes dates ##
+
 def _inv_pme(mt, ne, mv, nf, mx, na, _P):
+    
     P= _P.isf.pme
     inv_dir_soc = mt*P.taux2 + ne*P.taux1
     holdings = mv*P.taux2+ nf*P.taux1
     fip = mx*P.taux1
     fcpi= na*P.taux1
     return holdings + fip + fcpi + inv_dir_soc
+    ##if _P.datesim.year < 2008:
+       ## pass
+  ##  else:
+    
 
 def _org_int_gen(nc, _P):
     P= _P.isf.pme
+   ##if _P.datesim.year < 2008: 
+      ##  pass
+  ##  else: 
     return nc*P.taux2
 
 def _isf_avant_plaf(isf_iai, inv_pme, org_int_gen, reduc_pac, _P ) :

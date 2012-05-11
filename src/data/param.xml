@@ -4046,15 +4046,18 @@
   </NODE>
   <NODE description="Investissement PME" code="pme" >
     <CODE description="Plafond pour investissement dans les PME" code="max" format="integer"> ## ce type de réductions apparaît seulement en 2008 ##
-      <VALUE valeur="50000000" deb="2002-01-01" fin="2008-12-31" /> ## no upperbound before 2009- set arbitrarily large##
+      <VALUE valeur="0" deb="2002-01-01" fin="2007-12-31" />
+      <VALUE valeur="50000000" deb="2008-01-01" fin="2008-12-31" /> ## no upperbound before 2009- set arbitrarily large##
       <VALUE valeur="50000" deb="2009-01-01" fin="2010-12-31" />
       <VALUE valeur="45000" deb="2011-01-01" fin="2011-12-31" />
     </CODE>    
     <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux1" format = 'percent'>
-	  <VALUE valeur="0.5" deb="2002-01-01" fin="2011-12-31"/>
+	  <VALUE valeur="0" deb="2002-01-01" fin="2007-12-31"/>
+	  <VALUE valeur="0.5" deb="2008-01-01" fin="2011-12-31"/>
 	</CODE>
     <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux2" format="percent">
-	  <VALUE valeur="0.75" deb="2002-01-01" fin="2011-12-31"/>
+	  <VALUE valeur="0" deb="2002-01-01" fin="2007-12-31"/>
+	  <VALUE valeur="0.75" deb="2008-01-01" fin="2011-12-31"/>
 	</CODE>
   </NODE>
   <NODE description="Revenus et produits de l'année" code="plafonnement" >
