@@ -270,14 +270,12 @@ class ModelFrance(ModelDescription):
     ass_isf = Prestation(isf._ass_isf, 'foy')
     isf_iai = Prestation(isf._isf_iai, 'foy')
     tot_impot= Prestation(isf._tot_impot, 'foy')
-    plafonnement = Prestation(isf._plafonnement, 'foy')
-    mai = Prestation(isf._mai, 'foy')
+    isf_avant_plaf = Prestation(isf._isf_avant_plaf, 'foy')
     reduc_pac = Prestation(isf._reduc_pac, 'foy')
     inv_pme = Prestation(isf._inv_pme, 'foy')
     org_int_gen= Prestation(isf._org_int_gen, 'foy')
-    isfapresplafonnement= Prestation(isf._isfapresplafonnement, 'foy')
-    limitationplaf= Prestation(isf._limitationplaf, 'foy')
     revetproduits= Prestation(isf._revetproduits, 'foy')
+    isf_apres_plaf= Prestation(isf._isf_apres_plaf, 'foy')
     isf = Prestation(isf._isf, 'foy')
     
     

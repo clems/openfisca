@@ -28,6 +28,9 @@ from numpy import ( maximum as max_, minimum as min_)
 
 def _res_princ (ab, _P):
     P= _P.isf.res_princ
+    print 'residence'
+    print ab
+    print (1-P.taux)*ab
     return (1-P.taux)*ab
 
 def _forets(bc, _P):
@@ -76,6 +79,7 @@ def _forf_mob(ef, patrimoine, _P):
     return (ef != 0)*ef + (ef==0)*patrimoine*P.taux 
   
 def _ass_isf(patrimoine, forf_mob, gh):
+  
     return forf_mob + patrimoine - gh 
     
 ## calcul de l'impôt par application du barème ##
@@ -83,16 +87,16 @@ def _ass_isf(patrimoine, forf_mob, gh):
 def _isf_iai(ass_isf, _P):
     bar = _P.isf.bareme
     bar.t_x()
-    print "isf_iai"
-    print bar.calc(ass_isf)
     return bar.calc(ass_isf)
 
 ## réductions pour personnes à charges ##
 def _reduc_pac(nb_pac, nbH, _P):
     P= _P.isf.reduc_pac
-    return nb_pac*P.reduc_1*(nb_pac-nbH)+ nb_pac*P.reduc_2*nbH  
+   
+    return P.reduc_1*(nb_pac)+ P.reduc_2*nbH  
 
-## réductions pour investissements dans les PME ##
+## réductions pour investissements dans les PME -à partir de 2008!  ## 
+## ces réductions ne sont accessibles qu'à partir de 2008- avec le logiciel, elles le sont à toutes dates ##
 def _inv_pme(mt, ne, mv, nf, mx, na, _P):
     P= _P.isf.pme
     inv_dir_soc = mt*P.taux2 + ne*P.taux1
@@ -105,53 +109,43 @@ def _org_int_gen(nc, _P):
     P= _P.isf.pme
     return nc*P.taux2
 
-def _mai(isf_iai, inv_pme, org_int_gen, reduc_pac, _P ) :
+def _isf_avant_plaf(isf_iai, inv_pme, org_int_gen, reduc_pac, _P ) :
     '''
-    montant de l'impôt avant imputation
+    montant de l'impôt avant plafonnement
     '''
     borne_max = _P.isf.pme.max
+    print "isf_avant_plaf"
+    print isf_iai - min_(inv_pme + org_int_gen, borne_max) - reduc_pac
     return isf_iai - min_(inv_pme + org_int_gen, borne_max) - reduc_pac
 
   
 ## calcul du plafonnement ##
   
-def _tot_impot(irpp, mai ):
-    return -irpp + mai
-
+def _tot_impot(irpp, isf_avant_plaf ):
+    print 'tot impot'
+    print -irpp + isf_avant_plaf 
+    return -irpp + isf_avant_plaf
 
 
 def _revetproduits(sal_net, pen_net, rto_net, rfr_rvcm, fon, ric, rag, rpns_exon, rpns_pvct, rev_cap_lib, imp_lib, _P) :   # TODO: ric? benef indu et comm
-    pt = sal_net + pen_net + rto_net + rfr_rvcm + ric + rag + rpns_exon + rpns_pvct + rev_cap_lib + imp_lib 
+    pt = max_(sal_net + pen_net + rto_net + rfr_rvcm + ric + rag + rpns_exon + rpns_pvct + rev_cap_lib + imp_lib, 0)
     # rev_cap et imp_lib pour produits soumis à prel libératoire- check ##
     ## def rev_exon et rev_etranger dans data? ##
-    P= _P.isf.bouclier
+    P= _P.isf.plafonnement
     return pt*P.taux
 
-def _plafonnement(tot_impot, revetproduits): 
-    return tot_impot - revetproduits
-
-def _limitationplaf (mai, plafonnement, _P):
-    '''
-    limitation du plafonnement
-    '''
+def _isf_apres_plaf(tot_impot, revetproduits, isf_avant_plaf, _P): 
+    plafonnement = max_(tot_impot- revetproduits, 0)
     P = _P.isf.plaf
-    return (mai<= P.seuil1)*plafonnement + (P.seuil1 <= mai)*(mai <= P.seuil2)*min_(plafonnement, P.seuil1) + (mai >= P.seuil2)*min_(mai*P.taux, plafonnement)  
-    
-     
-    
-def _isfapresplafonnement(mai, limitationplaf):
-    print 'isfapresplaf'
-    print (mai - limitationplaf)
-    return (mai - limitationplaf)
-    
+    limitationplaf = (isf_avant_plaf<= P.seuil1)*plafonnement + (P.seuil1 <= isf_avant_plaf)*(isf_avant_plaf <= P.seuil2)*min_(plafonnement, P.seuil1) + (isf_avant_plaf >= P.seuil2)*min_(isf_avant_plaf*P.taux, plafonnement)  
+    return (isf_avant_plaf - limitationplaf)
+
+
 ## rs est le montant des impôts acquittés hors de France ## 
 ## montant net à payer ##
-def _isf(rs, mai, isfapresplafonnement, irpp):
-    print 'irpp'
-    print irpp
-    print 'isf'
-    print -(isfapresplafonnement - rs)*((-irpp)>0) + (mai-rs)*((-irpp)<=0)
-    return -(isfapresplafonnement - rs)*((-irpp)>0) + (mai-rs)*((-irpp)<=0)
+def _isf(rs, isf_avant_plaf, isf_apres_plaf, irpp):
+   
+    return -((isf_apres_plaf - rs)*((-irpp)>0) + (isf_avant_plaf-rs)*((-irpp)<=0))
 ## avec indicatrice ## 
 
 
