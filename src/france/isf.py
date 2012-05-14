@@ -43,21 +43,20 @@ def _ruraux(be, _P):
     return min_(be, P.seuil)*P.taux_r1 + max_(be-P.seuil,0)*P.taux_r2 
  
 def _grp_agr(bh, _P):
-    '''part de groupements forestiers- agricoles fonciers'''
+    '''
+    part de groupements forestiers- agricoles fonciers
+    '''
     P = _P.isf.nonbat
     return min_(bh, P.seuil)*P.taux_r1 + max_(bh-P.seuil,0)*P.taux_r2
 
 ## droits sociaux- valeurs mobilières- liquidités- autres meubles ##
 
-def _actions_sal(cl2, _P): ## non présent en 2005##
-    ''' 
+def _isf_actions_sal(cl2, _P): ## non présent en 2005##
+    '''
     parts ou actions détenues par les salariés et mandataires sociaux
     '''
     P = _P.isf.droits_soc
-    if _P.datesim.year < 2006: ## check 
-        pass
-    else:
-        return  cl2*P.taux1  
+    return  cl2*P.taux1  
 
 def _actions_conserv(cb, _P):
     P= _P.isf.droits_soc
@@ -70,14 +69,14 @@ def _autres_biens_meubles(cg, co):
     return cg 
 
 
-def _patrimoine(res_princ, ac, forets, ruraux, grp_agr, bk, actions_sal, actions_conserv, cd, cf2, ce, autres_biens_meubles):
+def _patrimoine(res_princ, ac, forets, ruraux, grp_agr, bk, isf_actions_sal, actions_conserv, cd, cf2, ce, autres_biens_meubles):
     # res_princ résidence principale
     # ac autres immeubles
     # bk autres biens  
     # cd droits sociaux de sociétés dans lesquelles vous avez exercez une fonction ou activité
     # ce autres valeurs mobilières
     # cf2  liquidités
-    return autres_biens_meubles + cf2 + ce + res_princ + ac + forets + ruraux + grp_agr + bk + actions_sal + actions_conserv + cd
+    return autres_biens_meubles + cf2 + ce + res_princ + ac + forets + ruraux + grp_agr + bk + isf_actions_sal + actions_conserv + cd
 
 def _forf_mob(ef, patrimoine, _P):
     P=_P.isf.forf_mob
@@ -94,15 +93,20 @@ def _isf_iai(ass_isf, _P):
     bar.t_x()
     return bar.calc(ass_isf)
 
-## réductions pour personnes à charges ##
-def _reduc_pac(nb_pac, nbH, _P):
+def _isf_reduc_pac(nb_pac, nbH, _P):
+    '''
+    réductions pour personnes à charges
+    '''
     P= _P.isf.reduc_pac
    
     return P.reduc_1*(nb_pac)+ P.reduc_2*nbH  
 
-## réductions pour investissements dans les PME -à partir de 2008!  ## 
 
-def _inv_pme(mt, ne, mv, nf, mx, na, _P):
+def _isf_inv_pme(mt, ne, mv, nf, mx, na, _P):
+    '''
+    réductions pour investissements dans les PME
+    à partir de 2008!
+    '''
     
     P= _P.isf.pme
     inv_dir_soc = mt*P.taux2 + ne*P.taux1
@@ -110,26 +114,20 @@ def _inv_pme(mt, ne, mv, nf, mx, na, _P):
     fip = mx*P.taux1
     fcpi= na*P.taux1
     return holdings + fip + fcpi + inv_dir_soc
-    ##if _P.datesim.year < 2008:
-       ## pass
-  ##  else:
-    
 
-def _org_int_gen(nc, _P):
-    P= _P.isf.pme
-   ##if _P.datesim.year < 2008: 
-      ##  pass
-  ##  else: 
+    
+def _isf_org_int_gen(nc, _P):
+    P = _P.isf.pme
     return nc*P.taux2
 
-def _isf_avant_plaf(isf_iai, inv_pme, org_int_gen, reduc_pac, _P ) :
+def _isf_avant_plaf(isf_iai, isf_inv_pme, isf_org_int_gen, isf_reduc_pac, _P ) :
     '''
     montant de l'impôt avant plafonnement
     '''
     borne_max = _P.isf.pme.max
     print "isf_avant_plaf"
-    print isf_iai - min_(inv_pme + org_int_gen, borne_max) - reduc_pac
-    return isf_iai - min_(inv_pme + org_int_gen, borne_max) - reduc_pac
+    print isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac
+    return isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac
 
   
 ## calcul du plafonnement ##
@@ -138,11 +136,13 @@ def _tot_impot(irpp, isf_avant_plaf ):
     print 'tot impot'
     print -irpp + isf_avant_plaf 
     return -irpp + isf_avant_plaf
+# irpp n'est pas suffisant : ajouter ir soumis à taux propor + impôt acquitté à l'étranger
+# + prélèvement libé de l'année passée + montant de la csg TODO
 
 
-def _revetproduits(sal_net, pen_net, rto_net, rfr_rvcm, fon, ric, rag, rpns_exon, rpns_pvct, rev_cap_lib, imp_lib, _P) :   # TODO: ric? benef indu et comm
+def _revetproduits(sal_net, pen_net, rto_net, rfr_rvcm, fon, ric, rag, rpns_exon, rpns_pvct, rev_cap_lib, imp_lib, _P) :   # TODO: ric? benef indu et comm 
     pt = max_(sal_net + pen_net + rto_net + rfr_rvcm + ric + rag + rpns_exon + rpns_pvct + rev_cap_lib + imp_lib, 0)
-    # rev_cap et imp_lib pour produits soumis à prel libératoire- check ##
+    # rev_cap et imp_lib pour produits soumis à prel libératoire- check TODO
     ## def rev_exon et rev_etranger dans data? ##
     P= _P.isf.plafonnement
     return pt*P.taux
@@ -152,6 +152,9 @@ def _isf_apres_plaf(tot_impot, revetproduits, isf_avant_plaf, _P):
     P = _P.isf.plaf
     limitationplaf = (isf_avant_plaf<= P.seuil1)*plafonnement + (P.seuil1 <= isf_avant_plaf)*(isf_avant_plaf <= P.seuil2)*min_(plafonnement, P.seuil1) + (isf_avant_plaf >= P.seuil2)*min_(isf_avant_plaf*P.taux, plafonnement)  
     return (isf_avant_plaf - limitationplaf)
+## si ISF avant plafonnement n'excède pas seuil 1= la limitation du plafonnement ne joue pas ##
+## si entre les deux seuils; l'allègement est limité au 1er seuil ##
+## si ISF avant plafonnement est supérieur au 2nd seuil, l'allègement qui résulte du plafonnement est limité à 50% de l'ISF ##
 
 
 ## rs est le montant des impôts acquittés hors de France ## 
@@ -162,5 +165,62 @@ def _isf(rs, isf_avant_plaf, isf_apres_plaf, irpp):
 ## avec indicatrice ## 
 
 
+## BOUCLIER FISCAL ##
+## calcul de l'ensemble des revenus du contribuable ##
+def _bouclier_rev(rbg, rpns_maj, csg_deduc, deficit_globaux, rcvm_rfr):
+    ''' total des revenus sur l'année 'n' net de charges
+    '''
+    null = 0*rbg
+    ## Revenus 
+    # Revenus soumis au barème
+    frac_deficit_globaux = deficit_globaux
+    frac_rcvm_rfr = 0.7*rcvm_rfr
+    rev_bar = rbg - rpns_maj - csg_deduc 
 
+    # Revenu soumis à l'impôt sur le revenu forfaitaire
+    rev_lib = null 
+    
+    # Revenus exonérés
+    rev_exo = null
+    
+    # revenus soumis à la taxe
+    rev_or = null
+    
+    revenus = rev_bar + rev_lib + rev_exo + rev_or
+    
+    ## Charges
+    # Pension alimentaires
+    pen_alim = null
+    
+    # Cotisations ou primes versées au titre de l'épargne retraite
+    epa_ret = null
+    
+    charges = pen_alim + epa_ret
+    
+    return revenus - charges
+    
+    
+def _imp_gen ():
+    imp1= 0
+    ''' 
+    impôts payés en l'année 'n' au titre des revenus réalisés sur l'année 'n' 
+    '''
+    imp2= 0
+    '''
+    impôts payés en l'année 'n' au titre des revenus réalisés en 'n-1'
+    '''
+    return imp1+ imp2
+
+def _restitutions():
+    '''
+    restitutions d'impôt sur le revenu et degrèvements percus en l'année 'n'
+    '''
+    pass
+
+def _sumimp(imp_gen, restitutions):
+    return imp_gen - restitutions
+
+def _bouclier_fis(sumimp,revenus, _P):
+    P= _P.isf.bouclier
+    return sumimp - (revenus*P.taux)
 

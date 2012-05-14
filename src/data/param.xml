@@ -4052,7 +4052,7 @@
       <VALUE valeur="45000" deb="2011-01-01" fin="2011-12-31" />
     </CODE>    
     <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux1" format = 'percent'>
-	  <VALUE valeur="0" deb="2002-01-01" fin="2007-12-31"/>
+	  <VALUE valeur="0" deb="2002-01-01" fin="2007-12-31"/> # taux set to 0 to avoid error- expect prog to pass when date inf to 2008 #
 	  <VALUE valeur="0.5" deb="2008-01-01" fin="2011-12-31"/>
 	</CODE>
     <CODE description="Taux pour investissement direct soc, holdings, fip, fcpi" code="taux2" format="percent">
@@ -4065,5 +4065,11 @@
 	  <VALUE valeur="0.85" deb="2002-01-01" fin="2011-12-31"/>
 	</CODE>
   </NODE>
+  <NODE description="Bouclier fiscal" code="bouclier">
+  	 <CODE description= "Taux d'imposition maximal">
+  	 <VALUE valeur="0.5" deb="2006-01-01" fin="2011-12-31"/>
+  	  <VALUE valeur="0.6" deb="2005-01-01" fin="2005-12-31"/>
+    </CODE>
+     </NODE>
 </NODE>
 </NODE>
