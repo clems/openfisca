@@ -95,5 +95,6 @@
   <NODE desc= "Impôts directs" shortname="Impôts directs" code = "impo" color = "232,79,95">
     <NODE desc= "Impôt sur le revenu" shortname="IRPP" code = "irpp" color = "232,79,95"/>
     <NODE desc= "Impôt de solidarité sur la fortune" shortname="ISF" code = "isf" color="232,79,95"/>
+  <NODE desc= "Bouclier fiscal" shortname="Bouclier fiscal" code = "bouclier" color="182,34,131"/>
   </NODE>	
 </NODE>        
