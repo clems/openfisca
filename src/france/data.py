@@ -659,6 +659,15 @@ class InputTable(ModelDescription):
 ## passifs et autres réduc ##
     gh= IntCol()
     
+    
+    
+## BOUCLIER FISCAL ##
+
+    rev_or= IntCol()
+    tax_hab= IntCol()
+    tax_fonc= IntCol()
+    restit_imp= IntCol()
+        
     # to remove
     wprm = FloatCol()
     etr = IntCol()     

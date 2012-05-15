@@ -166,58 +166,71 @@ def _isf(rs, isf_avant_plaf, isf_apres_plaf, irpp):
 
 
 ## BOUCLIER FISCAL ##
+
 ## calcul de l'ensemble des revenus du contribuable ##
-def _bouclier_rev(rbg, rpns_maj, csg_deduc, deficit_globaux, rcvm_rfr):
+def _bouclier_rev(rbg, rpns_maj, csg_deduc, deficit_globaux, rcvm_rfr, deficit_ante, rev_cap_lib, imp_lib, rev_exo, rev_or, pen_alim, eparet, ric):
     ''' total des revenus sur l'année 'n' net de charges
     '''
     null = 0*rbg
     ## Revenus 
     # Revenus soumis au barème
-    frac_deficit_globaux = deficit_globaux
+    frac_deficit_globaux = deficit_globaux 
+    ## def _deficit_rcm(f2aa, f2al, f2am, f2an):
+    ## return f2aa + f2al + f2am + f2an ??
     frac_rcvm_rfr = 0.7*rcvm_rfr
-    rev_bar = rbg - rpns_maj - csg_deduc 
+    ## revenus distribués? 
+    ## A majorer de l'abatt de 40% - montant brut en cas de PFL
+    ## pour le calcul de droit à restitution : prendre 0.7*montant_brut_rev_dist_soumis_au_barème
+    
+    rev_bar = rbg - rpns_maj - csg_deduc - deficit_ante
+
+## AJOUTER : indemnités de fonction percus par les élus- revenus soumis à régimes spéciaux
 
     # Revenu soumis à l'impôt sur le revenu forfaitaire
-    rev_lib = null 
+    rev_lib = rev_cap_lib + imp_lib+ ric 
+    ## AJOUTER plus-values immo et moins values? 
     
-    # Revenus exonérés
-    rev_exo = null
-    
-    # revenus soumis à la taxe
-    rev_or = null
-    
+    ##Revenus exonérés d'IR réalisés en France et à l'étranger##
+    rev_exo= primes_pel + primes_cel + rente_pea + int_livrets + plus_values_per
+
+    ## proposer à l'utilisateur des taux de réference- PER, PEA, PEL,...TODO
+    ## sommes investis- calculer les plus_values annuelles et prendre en compte pour rev_exo?
+    # revenus soumis à la taxe forfaitaire sur les métaux précieux : rev_or 
+  
     revenus = rev_bar + rev_lib + rev_exo + rev_or
     
-    ## Charges
+    ## CHARGES 
     # Pension alimentaires
-    pen_alim = null
-    
     # Cotisations ou primes versées au titre de l'épargne retraite
-    epa_ret = null
-    
-    charges = pen_alim + epa_ret
+   
+    charges = pen_alim + eparet
     
     return revenus - charges
     
     
-def _imp_gen ():
+def bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf, ): ## ajouter CSG- CRDS
+    ## ajouter Prelèvements sources/ libé 
+    ## impôt sur les plus-values immo et cession de fonds de commerce
     imp1= 0
     ''' 
     impôts payés en l'année 'n' au titre des revenus réalisés sur l'année 'n' 
     '''
-    imp2= 0
+    imp2= irpp + isf + tax_hab + tax_fonc
     '''
     impôts payés en l'année 'n' au titre des revenus réalisés en 'n-1'
     '''
     return imp1+ imp2
 
-def _restitutions():
+def _restitutions(ppe, restit_imp ):
     '''
     restitutions d'impôt sur le revenu et degrèvements percus en l'année 'n'
     '''
-    pass
+    return ppe+ restit_imp
 
-def _sumimp(imp_gen, restitutions):
+def bouclier_sumimp(imp_gen, restitutions):
+    '''
+    somme totale des impôts moins restitutions et degrèvements 
+    '''
     return imp_gen - restitutions
 
 def _bouclier_fis(sumimp,revenus, _P):

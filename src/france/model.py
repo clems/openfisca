@@ -279,6 +279,18 @@ class ModelFrance(ModelDescription):
     isf = Prestation(isf._isf, 'foy')
     
     
+#############################################################################
+#                            Bouclier Fiscal                              ###
+#############################################################################
+
+    bouclier_rev = Prestation( isf._bouclier_rev, 'foy')
+    bouclier_imp_gen = Prestation(isf._bouclier_imp_gen, 'foy')
+    restitutions = Prestation(isf._restitutions, 'foy')
+    bouclier_sumimp = Prestation(isf._bouclier_sumimp, 'foy')
+    bouclier_fis = Prestation(isf._bouclier_fis, 'foy')
+    
+
+    
     # inclure aussi les dates si nécessaire start=date(2007,1,1)
     
     ############################################################
