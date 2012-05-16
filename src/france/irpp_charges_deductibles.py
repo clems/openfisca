@@ -24,40 +24,11 @@ This file is part of openFisca.
 from __future__ import division
 from numpy import minimum as min_, maximum as max_
 
-def niches(penali, acc75a, deddiv, eparet, grorep, ecodev, sofipe, percap, cinema, doment, _P):
-    ''' 
-    Renvoie la liste des charges déductibles à intégrer en fonction de l'année
-    niches1 : niches avant le rbg_int
-    niches2 : niches après le rbg_int
-    niches3 : indices des niches à ajouter au revenu fiscal de référence
-    '''
-# TODO REMOVEME WHEN DONE ind_rfr    
-    if _P.datesim.year in (2002, 2003):
-        niches1 = penali + acc75a + percap + deddiv + doment
-        niches2 = sofipe + cinema
-        ind_rfr = [2, 5, 6] #TODO: check
-    elif _P.datesim.year in (2004,2005):
-        niches1 = penali + acc75a + percap + deddiv + doment + eparet
-        niches2 = sofipe + cinema
-        ind_rfr = [2, 5, 6, 7]
-    elif _P.datesim.year == 2006:
-        niches1 = penali + acc75a + percap + deddiv + eparet
-        niches2 = sofipe
-        ind_rfr = [2, 4, 5]
-    elif _P.datesim.year in (2007, 2008):
-        niches1 = penali + acc75a + deddiv + eparet
-        niches2 = ecodev
-        ind_rfr = [ 3, 4]
-    elif _P.datesim.year in (2009, 2010):
-        niches1 = penali + acc75a + deddiv + eparet + grorep
-        niches2 = []
-        ind_rfr = [3]
-    return niches1, niches2, ind_rfr
 
-def _rfr_cd(acc75a, doment, eparet, sofipe):
-    return acc75a + doment + eparet + sofipe
+def _rfr_cd(cd_acc75a, cd_doment, cd_eparet, cd_sofipe):
+    return cd_acc75a + cd_doment + cd_eparet + cd_sofipe
 
-def _cd1(penali, acc75a, percap, deddiv, doment, eparet, grorep, _P):
+def _cd1(cd_penali, cd_acc75a, cd_percap, cd_deddiv, cd_doment, cd_eparet, cd_grorep, _P):
     '''
     Renvoie la liste des charges déductibles à intégrer en fonction de l'année
     niches1 : niches avant le rbg_int
@@ -65,18 +36,18 @@ def _cd1(penali, acc75a, percap, deddiv, doment, eparet, grorep, _P):
     niches3 : indices des niches à ajouter au revenu fiscal de référence
     '''
     if _P.datesim.year in (2002, 2003):
-        niches1 = penali + acc75a + percap + deddiv + doment
+        niches1 = cd_penali + cd_acc75a + cd_percap + cd_deddiv + cd_doment
     elif _P.datesim.year in (2004,2005):
-        niches1 = penali + acc75a + percap + deddiv + doment + eparet
+        niches1 = cd_penali + cd_acc75a + cd_percap + cd_deddiv + cd_doment + cd_eparet
     elif _P.datesim.year == 2006:
-        niches1 = penali + acc75a + percap + deddiv + eparet
+        niches1 = cd_penali + cd_acc75a + cd_percap + cd_deddiv + cd_eparet
     elif _P.datesim.year in (2007, 2008):
-        niches1 = penali + acc75a + deddiv + eparet
+        niches1 = cd_penali + cd_acc75a + cd_deddiv + cd_eparet
     elif _P.datesim.year in (2009, 2010):
-        niches1 = penali + acc75a + deddiv + eparet + grorep
+        niches1 = cd_penali + cd_acc75a + cd_deddiv + cd_eparet + cd_grorep
     return niches1
 
-def _cd2(ecodev, sofipe, cinema, _P):
+def _cd2(cd_ecodev, cd_sofipe, cd_cinema, _P):
     '''
     Renvoie la liste des charges déductibles à intégrer en fonction de l'année
     niches1 : niches avant le rbg_int
@@ -84,11 +55,11 @@ def _cd2(ecodev, sofipe, cinema, _P):
     niches3 : indices des niches à ajouter au revenu fiscal de référence
     '''
     if _P.datesim.year in (2002, 2003, 2004, 2005):
-        niches2 = sofipe + cinema
+        niches2 = cd_sofipe + cd_cinema
     elif _P.datesim.year == 2006:
-        niches2 = sofipe
+        niches2 = cd_sofipe
     elif _P.datesim.year in (2007, 2008):
-        niches2 = ecodev
+        niches2 = cd_ecodev
     return niches2
 
 def _rbg_int(rbg, cd1):
@@ -97,7 +68,7 @@ def _rbg_int(rbg, cd1):
 def _charges_deduc(cd1, cd2):
     return cd1 + cd2
 
-def _penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
+def _cd_penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
     '''
     Pensions alimentaires
     '''
@@ -118,7 +89,7 @@ def _penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
                 min_(f6em, max1) + 
                 f6gp*(1 + taux) + f6gu)
 
-def _acc75a(f6eu, f6ev, _P):
+def _cd_acc75a(f6eu, f6ev, _P):
     '''
     Frais d’accueil sous votre toit d’une personne de plus de 75 ans
     '''
@@ -126,7 +97,7 @@ def _acc75a(f6eu, f6ev, _P):
     amax = P.max*max_(1, f6ev)
     return min_(f6eu, amax)
 
-def _percap(f6cb, f6da, marpac, _P):
+def _cd_percap(f6cb, f6da, marpac, _P):
     '''
     Pertes en capital consécutives à la souscription au capital de sociétés 
     nouvelles ou de sociétés en difficulté (cases CB et DA de la déclaration 
@@ -141,67 +112,65 @@ def _percap(f6cb, f6da, marpac, _P):
         max_da = P.percap.max_da*(1 + marpac)
         return min_(min_(f6cb, max_cb) + min_(f6da, max_da), max_da)
 
-def _deddiv(f6dd):
+def _cd_deddiv(f6dd):
     '''
     Déductions diverses (case DD)
     '''
     return f6dd
 
-def _doment(f6eh, _P):
+def _cd_doment(f6eh, _P):
     '''
     Investissements DOM-TOM dans le cadre d’une entreprise (case EH de la 
     déclaration n° 2042 complémentaire)
+    2002-2005
     '''
-    if _P.datesim.year <= 2005:
-        return f6eh
+    return f6eh
 
-def _eparet(f6ps, f6rs, f6ss, f6pt, f6rt, f6st, f6pu, f6ru, f6su, _P):
+def _cd_eparet(f6ps, f6rs, f6ss, f6pt, f6rt, f6st, f6pu, f6ru, f6su, _P):
     '''
     Épargne retraite - PERP, PRÉFON, COREM et CGOS
+    2004-
     '''
     # TODO: En théorie, les plafonds de déductions (ps, pt, pu) sont calculés sur 
     # le formulaire 2041 GX
-    if 2004 <= _P.datesim.year <= 2010:
-        return ((f6ps==0)*(f6rs + f6ss) + 
-                (f6ps!=0)*min_(f6rs + f6ss, f6ps) +
-                (f6pt==0)*(f6rt + f6st) + 
-                (f6pt!=0)*min_(f6rt + f6st, f6pt) +
-                (f6pu==0)*(f6ru + f6su) + 
-                (f6pu!=0)*min_(f6ru + f6su, f6pu))
+    return ((f6ps==0)*(f6rs + f6ss) + 
+            (f6ps!=0)*min_(f6rs + f6ss, f6ps) +
+            (f6pt==0)*(f6rt + f6st) + 
+            (f6pt!=0)*min_(f6rt + f6st, f6pt) +
+            (f6pu==0)*(f6ru + f6su) + 
+            (f6pu!=0)*min_(f6ru + f6su, f6pu))
 
-def _sofipe(f6cc, rbg_int, marpac, _P):
+def _cd_sofipe(f6cc, rbg_int, marpac, _P):
     '''
     Souscriptions au capital des SOFIPÊCHE (case CC de la déclaration 
     complémentaire)
+    2002-2006
     '''
     P = _P.ir.charges_deductibles
-    if _P.datesim.year <= 2006:
-        max1 = min_(P.sofipe.taux*rbg_int, P.sofipe.max*(1+marpac))
-        return min_(f6cc, max1)
+    max1 = min_(P.sofipe.taux*rbg_int, P.sofipe.max*(1+marpac))
+    return min_(f6cc, max1)
 
-def _cinema(f6aa, rbg_int, _P):
+def _cd_cinema(f6aa, rbg_int, _P):
     '''
     Souscriptions en faveur du cinéma ou de l’audiovisuel (case AA de la 
     déclaration n° 2042 complémentaire)
+    2002-2005
     '''
     P = _P.ir.charges_deductibles
-    if _P.datesim.year <= 2005:
-        max1 = min_(P.cinema.taux*rbg_int, P.cinema.max)
-        return min_(f6aa, max1)
+    max1 = min_(P.cinema.taux*rbg_int, P.cinema.max)
+    return min_(f6aa, max1)
 
-def _ecodev(f6eh, rbg_int, _P):
+def _cd_ecodev(f6eh, rbg_int, _P):
     '''
     Versements sur un compte épargne codéveloppement (case EH de la déclaration 
     complémentaire)
+    2007-2008
     '''
     P = _P.ir.charges_deductibles
-    if _P.datesim.year <= 2006:
-        return None
-    elif _P.datesim.year <= 2008:
-        max1 = min_(P.ecodev.taux*rbg_int, P.ecodev.max)
-        return min_(f6eh, max1)
+    max1 = min_(P.ecodev.taux*rbg_int, P.ecodev.max)
+    return min_(f6eh, max1)
 
-def _grorep(f6cb, f6hj, _P):
+def _cd_grorep(f6cb, f6hj, _P):
     '''
     Dépenses de grosses réparations des nus-propriétaires (case 6CB et 6HJ)
     2009- 
