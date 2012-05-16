@@ -37,6 +37,7 @@ import france.calage as cl
 
 
 class ModelFrance(ModelDescription):
+    
     mhsup = Prestation(cs._mhsup)
     alv   = Prestation(ir._alv)
     ############################################################
@@ -214,7 +215,7 @@ class ModelFrance(ModelDescription):
     aidper = Prestation(ci._aidper, 'foy')
     quaenv = Prestation(ci._quaenv, 'foy', start=date(2005,1,1))
     drbail = Prestation(ci._drbail, 'foy')
-    garext = Prestation(ci._garext, 'foy', start=date(2005,1,1))
+    ci_garext = Prestation(ci._ci_garext, 'foy', start=date(2005,1,1))
     preetu = Prestation(ci._preetu, 'foy', start=date(2005,1,1))
     saldom2 = Prestation(ci._saldom2, 'foy', start=date(2007,1,1))
     inthab = Prestation(ci._inthab, 'foy', start=date(2007,1,1))
@@ -401,7 +402,6 @@ class ModelFrance(ModelDescription):
     rev_cap = Prestation(cm._rev_cap)
     psoc = Prestation(cm._psoc)
     pfam = Prestation(cm._pfam)
-    paje = Prestation(cm._paje)
     mini = Prestation(cm._mini)
     logt = Prestation(cm._logt)
     impo = Prestation(cm._impo)
