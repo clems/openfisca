@@ -628,7 +628,7 @@ class InputTable(ModelDescription):
     reg   = EnumCol()
     pol99 = EnumCol()
     cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
-                         enum = Enum(["Agriculteurs exploitants",
+                         enum = Enum([u"Agriculteurs exploitants",
                                       u"Artisans, commerçants, chefs d'entreprise",
                                       u"Cadres supérieurs",
                                       u"Professions intermédiaires",
@@ -690,12 +690,12 @@ class InputTable(ModelDescription):
 
                                  
     nbinde = EnumCol(label = u"taille du ménage",
-                     enum = Enum(["Une personne",
-                                  "Deux personnes",
-                                  "Trois personnes",
-                                  "Quatre personnes",
-                                  "Cinq personnes",
-                                  "Six personnes et plus"], start=1))
+                     enum = Enum([u"Une personne",
+                                  u"Deux personnes",
+                                  u"Trois personnes",
+                                  u"Quatre personnes",
+                                  u"Cinq personnes",
+                                  u"Six personnes et plus"], start=1))
 
     ddipl = EnumCol(label = u"diplôme de la personne de référence",
                     enum = Enum([u"Diplôme supérieur",
@@ -709,7 +709,7 @@ class InputTable(ModelDescription):
                                   u"Indépendant",
                                   u"Chômeur",
                                   u"Retraité",
-                                  "Inactif"], start=1)) # 5 postes
+                                  u"Inactif"], start=1)) # 5 postes
     wprm_init = FloatCol()
 
     # to remove
