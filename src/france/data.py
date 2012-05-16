@@ -344,7 +344,6 @@ class InputTable(ModelDescription):
     f7xd = IntCol()
     f7xe = IntCol()
     f7xf = IntCol()
-    f7xg = IntCol()
     f7xh = IntCol()
     f7xi = IntCol()
     f7xj = IntCol()
@@ -432,7 +431,6 @@ class InputTable(ModelDescription):
     
     # Investissements locatifs dans les résidences de tourisme situées dans une zone de 
     # revitalisation rurale
-    f7gs = IntCol()
     f7gt = IntCol()
     f7xg = IntCol()
     f7gu = IntCol()

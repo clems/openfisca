@@ -25,7 +25,7 @@ from __future__ import division
 from numpy import minimum as min_, maximum as max_, logical_not as not_
 
 def _credits_impot(creimp, accult, percvm, direpa, mecena, prlire, aidper,
-           quaenv, drbail, garext, preetu, saldom2, inthab, assloy, 
+           quaenv, drbail, ci_garext, preetu, saldom2, inthab, assloy, 
            autent, acqgpl, divide, aidmob, jeunes, _P):
     if _P.datesim.year == 2002:
         niches = (creimp + accult + prlire + aidper + acqgpl + drbail)
@@ -35,24 +35,24 @@ def _credits_impot(creimp, accult, percvm, direpa, mecena, prlire, aidper,
         niches = (creimp + accult + mecena + prlire + aidper + acqgpl + drbail)
     elif _P.datesim.year == 2005:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + acqgpl + drbail + garext + preetu + assloy + aidmob + jeunes)
+                  quaenv + acqgpl + drbail + ci_garext + preetu + assloy + aidmob + jeunes)
     elif _P.datesim.year == 2006:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + acqgpl + drbail + garext + preetu + assloy + aidmob + jeunes)
+                  quaenv + acqgpl + drbail + ci_garext + preetu + assloy + aidmob + jeunes)
     elif _P.datesim.year == 2007:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + acqgpl + drbail + garext + preetu + saldom2 + inthab + assloy + 
+                  quaenv + acqgpl + drbail + ci_garext + preetu + saldom2 + inthab + assloy + 
                   aidmob + jeunes)
     elif _P.datesim.year == 2008:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + aidmob + 
+                  quaenv + drbail + ci_garext + preetu + saldom2 + inthab + assloy + aidmob + 
                   jeunes)
     elif _P.datesim.year == 2009:
         niches = (creimp + divide + direpa + accult + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + autent)
+                  quaenv + drbail + ci_garext + preetu + saldom2 + inthab + assloy + autent)
     elif _P.datesim.year == 2010:
         niches = (creimp + accult + percvm + direpa + mecena + prlire + aidper +
-                  quaenv + drbail + garext + preetu + saldom2 + inthab + assloy + 
+                  quaenv + drbail + ci_garext + preetu + saldom2 + inthab + assloy + 
                   autent)
     return niches
 
@@ -255,7 +255,7 @@ def _drbail(f4tq, _P):
     P = _P.ir.credits_impot.drbail
     return P.taux*f4tq
 
-def _garext(f4ga, f4gb, f4gc, f4ge, f4gf, f4gg, _P):
+def _ci_garext(f4ga, f4gb, f4gc, f4ge, f4gf, f4gg, _P):
     '''
     Frais de garde des enfants à l’extérieur du domicile (cases 7GA à 7GC et 7GE à 7GG)
     2005-
