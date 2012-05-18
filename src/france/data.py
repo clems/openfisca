@@ -71,12 +71,13 @@ class InputTable(ModelDescription):
     zone_apl = EnumCol(label = u"zone apl", default = 2)
     loyer = IntCol() # Loyer mensuel
     so = EnumCol(label = u"statut d'occupation",
-                  enum = Enum([u"Accédant à la propriété",
+                  enum = Enum([u"Non renseigné",
+                               u"Accédant à la propriété",
                                u"Propriétaire (non accédant) du logement",
                                u"Locataire d'un logement HLM",
-                               u"Locataire ou sous-locataire d'un logement loué vie non-HLM",
+                               u"Locataire ou sous-locataire d'un logement loué vide non-HLM",
                                u"Locataire ou sous-locataire d'un logement loué meublé ou d'une chambre d'hôtel",
-                               u"Logé gratuitement par des parents, des amis ou l'employeur"], start=1))
+                               u"Logé gratuitement par des parents, des amis ou l'employeur"]))
     activite = IntCol()
     boursier = BoolCol()
     code_postal = IntCol()
@@ -630,14 +631,15 @@ class InputTable(ModelDescription):
     reg   = EnumCol()
     pol99 = EnumCol()
     cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
-                         enum = Enum(["Agriculteurs exploitants",
+                         enum = Enum([u"Non renseignée",
+                                      "Agriculteurs exploitants",
                                       u"Artisans, commerçants, chefs d'entreprise",
                                       u"Cadres supérieurs",
                                       u"Professions intermédiaires",
                                       u"Employés",
                                       u"Ouvriers",
                                       u"Retraités",
-                                      u"Autres inactifs"], start = 1))
+                                      u"Autres inactifs"]))
     
     naf16pr = EnumCol(label = u"activité économique de l'établissement de l'emploi principal actuel de la personne de référence",
                       enum = Enum([u"Sans objet",
