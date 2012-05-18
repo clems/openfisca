@@ -629,7 +629,8 @@ class InputTable(ModelDescription):
     reg   = EnumCol()
     pol99 = EnumCol()
     cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
-                         enum = Enum([u"Agriculteurs exploitants",
+                         enum = Enum([u"Sans objet",
+                                      u"Agriculteurs exploitants",
                                       u"Artisans, commerçants, chefs d'entreprise",
                                       u"Cadres supérieurs",
                                       u"Professions intermédiaires",
