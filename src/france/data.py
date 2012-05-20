@@ -707,11 +707,12 @@ class InputTable(ModelDescription):
                                  u"Brevet des collèges",
                                  u"Aucun diplôme ou CEP"],start=1)) 
     act5 = EnumCol(label = u"activité",
-                     enum = Enum([u"Salarié",
+                     enum = Enum(['Bizarre' 
+                                  u"Salarié",
                                   u"Indépendant",
                                   u"Chômeur",
                                   u"Retraité",
-                                  u"Inactif"], start=1)) # 5 postes
+                                  u"Inactif"])) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
 
     # to remove
