@@ -26,67 +26,54 @@ from france.data import QUIFOY
 ALL = [x[1] for x in QUIFOY]
 
 
-## immeubles bâtis- non bâtis, parts de groupements ##
+# 1 ACTIF BRUT
 
-def _res_princ (ab, _P):
+def _isf_imm_bati(b1ab, b1ac, _P):
+    '''
+    immeubles bâtis
+    '''
     P= _P.isf.res_princ
-    print 'residence'
-    print ab
-    print (1-P.taux)*ab
-    return (1-P.taux)*ab
+    return (1-P.taux)*b1ab + b1ac
 
-def _forets(bc, _P):
+def _isf_imm_non_bati(b1bc, b1be, b1bh, b1bk, _P):
+    '''
+    immeubles non bâtis
+    '''
     P= _P.isf.nonbat
-    return bc*P.taux_f
- 
-def _ruraux(be, _P): 
-    ''' bien ruraux loués à long terme'''
-    P = _P.isf.nonbat
-    return min_(be, P.seuil)*P.taux_r1 + max_(be-P.seuil,0)*P.taux_r2 
- 
-def _grp_agr(bh, _P):
-    '''
-    part de groupements forestiers- agricoles fonciers
-    '''
-    P = _P.isf.nonbat
-    return min_(bh, P.seuil)*P.taux_r1 + max_(bh-P.seuil,0)*P.taux_r2
+    # forêts
+    b1bd = b1bc*P.taux_f
+    # bien ruraux loués à long terme
+    b1bf = min_(b1be, P.seuil)*P.taux_r1 
+    b1bg = max_(b1be-P.seuil,0)*P.taux_r2 
+    # part de groupements forestiers- agricoles fonciers
+    b1bi = min_(b1bh, P.seuil)*P.taux_r1 
+    b1bj = max_(b1bh-P.seuil,0)*P.taux_r2
+    
+    return b1bd + b1bf + b1bg + b1bi + b1bj + b1bk
+  
 
 ## droits sociaux- valeurs mobilières- liquidités- autres meubles ##
 
-def _isf_actions_sal(cl2, _P): ## non présent en 2005##
+def _isf_actions_sal(b1cl, _P): ## non présent en 2005##
     '''
     parts ou actions détenues par les salariés et mandataires sociaux
     '''
     P = _P.isf.droits_soc
-    return  cl2*P.taux1  
+    return  b1cl*P.taux1  
 
-def _actions_conserv(cb, _P):
-    P= _P.isf.droits_soc
-    ''' parts ou actions de sociétés avec engagement de 6 ans conservation minimum'''
-    return cb*P.taux2 
-def _autres_biens_meubles(cg, co):
-    '''
-    autres bien meubles dont contrat d'assurance vie
-    '''
-    return cg 
+def _isf_droits_sociaux(isf_actions_sal, b1cb, b1cd, b1ce, b1cf, b1cg, _P):
+    P = _P.isf.droits_soc
+    # parts ou actions de sociétés avec engagement de 6 ans conservation minimum
+    b1cc = b1cb*P.taux2 
 
+    return isf_actions_sal + b1cc + b1cd + b1ce + b1cf + b1cg
 
-def _patrimoine(res_princ, ac, forets, ruraux, grp_agr, bk, isf_actions_sal, actions_conserv, cd, cf2, ce, autres_biens_meubles):
-    # res_princ résidence principale
-    # ac autres immeubles
-    # bk autres biens  
-    # cd droits sociaux de sociétés dans lesquelles vous avez exercez une fonction ou activité
-    # ce autres valeurs mobilières
-    # cf2  liquidités
-    return autres_biens_meubles + cf2 + ce + res_princ + ac + forets + ruraux + grp_agr + bk + isf_actions_sal + actions_conserv + cd
-
-def _forf_mob(ef, patrimoine, _P):
+def _ass_isf(isf_imm_bati, isf_imm_non_bati, isf_droits_sociaux, b1ef, b2gh, _P):
+    total = isf_imm_bati + isf_imm_non_bati + isf_droits_sociaux
     P=_P.isf.forf_mob
-    return (ef != 0)*ef + (ef==0)*patrimoine*P.taux 
-  
-def _ass_isf(patrimoine, forf_mob, gh):
-  
-    return forf_mob + patrimoine - gh 
+    forf_mob = (b1ef != 0)*b1ef + (b1ef==0)*total*P.taux 
+    actif_brut = total + forf_mob
+    return actif_brut - b2gh 
     
 ## calcul de l'impôt par application du barème ##
 
@@ -104,39 +91,35 @@ def _isf_reduc_pac(nb_pac, nbH, _P):
     return P.reduc_1*(nb_pac)+ P.reduc_2*nbH  
 
 
-def _isf_inv_pme(mt, ne, mv, nf, mx, na, _P):
+def _isf_inv_pme(b2mt, b2ne, b2mv, b2nf, b2mx, b2na, _P):
     '''
     réductions pour investissements dans les PME
     à partir de 2008!
     '''
     
     P= _P.isf.pme
-    inv_dir_soc = mt*P.taux2 + ne*P.taux1
-    holdings = mv*P.taux2+ nf*P.taux1
-    fip = mx*P.taux1
-    fcpi= na*P.taux1
+    inv_dir_soc = b2mt*P.taux2 + b2ne*P.taux1
+    holdings = b2mv*P.taux2+ b2nf*P.taux1
+    fip = b2mx*P.taux1
+    fcpi= b2na*P.taux1
     return holdings + fip + fcpi + inv_dir_soc
 
     
-def _isf_org_int_gen(nc, _P):
+def _isf_org_int_gen(b2nc, _P):
     P = _P.isf.pme
-    return nc*P.taux2
+    return b2nc*P.taux2
 
 def _isf_avant_plaf(isf_iai, isf_inv_pme, isf_org_int_gen, isf_reduc_pac, _P ) :
     '''
     montant de l'impôt avant plafonnement
     '''
     borne_max = _P.isf.pme.max
-    print "isf_avant_plaf"
-    print isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac
     return isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac
 
   
 ## calcul du plafonnement ##
   
 def _tot_impot(irpp, isf_avant_plaf ):
-    print 'tot impot'
-    print -irpp + isf_avant_plaf 
     return -irpp + isf_avant_plaf
 # irpp n'est pas suffisant : ajouter ir soumis à taux propor + impôt acquitté à l'étranger
 # + prélèvement libé de l'année passée + montant de la csg TODO
@@ -161,9 +144,9 @@ def _isf_apres_plaf(tot_impot, revetproduits, isf_avant_plaf, _P):
 
 ## rs est le montant des impôts acquittés hors de France ## 
 ## montant net à payer ##
-def _isf_tot(rs, isf_avant_plaf, isf_apres_plaf, irpp):
+def _isf_tot(b4rs, isf_avant_plaf, isf_apres_plaf, irpp):
    
-    return -((isf_apres_plaf - rs)*((-irpp)>0) + (isf_avant_plaf-rs)*((-irpp)<=0))
+    return -((isf_apres_plaf - b4rs)*((-irpp)>0) + (isf_avant_plaf-b4rs)*((-irpp)<=0))
 ## avec indicatrice ## 
 
 

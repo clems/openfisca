@@ -718,43 +718,46 @@ class InputTable(ModelDescription):
 ## ISF ##
     
 ## Immeubles bâtis ##
-    ab= IntCol(default=3000000) ##  valeur résidence principale avant abattement ##
-    ac= IntCol()
+    b1ab = IntCol(default=3000000) ##  valeur résidence principale avant abattement ##
+    b1ac = IntCol()
 ## non bâtis ##
-    bc= IntCol()
-    be= IntCol()
-    bh= IntCol()
-    bk= IntCol() 
+    b1bc = IntCol()
+    b1be = IntCol()
+    b1bh = IntCol()
+    b1bk = IntCol() 
 ## droits sociaux- valeurs mobilières-liquidités- autres meubles ##
 
-    cl2= IntCol()
-    cb= IntCol()
-    cd= IntCol()
-    ce= IntCol()
-    cf2= IntCol()
-    cg= IntCol()
-    co= IntCol()
-    
-## TODO:
-    ef=IntCol()    
+    b1cl = IntCol()
+    b1cb = IntCol()
+    b1cd = IntCol()
+    b1ce = IntCol()
+    b1cf = IntCol()
+    b1cg = IntCol()
+
+    b1co = IntCol()
+
+#    b1ch
+#    b1ci
+#    b1cj
+#    b1ck
+
+    b1ef = IntCol()    
+
+## passifs et autres réduc ##
+    b2gh= IntCol()
     
 ## réductions ##
-    mt= IntCol()
-    ne= IntCol()
-    mv= IntCol()
-    nf= IntCol()
-    mx= IntCol()
-    na= IntCol()
-    nc= IntCol()
+    b2mt = IntCol()
+    b2ne = IntCol()
+    b2mv = IntCol()
+    b2nf = IntCol()
+    b2mx = IntCol()
+    b2na = IntCol()
+    b2nc = IntCol()
 
 ##  montant impôt acquitté hors de France ##
-    rs= IntCol()
-    
-## passifs et autres réduc ##
-    gh= IntCol()
-    
-    
-    
+    b4rs = IntCol()
+
 ## BOUCLIER FISCAL ##
 
     rev_or= IntCol()

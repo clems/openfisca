@@ -259,17 +259,12 @@ class ModelFrance(ModelDescription):
     ############################################################
     # Impôt de solidarité sur la fortune
     ############################################################
-    
-    res_princ = Prestation(isf._res_princ, 'foy')
-    forets = Prestation(isf._forets, 'foy')
-    ruraux = Prestation(isf._ruraux, 'foy')
-    grp_agr =  Prestation (isf._grp_agr, 'foy')
-    actions_conserv =Prestation(isf._actions_conserv, 'foy')
+    isf_imm_bati = Prestation(isf._isf_imm_bati, 'foy')
+    isf_imm_non_bati = Prestation(isf._isf_imm_non_bati, 'foy')
     isf_actions_sal = Prestation(isf._isf_actions_sal, 'foy', start = date(2006,1,1))
-    autres_biens_meubles = Prestation(isf._autres_biens_meubles, 'foy')
-    forf_mob= Prestation(isf._forf_mob, 'foy')
-    patrimoine = Prestation(isf._patrimoine, 'foy')
+    isf_droits_sociaux = Prestation(isf._isf_droits_sociaux, 'foy')
     ass_isf = Prestation(isf._ass_isf, 'foy')
+
     isf_iai = Prestation(isf._isf_iai, 'foy')
     tot_impot= Prestation(isf._tot_impot, 'foy')
     isf_avant_plaf = Prestation(isf._isf_avant_plaf, 'foy')
