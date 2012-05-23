@@ -30,6 +30,7 @@ QUIFAM = Enum(['chef', 'part', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7',
 QUIMEN = Enum(['pref', 'cref', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
 CAT    = Enum(['noncadre', 'cadre', 'fonc'])
 
+
 class InputTable(ModelDescription):
     '''
     Socio-economic data
@@ -67,9 +68,16 @@ class InputTable(ModelDescription):
     age = AgesCol(label = u"âge")
     agem = AgesCol(label = u"âge (en mois)")
     
-    zone_apl = EnumCol(default = 2)
+    zone_apl = EnumCol(label = u"zone apl", default = 2)
     loyer = IntCol() # Loyer mensuel
-    so = EnumCol(label = u"statut d'occupation")
+    so = EnumCol(label = u"statut d'occupation",
+                  enum = Enum([u"Non renseigné",
+                               u"Accédant à la propriété",
+                               u"Propriétaire (non accédant) du logement",
+                               u"Locataire d'un logement HLM",
+                               u"Locataire ou sous-locataire d'un logement loué vide non-HLM",
+                               u"Locataire ou sous-locataire d'un logement loué meublé ou d'une chambre d'hôtel",
+                               u"Logé gratuitement par des parents, des amis ou l'employeur"]))
     activite = IntCol()
     boursier = BoolCol()
     code_postal = IntCol()
@@ -337,7 +345,6 @@ class InputTable(ModelDescription):
     f7xd = IntCol()
     f7xe = IntCol()
     f7xf = IntCol()
-    f7xg = IntCol()
     f7xh = IntCol()
     f7xi = IntCol()
     f7xj = IntCol()
@@ -425,7 +432,6 @@ class InputTable(ModelDescription):
     
     # Investissements locatifs dans les résidences de tourisme situées dans une zone de 
     # revitalisation rurale
-    f7gs = IntCol()
     f7gt = IntCol()
     f7xg = IntCol()
     f7gu = IntCol()
@@ -608,17 +614,105 @@ class InputTable(ModelDescription):
     gar_dom   = BoolCol()
 
 # zones apl and calibration 
-    tu99 = EnumCol()
-    tau99 = EnumCol()
+    tu99 = EnumCol(label = u"tranche d'unité urbaine",
+                   enum=Enum([u'Communes rurales',
+                         u'moins de 5 000 habitants',
+                         u'5 000 à 9 999 habitants',
+                         u'10 000 à 19 999 habitants',
+                         u'20 000 à 49 999 habitants',
+                         u'50 000 à 99 999 habitants',
+                         u'100 000 à 199 999 habitants',
+                         u'200 000 habitants ou plus (sauf agglomération parisienne)',
+                         u'agglomération parisienne']))
+    
+    tau99 = EnumCol(label = u"tranche d'aire urbaine")
     reg   = EnumCol()
     pol99 = EnumCol()
-    cstotpragr = EnumCol()
-    naf16pr = EnumCol()
-    typmen15 = EnumCol()
-    ageq  = EnumCol()
-    nbinde = EnumCol()
-    ddipl = EnumCol()
-    act5 = EnumCol()
+    cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
+                         enum = Enum([u"Sans objet",
+                                      u"Agriculteurs exploitants",
+                                      u"Artisans, commerçants, chefs d'entreprise",
+                                      u"Cadres supérieurs",
+                                      u"Professions intermédiaires",
+                                      u"Employés",
+                                      u"Ouvriers",
+                                      u"Retraités",
+                                      u"Autres inactifs"]))
+    
+    naf16pr = EnumCol(label = u"activité économique de l'établissement de l'emploi principal actuel de la personne de référence",
+                      enum = Enum([u"Sans objet",
+                                   u"Agriculture, sylviculture et pêche",
+                                   u"Industries agricoles",
+                                   u"Industries des biens de consommation",
+                                   u"Industrie automobile",
+                                   u"Industries des biens d'équipement",
+                                   u"Industries des biens intermédiaires",
+                                   u"Energie",
+                                   u"Construction",
+                                   u"Commerce et réparations",
+                                   u"Transports",
+                                   u"Activités financières",
+                                   u"Activités immobilières",
+                                   u"Services aux entreprises",
+                                   u"Services aux particuliers",
+                                   u"Education, santé, action sociale",
+                                   u"Administrations"])) # 16 postes + 1 (17 sans objet) 
+    
+    typmen15 = EnumCol(label = u"type de ménage",
+                       enum = Enum([u"Personne seule active",
+                                    u"Personne seule inactive",
+                                    u"Familles monoparentales, parent actif",
+                                    u"Familles monoparentales, parent inactif et au moins un enfant actif",
+                                    u"Familles monoparentales, tous inactifs",
+                                    u"Couples sans enfant, 1 actif",
+                                    u"Couples sans enfant, 2 actifs",
+                                    u"Couples sans enfant, tous inactifs",
+                                    u"Couples avec enfant, 1 membre du couple actif",
+                                    u"Couples avec enfant, 2 membres du couple actif",
+                                    u"Couples avec enfant, couple inactif et au moins un enfant actif",
+                                    u"Couples avec enfant, tous inactifs",
+                                    u"Autres ménages, 1 actif",
+                                    u"Autres ménages, 2 actifs ou plus",
+                                    u"Autres ménages, tous inactifs"],start=1))
+    
+    ageq  = EnumCol(label = u"âge quinquennal de la personne de référence",
+                    enum = Enum([u"moins de 25 ans",
+                                 u"25 à 29 ans",
+                                 u"30 à 34 ans",
+                                 u"35 à 39 ans",
+                                 u"40 à 44 ans",
+                                 u"45 à 49 ans",
+                                 u"50 à 54 ans",
+                                 u"55 à 59 ans",
+                                 u"60 à 64 ans",
+                                 u"65 à 69 ans",
+                                 u"70 à 74 ans",
+                                 u"75 à 79 ans",
+                                 u"80 ans et plus"]))
+
+                                 
+    nbinde = EnumCol(label = u"taille du ménage",
+                     enum = Enum([u"Une personne",
+                                  u"Deux personnes",
+                                  u"Trois personnes",
+                                  u"Quatre personnes",
+                                  u"Cinq personnes",
+                                  u"Six personnes et plus"], start=1))
+
+    ddipl = EnumCol(label = u"diplôme de la personne de référence",
+                    enum = Enum([u"Diplôme supérieur",
+                                 u"Baccalauréat + 2 ans",
+                                 u"Baccalauréat ou brevet professionnel ou autre diplôme de ce niveau",
+                                 u"CAP, BEP ou autre diplôme de ce niveau",
+                                 u"Brevet des collèges",
+                                 u"Aucun diplôme ou CEP"],start=1)) 
+    act5 = EnumCol(label = u"activité",
+                     enum = Enum(['Bizarre' 
+                                  u"Salarié",
+                                  u"Indépendant",
+                                  u"Chômeur",
+                                  u"Retraité",
+                                  u"Inactif"])) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
 
 ## ISF ##

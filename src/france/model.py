@@ -39,6 +39,7 @@ import france.calage as cl
 
 
 class ModelFrance(ModelDescription):
+    
     mhsup = Prestation(cs._mhsup)
     alv   = Prestation(ir._alv)
     ############################################################
@@ -96,16 +97,16 @@ class ModelFrance(ModelDescription):
     rbg = Prestation(ir._rbg, 'foy', label = u"Revenu brut global")
 
     # charges déductibles
-    penali = Prestation(cd._penali, 'foy')
-    acc75a = Prestation(cd._acc75a, 'foy')
-    percap = Prestation(cd._percap, 'foy', start=date(2002,1,1), end=date(2006,12,31))
-    deddiv = Prestation(cd._deddiv, 'foy')
-    doment = Prestation(cd._doment, 'foy', start=date(2003,1,1), end=date(2009,12,31))
-    eparet = Prestation(cd._eparet, 'foy', start=date(2004,1,1), end=date(2010,12,31))
-    sofipe = Prestation(cd._sofipe, 'foy', start=date(2002,1,1), end=date(2006,12,31))
-    cinema = Prestation(cd._cinema, 'foy', start=date(2002,1,1), end=date(2005,12,31))
-    ecodev = Prestation(cd._ecodev, 'foy', start=date(2009,1,1), end=date(2009,12,31))
-    grorep = Prestation(cd._grorep, 'foy', start=date(2009,1,1))
+    cd_penali = Prestation(cd._cd_penali, 'foy')
+    cd_acc75a = Prestation(cd._cd_acc75a, 'foy')
+    cd_percap = Prestation(cd._cd_percap, 'foy', start=date(2002,1,1), end=date(2006,12,31))
+    cd_deddiv = Prestation(cd._cd_deddiv, 'foy')
+    cd_doment = Prestation(cd._cd_doment, 'foy', start=date(2002,1,1), end=date(2005,12,31))
+    cd_eparet = Prestation(cd._cd_eparet, 'foy', start=date(2004,1,1))
+    cd_sofipe = Prestation(cd._cd_sofipe, 'foy', start=date(2002,1,1), end=date(2006,12,31))
+    cd_cinema = Prestation(cd._cd_cinema, 'foy', start=date(2002,1,1), end=date(2005,12,31))
+    cd_ecodev = Prestation(cd._cd_ecodev, 'foy', start=date(2007,1,1), end=date(2008,12,31))
+    cd_grorep = Prestation(cd._cd_grorep, 'foy', start=date(2009,1,1))
     
     rbg_int = Prestation(cd._rbg_int, 'foy', label = u"Revenu brut global intermédiaire")
     cd1     = Prestation(cd._cd1, 'foy', label = u"Charges déductibles non plafonnées")
@@ -216,7 +217,7 @@ class ModelFrance(ModelDescription):
     aidper = Prestation(ci._aidper, 'foy')
     quaenv = Prestation(ci._quaenv, 'foy', start=date(2005,1,1))
     drbail = Prestation(ci._drbail, 'foy')
-    garext = Prestation(ci._garext, 'foy', start=date(2005,1,1))
+    ci_garext = Prestation(ci._ci_garext, 'foy', start=date(2005,1,1))
     preetu = Prestation(ci._preetu, 'foy', start=date(2005,1,1))
     saldom2 = Prestation(ci._saldom2, 'foy', start=date(2007,1,1))
     inthab = Prestation(ci._inthab, 'foy', start=date(2007,1,1))
@@ -441,7 +442,6 @@ class ModelFrance(ModelDescription):
     rev_cap = Prestation(cm._rev_cap)
     psoc = Prestation(cm._psoc)
     pfam = Prestation(cm._pfam)
-    paje = Prestation(cm._paje)
     mini = Prestation(cm._mini)
     logt = Prestation(cm._logt)
     impo = Prestation(cm._impo)
