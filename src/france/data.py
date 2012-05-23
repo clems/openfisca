@@ -758,6 +758,7 @@ class InputTable(ModelDescription):
 ## BOUCLIER FISCAL ##
 
     rev_or= IntCol()
+    rev_exo= IntCol()
     tax_hab= IntCol()
     tax_fonc= IntCol()
     restit_imp= IntCol()

@@ -22,6 +22,8 @@ This file is part of openFisca.
 """
 from __future__ import division
 from numpy import ( maximum as max_, minimum as min_) 
+from france.data import QUIFOY
+ALL = [x[1] for x in QUIFOY]
 
 
 ## immeubles bâtis- non bâtis, parts de groupements ##
@@ -159,7 +161,7 @@ def _isf_apres_plaf(tot_impot, revetproduits, isf_avant_plaf, _P):
 
 ## rs est le montant des impôts acquittés hors de France ## 
 ## montant net à payer ##
-def _isf(rs, isf_avant_plaf, isf_apres_plaf, irpp):
+def _isf_tot(rs, isf_avant_plaf, isf_apres_plaf, irpp):
    
     return -((isf_apres_plaf - rs)*((-irpp)>0) + (isf_avant_plaf-rs)*((-irpp)<=0))
 ## avec indicatrice ## 
@@ -168,31 +170,83 @@ def _isf(rs, isf_avant_plaf, isf_apres_plaf, irpp):
 ## BOUCLIER FISCAL ##
 
 ## calcul de l'ensemble des revenus du contribuable ##
-def _bouclier_rev(rbg, rpns_maj, csg_deduc, deficit_globaux, rcvm_rfr, deficit_ante, rev_cap_lib, imp_lib, rev_exo, rev_or, pen_alim, eparet, ric):
-    ''' total des revenus sur l'année 'n' net de charges
+
+# TODO: à reintégrer dans irpp
+def _rvcm_plus_abat(rev_cat_rvcm, rfr_rvcm):
     '''
+    Revenu catégoriel avec abattement de 40% réintégré.
+    '''
+    return rev_cat_rvcm + rfr_rvcm
+
+# TODO: à reintégrer dans irpp (et vérifier au passage que frag_impo est dans la majo_cga
+def _maj_cga_i(frag_impo, nrag_impg, 
+            nbic_impn, nbic_imps, nbic_defn, nbic_defs,
+            nacc_impn, nacc_imps, nacc_defn, nacc_defs,
+            nbnc_impo, nbnc_defi, _P):
+    '''
+    Majoration pour non adhésion à un centre de gestion agréé
+    'ind'
+    '''
+    
+    ## B revenus industriels et commerciaux professionnels     
+    nbic_timp = (nbic_impn + nbic_imps) - (nbic_defn + nbic_defs)
+    
+    ## C revenus industriels et commerciaux non professionnels 
+    # (revenus accesoires du foyers en nomenclature INSEE)
+    nacc_timp = max_(0, (nacc_impn + nacc_imps) - (nacc_defn + nacc_defs))
+    
+    #regime de la déclaration contrôlée ne bénéficiant pas de l'abattement association agréée
+    nbnc_timp = nbnc_impo - nbnc_defi
+    
+    ## Totaux
+    ntimp = nrag_impg + nbic_timp +  nacc_timp + nbnc_timp
+    
+    maj_cga = max_(0,_P.ir.rpns.cga_taux2*(ntimp + frag_impo))
+    return maj_cga
+
+def _maj_cga(maj_cga_i, _option = {'maj_cga_i': ALL}):
+    '''
+    Traitemens salaires pensions et rentes
+    'foy'
+    '''
+    out = None
+    for qui in maj_cga_i.itervalues():
+        if out is None:
+            out = qui
+        else:
+            out += qui
+    
+    return out
+
+
+def _bouclier_rev(rbg, maj_cga, csg_deduc, rvcm_plus_abat, rev_cap_lib, rev_exo, rev_or, cd_penali, cd_eparet):
+    ''' 
+    total des revenus sur l'année 'n' net de charges
+    '''
+    # TODO: réintégrer les déficits antérieur
+    # TODO: intégrer les revenus soumis au prélèvement libératoire
     null = 0*rbg
-    ## Revenus 
-    # Revenus soumis au barème
-    frac_deficit_globaux = deficit_globaux 
-    ## def _deficit_rcm(f2aa, f2al, f2am, f2an):
-    ## return f2aa + f2al + f2am + f2an ??
-    frac_rcvm_rfr = 0.7*rcvm_rfr
+    
+    deficit_ante = null
+    
+    ## Revenus
+    frac_rvcm_rfr = 0.7*rvcm_plus_abat
     ## revenus distribués? 
     ## A majorer de l'abatt de 40% - montant brut en cas de PFL
     ## pour le calcul de droit à restitution : prendre 0.7*montant_brut_rev_dist_soumis_au_barème
     
-    rev_bar = rbg - rpns_maj - csg_deduc - deficit_ante
+    rev_bar = rbg - maj_cga - csg_deduc - deficit_ante
 
 ## AJOUTER : indemnités de fonction percus par les élus- revenus soumis à régimes spéciaux
 
     # Revenu soumis à l'impôt sur le revenu forfaitaire
-    rev_lib = rev_cap_lib + imp_lib+ ric 
+    rev_lib = rev_cap_lib 
     ## AJOUTER plus-values immo et moins values? 
     
     ##Revenus exonérés d'IR réalisés en France et à l'étranger##
-    rev_exo= primes_pel + primes_cel + rente_pea + int_livrets + plus_values_per
-
+#    rev_exo = primes_pel + primes_cel + rente_pea + int_livrets + plus_values_per
+    rev_exo = null
+    
     ## proposer à l'utilisateur des taux de réference- PER, PEA, PEL,...TODO
     ## sommes investis- calculer les plus_values annuelles et prendre en compte pour rev_exo?
     # revenus soumis à la taxe forfaitaire sur les métaux précieux : rev_or 
@@ -203,19 +257,18 @@ def _bouclier_rev(rbg, rpns_maj, csg_deduc, deficit_globaux, rcvm_rfr, deficit_a
     # Pension alimentaires
     # Cotisations ou primes versées au titre de l'épargne retraite
    
-    charges = pen_alim + eparet
+    charges = cd_penali + cd_eparet
     
     return revenus - charges
     
-    
-def bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf, ): ## ajouter CSG- CRDS
+def _bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf_tot): ## ajouter CSG- CRDS
     ## ajouter Prelèvements sources/ libé 
     ## impôt sur les plus-values immo et cession de fonds de commerce
     imp1= 0
     ''' 
     impôts payés en l'année 'n' au titre des revenus réalisés sur l'année 'n' 
     '''
-    imp2= irpp + isf + tax_hab + tax_fonc
+    imp2= irpp + isf_tot + tax_hab + tax_fonc
     '''
     impôts payés en l'année 'n' au titre des revenus réalisés en 'n-1'
     '''
@@ -225,15 +278,15 @@ def _restitutions(ppe, restit_imp ):
     '''
     restitutions d'impôt sur le revenu et degrèvements percus en l'année 'n'
     '''
-    return ppe+ restit_imp
+    return ppe + restit_imp
 
-def bouclier_sumimp(imp_gen, restitutions):
+def _bouclier_sumimp(bouclier_imp_gen, restitutions):
     '''
     somme totale des impôts moins restitutions et degrèvements 
     '''
-    return imp_gen - restitutions
+    return -(bouclier_imp_gen + restitutions)
 
-def _bouclier_fis(sumimp,revenus, _P):
-    P= _P.isf.bouclier
-    return sumimp - (revenus*P.taux)
+def _bouclier_fiscal(bouclier_sumimp, bouclier_rev, _P):
+    P= _P.bouclier_fiscal
+    return max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
 

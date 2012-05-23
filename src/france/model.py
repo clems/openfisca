@@ -259,6 +259,7 @@ class ModelFrance(ModelDescription):
     ############################################################
     # Impôt de solidarité sur la fortune
     ############################################################
+    
     res_princ = Prestation(isf._res_princ, 'foy')
     forets = Prestation(isf._forets, 'foy')
     ruraux = Prestation(isf._ruraux, 'foy')
@@ -277,18 +278,21 @@ class ModelFrance(ModelDescription):
     isf_org_int_gen= Prestation(isf._isf_org_int_gen, 'foy')
     revetproduits= Prestation(isf._revetproduits, 'foy')
     isf_apres_plaf= Prestation(isf._isf_apres_plaf, 'foy')
-    isf = Prestation(isf._isf, 'foy')
+    isf_tot = Prestation(isf._isf_tot, 'foy')
     
     
 #############################################################################
 #                            Bouclier Fiscal                              ###
 #############################################################################
-
+    rvcm_plus_abat = Prestation(isf._rvcm_plus_abat, 'foy')
+    maj_cga_i = Prestation(isf._maj_cga_i)
+    maj_cga = Prestation(isf._maj_cga, 'foy')
+    
     bouclier_rev = Prestation( isf._bouclier_rev, 'foy')
     bouclier_imp_gen = Prestation(isf._bouclier_imp_gen, 'foy')
     restitutions = Prestation(isf._restitutions, 'foy')
     bouclier_sumimp = Prestation(isf._bouclier_sumimp, 'foy')
-    bouclier_fis = Prestation(isf._bouclier_fis, 'foy')
+    bouclier_fiscal = Prestation(isf._bouclier_fiscal, 'foy', start = date(2006,1,1))
     
 
     
