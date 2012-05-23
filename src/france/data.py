@@ -718,7 +718,7 @@ class InputTable(ModelDescription):
 ## ISF ##
     
 ## Immeubles bâtis ##
-    b1ab = IntCol(default=3000000) ##  valeur résidence principale avant abattement ##
+    b1ab = IntCol() ##  valeur résidence principale avant abattement ##
     b1ac = IntCol()
 ## non bâtis ##
     b1bc = IntCol()
