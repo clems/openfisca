@@ -29,11 +29,13 @@ import france.irpp as ir
 import france.irpp_charges_deductibles as cd
 import france.irpp_reductions_impots as ri
 import france.irpp_credits_impots as ci
+import france.isf as isf
 import france.pfam as pf
 import france.mini as ms
 import france.lgtm as lg
 import france.common as cm
 import france.calage as cl
+
 
 
 class ModelFrance(ModelDescription):
@@ -253,6 +255,43 @@ class ModelFrance(ModelDescription):
     rev_cap_bar = Prestation(ir._rev_cap_bar, 'foy')
     rev_cap_lib = Prestation(ir._rev_cap_lib, 'foy')
     avf = Prestation(ir._avf, 'foy')
+    
+    ############################################################
+    # Impôt de solidarité sur la fortune
+    ############################################################
+    isf_imm_bati = Prestation(isf._isf_imm_bati, 'foy')
+    isf_imm_non_bati = Prestation(isf._isf_imm_non_bati, 'foy')
+    isf_actions_sal = Prestation(isf._isf_actions_sal, 'foy', start = date(2006,1,1))
+    isf_droits_sociaux = Prestation(isf._isf_droits_sociaux, 'foy')
+    ass_isf = Prestation(isf._ass_isf, 'foy')
+
+    isf_iai = Prestation(isf._isf_iai, 'foy')
+    tot_impot= Prestation(isf._tot_impot, 'foy')
+    isf_avant_plaf = Prestation(isf._isf_avant_plaf, 'foy')
+    isf_reduc_pac = Prestation(isf._isf_reduc_pac, 'foy')
+    isf_inv_pme = Prestation(isf._isf_inv_pme, 'foy', start = date(2008,1,1))
+    isf_org_int_gen= Prestation(isf._isf_org_int_gen, 'foy')
+    revetproduits= Prestation(isf._revetproduits, 'foy')
+    isf_apres_plaf= Prestation(isf._isf_apres_plaf, 'foy')
+    isf_tot = Prestation(isf._isf_tot, 'foy')
+    
+    
+#############################################################################
+#                            Bouclier Fiscal                              ###
+#############################################################################
+    rvcm_plus_abat = Prestation(isf._rvcm_plus_abat, 'foy')
+    maj_cga_i = Prestation(isf._maj_cga_i)
+    maj_cga = Prestation(isf._maj_cga, 'foy')
+    
+    bouclier_rev = Prestation( isf._bouclier_rev, 'foy')
+    bouclier_imp_gen = Prestation(isf._bouclier_imp_gen, 'foy')
+    restitutions = Prestation(isf._restitutions, 'foy')
+    bouclier_sumimp = Prestation(isf._bouclier_sumimp, 'foy')
+    bouclier_fiscal = Prestation(isf._bouclier_fiscal, 'foy', start = date(2006,1,1))
+    
+
+    
+    # inclure aussi les dates si nécessaire start=date(2007,1,1)
     
     ############################################################
     # Prestations familiales
