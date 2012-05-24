@@ -741,7 +741,6 @@ class InputTable(ModelDescription):
 #    b1cj
 #    b1ck
 
-    b1ef = IntCol()    
 
 ## passifs et autres réduc ##
     b2gh= IntCol()

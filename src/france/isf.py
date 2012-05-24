@@ -68,10 +68,10 @@ def _isf_droits_sociaux(isf_actions_sal, b1cb, b1cd, b1ce, b1cf, b1cg, _P):
 
     return isf_actions_sal + b1cc + b1cd + b1ce + b1cf + b1cg
 
-def _ass_isf(isf_imm_bati, isf_imm_non_bati, isf_droits_sociaux, b1ef, b2gh, _P):
+def _ass_isf(isf_imm_bati, isf_imm_non_bati, isf_droits_sociaux, b1cg, b2gh, _P):
     total = isf_imm_bati + isf_imm_non_bati + isf_droits_sociaux
     P=_P.isf.forf_mob
-    forf_mob = (b1ef != 0)*b1ef + (b1ef==0)*total*P.taux 
+    forf_mob = (b1cg != 0)*b1cg + (b1cg==0)*total*P.taux 
     actif_brut = total + forf_mob
     return actif_brut - b2gh 
     
