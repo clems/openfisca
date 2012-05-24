@@ -228,7 +228,7 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2gr,
     return max_(TOT1 + TOT2 + TOT3 - DEF, 0)
 
 def _rfr_rvcm(f2dc, f2fu, _P):
-    ''' Réintégration des abattements pour le revenu fiscal de référence '''
+    ''' Abattements sur rvcm à réintégrer dans le revenu fiscal de référence '''
     P = _P.ir.rvcm
     ## TODO: manque le sous total i121 (dans la fonction _rev_cat_rvcm)
     i121 = 0
@@ -253,9 +253,12 @@ def _rev_cat_rpns(rpns_i, _option = {'rpns_i': ALL}):
     Traitemens salaires pensions et rentes
     'foy'
     '''
-    out = 0
+    out = None
     for qui in rpns_i.itervalues():
-        out += qui
+        if out is None:
+            out = qui
+        else:
+            out += qui
     
     return out
 

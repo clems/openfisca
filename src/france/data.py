@@ -715,6 +715,56 @@ class InputTable(ModelDescription):
                                   u"Inactif"])) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
 
+## ISF ##
+    
+## Immeubles bâtis ##
+    b1ab = IntCol() ##  valeur résidence principale avant abattement ##
+    b1ac = IntCol()
+## non bâtis ##
+    b1bc = IntCol()
+    b1be = IntCol()
+    b1bh = IntCol()
+    b1bk = IntCol() 
+## droits sociaux- valeurs mobilières-liquidités- autres meubles ##
+
+    b1cl = IntCol()
+    b1cb = IntCol()
+    b1cd = IntCol()
+    b1ce = IntCol()
+    b1cf = IntCol()
+    b1cg = IntCol()
+
+    b1co = IntCol()
+
+#    b1ch
+#    b1ci
+#    b1cj
+#    b1ck
+
+
+## passifs et autres réduc ##
+    b2gh= IntCol()
+    
+## réductions ##
+    b2mt = IntCol()
+    b2ne = IntCol()
+    b2mv = IntCol()
+    b2nf = IntCol()
+    b2mx = IntCol()
+    b2na = IntCol()
+    b2nc = IntCol()
+
+##  montant impôt acquitté hors de France ##
+    b4rs = IntCol()
+
+## BOUCLIER FISCAL ##
+
+    rev_or= IntCol()
+    rev_exo= IntCol()
+    tax_hab= IntCol()
+    tax_fonc= IntCol()
+    restit_imp= IntCol()
+        
     # to remove
     wprm = FloatCol()
     etr = IntCol()     

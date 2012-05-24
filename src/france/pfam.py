@@ -676,7 +676,7 @@ def _afeama(age, smic55, ape, af_nbenf, br_pf, _P, _option={'age': ENFS, 'smic55
             (br_pf >= seuil2) * P.afeama.taux_maxi)
     return 12 * afeama # annualisé
 
-def _crds_pfam(af, cf, asf, ars, paje, ape, apje,_P):
+def _crds_pfam(af, cf, asf, ars, paje, ape, apje, _P):
     '''
     Renvoie la CRDS des prestations familiales
     '''
