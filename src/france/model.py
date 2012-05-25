@@ -424,6 +424,7 @@ class ModelFrance(ModelDescription):
     
     typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
     nb_ageq0 = Prestation(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
+    nbinde2 = Prestation(cl._nbinde2, 'men', label = u"Nombre d'individus dans le ménage")
 
     ############################################################
     # Totaux

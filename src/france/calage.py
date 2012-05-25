@@ -25,8 +25,14 @@ from __future__ import division
 from numpy import  floor, arange, array 
 from france.data import QUIMEN
 
-ALL = [x[1] for x in QUIMEN]
+ALL_MEN = [x[1] for x in QUIMEN]
 
+def _nbinde2(agem, _option = {'agem' : ALL_MEN}):
+    '''
+    Number of household members
+    'men'
+    '''
+    return array( [ agem[i] >= 0  for i in agem.keys()]).sum(axis=0)
 
 def _ageq(agem):
     '''
@@ -51,7 +57,7 @@ def _ageq(agem):
     return tranche
 
 
-def _nb_ageq0(agem, _option = {'agem': ALL}):
+def _nb_ageq0(agem, _option = {'agem': ALL_MEN}):
     '''
     Calcule le nombre d'individus dans chaque tranche d'âge quinquennal (voir ageq)
     'men'
@@ -64,7 +70,7 @@ def _nb_ageq0(agem, _option = {'agem': ALL}):
     return nb
 
 
-def _conf_fam(agem, activite, _option = {'agem': ALL}):
+def _conf_fam(agem, activite, _option = {'agem': ALL_MEN}):
     '''
     Calcule le code de configuration du ménage 
     Code à 5 chiffres
@@ -77,7 +83,7 @@ def _conf_fam(agem, activite, _option = {'agem': ALL}):
     
     pass
     
-def _typmen15(agem, activite, _option = {'agem': ALL}):    
+def _typmen15(agem, activite, _option = {'agem': ALL_MEN}):    
     pass
 #TYPMEN15
 #Type de ménage (15 postes)
