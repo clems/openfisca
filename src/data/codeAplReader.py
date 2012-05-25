@@ -25,7 +25,7 @@ This file is part of µSim.
 import csv, pickle
 
 codeDict = {}
-fileName = 'zone2.csv'
+fileName = 'zone_apl.csv'
 
 code = csv.reader(open(fileName), delimiter = ";")
 
