@@ -22,17 +22,26 @@ This file is part of openFisca.
 """
 
 from __future__ import division
-from numpy import  floor, arange, array 
+from numpy import  floor, arange, array, where 
 from france.data import QUIMEN
 
 ALL_MEN = [x[1] for x in QUIMEN]
+
 
 def _nbinde2(agem, _option = {'agem' : ALL_MEN}):
     '''
     Number of household members
     'men'
     '''
-    return array( [ agem[i] >= 0  for i in agem.keys()]).sum(axis=0)
+    print ALL_MEN
+    n1 = 0
+    for ind in agem.iterkeys():
+        n1 += 1*(floor(agem[ind]/12) >= 0) 
+    
+    n2 = where( n1 >=6, 6, n1)
+    
+    return n2
+
 
 def _ageq(agem):
     '''
@@ -53,7 +62,7 @@ def _ageq(agem):
     'ind'
     '''
     age = floor(agem/12)
-    tranche = array([ (agem >= ag) for ag in arange(25,5,81) ]).sum(axis=0) 
+    tranche = array([ (age >= ag) for ag in arange(25,5,81) ]).sum(axis=0) 
     return tranche
 
 
