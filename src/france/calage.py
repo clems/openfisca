@@ -33,7 +33,6 @@ def _nbinde2(agem, _option = {'agem' : ALL_MEN}):
     Number of household members
     'men'
     '''
-    print ALL_MEN
     n1 = 0
     for ind in agem.iterkeys():
         n1 += 1*(floor(agem[ind]/12) >= 0) 
