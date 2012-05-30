@@ -208,11 +208,11 @@ def _rev_cat_rvcm(marpac, deficit_rcm, f2ch, f2dc, f2ts, f2ca, f2fu, f2go, f2gr,
     
     # Revenus de capitaux mobiliers nets de frais, ouvrant droit à abattement
     # partie négative (à déduire des autres revenus nets de frais d'abattements
-    g12a = - min_(f2dc*P.abatmob_taux - F1,0)
+    g12a = - min_(f2dc*(1-P.abatmob_taux) - F1,0)
     # partie positive
-    g12b = max_(f2dc*P.abatmob_taux - F1,0)
+    g12b = max_(f2dc*(1-P.abatmob_taux) - F1,0)
     
-    rev = g12b + f2gr + f2fu*P.abatmob_taux
+    rev = g12b + f2gr + f2fu*(1-P.abatmob_taux)
 
     # Abattements, limité au revenu
     h12 = P.abatmob*(1 + marpac)
@@ -232,7 +232,7 @@ def _rfr_rvcm(f2dc, f2fu, _P):
     P = _P.ir.rvcm
     ## TODO: manque le sous total i121 (dans la fonction _rev_cat_rvcm)
     i121 = 0
-    return max_((1-P.abatmob_taux)*(f2dc + f2fu) - i121, 0)
+    return max_(P.abatmob_taux*(f2dc + f2fu) - i121, 0)
 
 def _rev_cat_rfon(f4ba, f4bb, f4bc, f4bd, f4be, _P):
     ''' REVENUS FONCIERS '''    

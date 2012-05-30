@@ -1553,13 +1553,13 @@
           <VALUE valeur="0.15" deb="2002-01-01" fin="2011-12-31"/>
         </CODE>
       </NODE>
-      <CODE description="Abattement produits des contrats d'assurance vie" code="abat_assvie" format = 'integer'>
+      <CODE description="Abattement produits des contrats d'assurance vie (personne seule)" code="abat_assvie" format = 'integer'>
         <VALUE valeur="4600" deb="2002-01-01" fin="2011-12-31"/>
       </CODE>
       <CODE description="Abatement capitaux mobiliers - Taux" code="abatmob_taux" format = 'percent'>
-        <VALUE valeur="1.0" deb="2002-01-01" fin="2004-12-31"/>
+        <VALUE valeur="0.0" deb="2002-01-01" fin="2004-12-31"/>
         <VALUE valeur="0.5" deb="2005-01-01" fin="2005-12-31"/>
-        <VALUE valeur="0.6" deb="2006-01-01" fin="2011-12-31"/>
+        <VALUE valeur="0.4" deb="2006-01-01" fin="2011-12-31"/>
       </CODE>
       <CODE description="Abatement capitaux mobiliers - Max" code="abatmob"  format = 'integer'>
         <VALUE valeur="1220" deb="2002-01-01" fin="2005-12-31" code="abatmob" />
