@@ -43,7 +43,7 @@ def _cd1(cd_penali, cd_acc75a, cd_percap, cd_deddiv, cd_doment, cd_eparet, cd_gr
         niches1 = cd_penali + cd_acc75a + cd_percap + cd_deddiv + cd_eparet
     elif _P.datesim.year in (2007, 2008):
         niches1 = cd_penali + cd_acc75a + cd_deddiv + cd_eparet
-    elif _P.datesim.year in (2009, 2010):
+    elif _P.datesim.year in (2009, 2010, 2011):
         niches1 = cd_penali + cd_acc75a + cd_deddiv + cd_eparet + cd_grorep
     return niches1
 
@@ -72,9 +72,10 @@ def _cd_penali(f6gi, f6gj, f6gp, f6el, f6em, f6gu, _P):
     '''
     Pensions alimentaires
     '''
+    year = _P.datesim.year
     P = _P.ir.charges_deductibles.penalim
     max1 = P.max 
-    if _P.datesim.year <= 2005:
+    if year <= 2005:
         # TODO: si vous subvenez seul(e) à l'entretien d'un enfant marié ou 
         # pacsé ou chargé de famille, quel que soit le nmbre d'enfants du jeune 
         # foyer, la déduction est limitée à 2*max
@@ -103,11 +104,12 @@ def _cd_percap(f6cb, f6da, marpac, _P):
     nouvelles ou de sociétés en difficulté (cases CB et DA de la déclaration 
     complémentaire)
     '''
+    year = _P.datesim.year 
     P = _P.ir.charges_deductibles
-    if _P.datesim.year <= 2002:
+    if year <= 2002:
         max_cb = P.percap.max_cb*(1 + marpac)
         return min_(f6cb, max_cb) 
-    elif _P.datesim.year <= 2006:
+    elif year <= 2006:
         max_cb = P.percap.max_cb*(1 + marpac)
         max_da = P.percap.max_da*(1 + marpac)
         return min_(min_(f6cb, max_cb) + min_(f6da, max_da), max_da)
@@ -170,10 +172,14 @@ def _cd_ecodev(f6eh, rbg_int, _P):
     max1 = min_(P.ecodev.taux*rbg_int, P.ecodev.max)
     return min_(f6eh, max1)
 
-def _cd_grorep(f6cb, f6hj, _P):
+def _cd_grorep(f6cb, f6hj, f6hk, _P):
     '''
     Dépenses de grosses réparations des nus-propriétaires (case 6CB et 6HJ)
     2009- 
     '''
     P = _P.ir.charges_deductibles
-    return min_(f6cb + f6hj, P.grorep.max)
+    year = _P.datesim.year
+    if year <= 2010:
+        return min_(f6cb + f6hj, P.grorep.max)
+    elif year <= 2011:
+        return min_(f6cb + f6hj + f6hk, P.grorep.max)

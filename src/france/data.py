@@ -24,6 +24,8 @@ This file is part of openFisca.
 from core.description import ModelDescription
 from core.columns import IntCol, EnumCol, BoolCol, AgesCol, FloatCol
 from core.utils import Enum
+from datetime import date
+
 
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
 QUIFAM = Enum(['chef', 'part', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
@@ -228,6 +230,7 @@ class InputTable(ModelDescription):
     # Dépenses de grosses réparations effectuées par les nus propriétaires
     f6cb = IntCol()
     f6hj = IntCol()
+    f6hk = IntCol(start = date(2011,1,1))
     
     # Sommes à rajouter au revenu imposable
     f6gh = IntCol()    
