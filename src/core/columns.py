@@ -27,29 +27,31 @@ from utils import Enum
 
 class Column(object):
     count = 0
-    def __init__(self, label = None, default = 0):
+    def __init__(self, label = None, default = 0, start = None, end = None):
         super(Column, self).__init__()
         self.name = None
         self.label = label
         self._order = Column.count
         Column.count += 1
         self._default = default
+        self._start = start
+        self._end = end
         self._dtype = float
 
 class IntCol(Column):
     '''
     A column of integer
     '''
-    def __init__(self, label = None, default = 0):
-        super(IntCol, self).__init__(label, default)
+    def __init__(self, label = None, default = 0, start = None, end = None):
+        super(IntCol, self).__init__(label, default, start, end)
         self._dtype = np.float32
         
 class EnumCol(IntCol):
     '''
     A column of integer with an enum
     '''
-    def __init__(self, enum=None, label = None, default = 0):
-        super(EnumCol, self).__init__(label, default)
+    def __init__(self, enum=None, label = None, default = 0, start = None, end = None):
+        super(EnumCol, self).__init__(label, default, start, end)
         self._dtype = np.int16
         if isinstance(enum, Enum):
             self.enum = enum
@@ -60,31 +62,31 @@ class BoolCol(Column):
     '''
     A column of boolean
     '''
-    def __init__(self, label = None, default = False):
-        super(BoolCol, self).__init__(label, default)
+    def __init__(self, label = None, default = False, start = None, end = None):
+        super(BoolCol, self).__init__(label, default, start, end)
         self._dtype = np.bool
         
 class FloatCol(Column):
     '''
     A column of float 32
     '''
-    def __init__(self, label = None, default = 0):
-        super(FloatCol, self).__init__(label, default)
+    def __init__(self, label = None, default = 0, start = None, end = None):
+        super(FloatCol, self).__init__(label, default, start, end)
         self._dtype = np.float32
         
 class AgesCol(IntCol):
     '''
     A column of Int to store ages of people
     '''
-    def __init__(self, label = None, default = -9999):
-        super(AgesCol, self).__init__(label, default)
+    def __init__(self, label = None, default = -9999, start = None, end = None):
+        super(AgesCol, self).__init__(label, default, start, end)
         
 class DateCol(Column):
     '''
     A column of Datetime 64 to store dates of people
     '''
-    def __init__(self, label = None, default = 0):
-        super(DateCol, self).__init__(label, default)
+    def __init__(self, label = None, default = 0, start = None, end = None):
+        super(DateCol, self).__init__(label, default, start, end)
         self._dtype = np.datetime64
 
 class Prestation(Column):
@@ -94,7 +96,7 @@ class Prestation(Column):
     '''
     count = 0
     def __init__(self, func, unit= 'ind', label = None, start = None, end = None):
-        super(Prestation, self).__init__(label)
+        super(Prestation, self).__init__(label = label, start = start, end = end)
 
         self._order = Prestation.count
         Prestation.count += 1
@@ -104,8 +106,6 @@ class Prestation(Column):
         self._option = {}
         self._func = func
         self._unit  = unit
-        self._start = start
-        self._end = end
         self.inputs = set(func.__code__.co_varnames[:func.__code__.co_argcount])
         self._children  = set() # prestations immidiately affected by current prestation 
         self._parents = set() # prestations that current prestations depends on  
@@ -144,7 +144,7 @@ class Prestation(Column):
 
 class BoolPresta(Prestation, BoolCol):
     def __init__(self, func, unit= 'ind', label = None, start = None, end = None):
-        BoolCol.__init__(self, label)
+        BoolCol.__init__(self, label = label, start = start, end = end)
         Prestation.__init__(self, func, unit, label, start, end)
 
 
