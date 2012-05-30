@@ -88,7 +88,7 @@ def _isf_reduc_pac(nb_pac, nbH, _P):
     '''
     P= _P.isf.reduc_pac
    
-    return P.reduc_1*(nb_pac)+ P.reduc_2*nbH  
+    return P.reduc_1*nb_pac + P.reduc_2*nbH  
 
 
 def _isf_inv_pme(b2mt, b2ne, b2mv, b2nf, b2mx, b2na, _P):
@@ -114,7 +114,7 @@ def _isf_avant_plaf(isf_iai, isf_inv_pme, isf_org_int_gen, isf_reduc_pac, _P ) :
     montant de l'impôt avant plafonnement
     '''
     borne_max = _P.isf.pme.max
-    return isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac
+    return max_(0, isf_iai - min_(isf_inv_pme + isf_org_int_gen, borne_max) - isf_reduc_pac)
 
   
 ## calcul du plafonnement ##
