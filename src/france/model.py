@@ -170,6 +170,7 @@ class ModelFrance(ModelDescription):
     daepad   = Prestation(ri._daepad, 'foy')
     rsceha   = Prestation(ri._rsceha, 'foy')
     invlst   = Prestation(ri._invlst, 'foy', start=date(2004,1,1))
+    invhvs   = Prestation(ri._invhvs, 'foy', start=date(2011,1,1))
     domlog   = Prestation(ri._domlog, 'foy', start=date(2002,1,1), end=date(2009,12,31))
     adhcga   = Prestation(ri._adhcga, 'foy')
     creaen   = Prestation(ri._creaen, 'foy', start=date(2006,1,1))

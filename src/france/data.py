@@ -246,6 +246,7 @@ class InputTable(ModelDescription):
     # Dons
     f7ud = IntCol()
     f7uf = IntCol()
+    f7vc = IntCol(start = date(2011,1,1))
     f7xs = IntCol()
     f7xt = IntCol()
     f7xu = IntCol()
@@ -337,6 +338,8 @@ class InputTable(ModelDescription):
     # Travaux de restauration immobilière
     f7ra = IntCol()
     f7rb = IntCol()
+    f7rc = IntCol(start = date(2011,1,1))
+    f7rd = IntCol(start = date(2011,1,1))
     
     # Assurance-vie
     f7gw = IntCol()
@@ -351,11 +354,17 @@ class InputTable(ModelDescription):
     f7xh = IntCol()
     f7xi = IntCol()
     f7xj = IntCol()
-    f7xk = IntCol()
+    f7xk = IntCol(end = date(2010,12,31))
     f7xl = IntCol()
     f7xm = IntCol()
     f7xn = IntCol()
-    f7xo = IntCol()
+    f7xo = IntCol(end = date(2010,12,31))
+    
+    # Investissement locatif dans une résidence hôtelière à vocation sociale
+#    f7xo = IntCol(start = date(2011,1,1))
+#    f7xk = IntCol(start = date(2011,1,1))
+    f7xr = IntCol(start = date(2011,1,1))
+
     
     # Souscriptions au capital des PME
     f7cf = IntCol()
@@ -385,6 +394,7 @@ class InputTable(ModelDescription):
     f7gq = IntCol()
     f7fq = IntCol()
     f7fm = IntCol()
+    f7fl = IntCol(start = date(2011,1,1))
     
     # Souscriptions au capital de SOFICA
     f7gn = IntCol()
@@ -402,6 +412,7 @@ class InputTable(ModelDescription):
     
     # Dépenses de protections du patrimoine naturel
     f7ka = IntCol()
+    f7kb = IntCol(start = date(2011,1,1))
 
     # Intérêts d'emprunts
     f7wg = IntCol()

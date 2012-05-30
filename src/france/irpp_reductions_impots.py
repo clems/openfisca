@@ -36,49 +36,55 @@ taille = 0
 
 def _reductions(ip_net, donapd, dfppce, cotsyn, resimm, patnat, sofipe, saldom, intagr, 
                prcomp, spfcpi, mohist, sofica, cappme, repsoc, invfor, deffor, 
-               daepad, rsceha, invlst, domlog, adhcga, creaen, ecpess, scelli, 
+               daepad, rsceha, invlst, invhvs, domlog, adhcga, creaen, ecpess, scelli, 
                locmeu, doment, domsoc, intemp, garext, assvie, invrev, intcon,
                ecodev, _P):
     '''
     Renvoie la liste des réductions d'impôt à intégrer en fonction de l'année
     '''
-    if   _P.datesim.year == 2002:
+    year = _P.datesim.year
+    if   year == 2002:
         total = (donapd + dfppce + saldom + cotsyn + prcomp + spfcpi + cappme + intemp + 
                 invfor + garext + daepad + rsceha + assvie + invrev + domlog + adhcga + 
                 ecpess + doment)
-    elif _P.datesim.year == 2003:
+    elif year == 2003:
         total = (donapd + dfppce + saldom + cotsyn + prcomp + spfcpi + cappme + intemp + 
                 repsoc + invfor + garext + daepad + rsceha + assvie + invrev + domlog + 
                 adhcga + ecpess + doment)
-    elif _P.datesim.year == 2004:
+    elif year == 2004:
         total = (donapd + dfppce + saldom + cotsyn + prcomp + spfcpi + cappme + intcon + 
                 repsoc + invfor + garext + daepad + rsceha + assvie + invlst + domlog + 
                 adhcga + ecpess + doment)
-    elif _P.datesim.year == 2005:
+    elif year == 2005:
         total = (donapd + dfppce + cotsyn + saldom + intagr + prcomp + spfcpi + cappme + 
                 intcon + repsoc + invfor + daepad + rsceha + invlst + domlog + adhcga + 
                 ecpess + doment)
-    elif _P.datesim.year == 2006:
+    elif year == 2006:
         total = (donapd + dfppce + cotsyn + saldom + intagr + prcomp + spfcpi + sofica + 
                 cappme + repsoc + invfor + deffor + daepad + rsceha + invlst + domlog + 
                 adhcga + ecpess + doment)
-    elif _P.datesim.year == 2007:
+    elif year == 2007:
         total = (donapd + dfppce + cotsyn + saldom + intagr + prcomp + spfcpi + sofica + 
                 cappme + repsoc + invfor + deffor + daepad + rsceha + invlst + domlog + 
                 adhcga + creaen + ecpess + doment)
-    elif _P.datesim.year == 2008:
+    elif year == 2008:
         total = (donapd + dfppce + cotsyn + saldom + intagr + prcomp + spfcpi + mohist + 
                 sofica + cappme + repsoc + invfor + deffor + daepad + rsceha + invlst + 
                 domlog + adhcga + creaen + ecpess + doment)
-    elif _P.datesim.year == 2009:
+    elif year == 2009:
         total = (donapd + dfppce + cotsyn + resimm + sofipe + ecodev + saldom + intagr + 
                 prcomp + spfcpi + mohist + sofica + cappme + repsoc + invfor + deffor + 
                 daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli + 
                 locmeu + doment)
-    elif _P.datesim.year == 2010:
+    elif year == 2010:
         total = (donapd + dfppce + cotsyn + resimm + patnat + sofipe + saldom + intagr + 
                 prcomp + spfcpi + mohist + sofica + cappme + repsoc + invfor + deffor + 
                 daepad + rsceha + invlst + domlog + adhcga + creaen + ecpess + scelli + 
+                locmeu + doment + domsoc)
+    elif year == 2011:
+        total = (donapd + dfppce + cotsyn + resimm + patnat + sofipe + saldom + intagr + 
+                prcomp + spfcpi + mohist + sofica + cappme + repsoc + invfor + daepad + 
+                rsceha + invlst + invhvs + domlog + adhcga + creaen + ecpess + scelli + 
                 locmeu + doment + domsoc)
     return min_(ip_net,total)    
 
@@ -91,21 +97,24 @@ def _donapd(f7ud, _P):
 
     return P.taux*min_(f7ud, P.max)
 
-def _dfppce(rbg_int, f7uf, f7xs, f7xt, f7xu, f7xw, f7xy, _P):   
+def _dfppce(rbg_int, f7uf, f7xs, f7xt, f7xu, f7xw, f7xy, f7vc, _P):   
     '''
     Dons aux autres oeuvres et dons effectués pour le financement des partis
     politiques et des compagnes électorales
     2002-
     '''
     P = _P.ir.reductions_impots.dfppce
+    year = _P.datesim.year
+
     base = f7uf
-    if _P.datesim.year >= 2004: base += f7xs
-    if _P.datesim.year >= 2005: base += f7xt
-    if _P.datesim.year >= 2006: base += f7xu
-    if _P.datesim.year >= 2007: base += f7xw
-    if _P.datesim.year >= 2008: base += f7xy
-    max1 = P.max*rbg_int
-    return P.taux*min_(base, max1)
+    if year >= 2004: base += f7xs
+    if year >= 2005: base += f7xt
+    if year >= 2006: base += f7xu
+    if year >= 2007: base += f7xw
+    if year >= 2008: base += f7xy
+    if year >= 2011: base += f7vc
+    max = P.max*rbg_int
+    return P.taux*min_(base, max)
     # TODO: note de bas de page
 
 def _cotsyn(f7ac, f7ae, f7ag, sal, cho, rst, _P, _option= {'sal':ALL, 'cho':ALL, 'rst':ALL}):
@@ -125,24 +134,40 @@ def _cotsyn(f7ac, f7ae, f7ag, sal, cho, rst, _P, _option= {'sal':ALL, 'cho':ALL,
     
     return P.taux*(min_(f7ac,maxv)  + min_(f7ae,maxc) + min_(f7ag,maxp))
 
-def _resimm(f7ra, f7rb, _P):
+def _resimm(f7ra, f7rb, f7rc, f7rd, _P):
     '''
     Travaux de restauration immobilière (cases 7RA et 7RB)
     2009-
     '''
     P = _P.ir.reductions_impots.resimm
-    max1 = P.max
-    max2 = max_(max1 - f7rb, 0)
-    return P.taux_rb*min_(f7rb, max1)+ P.taux_ra*min_(f7ra, max2)
+    year = _P.datesim.year
+    if year <= 2010:
+        max1 = P.max
+        max2 = max_(max1 - f7rb, 0)
+        return P.taux_rb*min_(f7rb, max1)+ P.taux_ra*min_(f7ra, max2)
+    elif year <= 2011:
+        max1 = P.max
+        max2 = max_(max1 - f7rd, 0)
+        max3 = max_(max2 - f7rb, 0)
+        max4 = max_(max3 - f7rc, 0) 
+        return ( P.taux_rd*min_(f7rd, max1) + 
+                 P.taux_rb*min_(f7rb, max2) +
+                 P.taux_rc*min_(f7rc, max3) +
+                 P.taux_ra*min_(f7ra, max4) )
 
-def _patnat(f7ka, _P):
+def _patnat(f7ka, f7kb, _P):
     '''
     Dépenses de protections du patrimoine naturel (case 7KA)
     2010-
     '''
     P = _P.ir.reductions_impots.patnat
-    max1 = P.max
-    return P.taux*min_(f7ka, max1)
+    year = _P.datesim.year
+    if year <= 2010:
+        max1 = P.max
+        return P.taux*min_(f7ka, max1)
+    if year <= 2011:
+        max1 = P.max
+        return P.taux*min_(f7ka + f7kb, max1)
 
 def _sofipe(marpac, rbg_int, f7gs, _P):
     '''
@@ -199,7 +224,7 @@ def _saldom(nb_pac2, f7db, f7df, f7dg, f7dl, f7dq, _P):
         maxEffectif = maxNonInv*not_(isinvalid) + P.max3*isinvalid
         max1 = maxEffectif - min_(f7db, maxEffectif)
             
-    elif _P.datesim.year in (2009, 2010):
+    elif _P.datesim.year in (2009, 2010, 2011):
         annee1 = f7dq
         nbpacmin = nb_pac2 + f7dl
         maxBase = P.max1*not_(annee1) + P.max1_1ereAnnee*annee1
@@ -237,7 +262,7 @@ def _prcomp(f7wm, f7wn, f7wo, f7wp, _P):
                               max_(0,(f7wn>f7wm)*(f7wo>=P.seuil)*P.taux*f7wn/div)) +
              P.taux*f7wp)
 
-def _spfcpi(marpac, f7gq, f7fq, f7fm, _P):
+def _spfcpi(marpac, f7gq, f7fq, f7fm, f7fl, _P):
     '''
     Souscription de parts de fonds communs de placement dans l'innovation, 
     de fonds d'investissement de proximité
@@ -255,6 +280,12 @@ def _spfcpi(marpac, f7gq, f7fq, f7fm, _P):
         return (P.taux1*min_(f7gq, max1) + 
                 P.taux1*min_(f7fq, max1) +
                 P.taux2*min_(f7fm, max1) )
+    elif _P.datesim.year <= 2011:
+        return (P.taux1*min_(f7gq, max1) + 
+                P.taux1*min_(f7fq, max1) +
+                P.taux2*min_(f7fm, max1) +
+                P.taux3*min_(f7fl, max1) )
+
 
 def _mohist(f7nz, _P):
     '''
@@ -429,7 +460,15 @@ def _invlst(marpac, f7xc, f7xd, f7xe, f7xf, f7xg, f7xh, f7xi, f7xj, f7xk, f7xl, 
     xn = P.taux_xn*min_(f7xn,seuil1/6)
     xo = P.taux_xo*f7xo
     return xc + xd + xe + xf + xg + xh + xi + xj + xk + xl + xm + xn + xo
-    
+
+def _invhvs(f7xo, f7xk, f7xr, _P):
+    '''
+    Investissement locatif dans une résidence hôtelière à vocation sociale (cases 7XO, 7XK, 7XR)
+    2011-
+    '''
+    P = _P.ir.reductions_impots.invhvs
+    return P.taux*(f7xo + f7xk + f7xr)
+
 def _domlog(f7ua, f7ub, f7uc, f7ui, f7uj, f7qb, f7qc, f7qd, f7ql, f7qt, f7qm, _P):
     '''
     Investissements OUTRE-MER dans le secteur du logement et autres secteurs d’activité
@@ -463,7 +502,7 @@ def _adhcga(f7ff, f7fg, _P):
 def _creaen(f7fy, f7gy, f7jy, f7hy, f7ky, f7iy, f7ly, f7my, _P):
     '''
     Aide aux créateurs et repreneurs d'entreprises
-    TODO...
+    TODO: ...
     '''
     P = _P.ir.reductions_impots.creaen
     if _P.datesim.year <= 2008:
