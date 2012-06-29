@@ -3978,7 +3978,7 @@
   </BAREME>
   <NODE description="Immeubles bâtis" code="res_princ" >
   		<CODE description="Taux d'abattement résidence principale" code="taux" format = 'percent'>
-	  	  <VALUE valeur="0.20" deb="2004-01-01" fin="2007-12-31"/>
+	  	  <VALUE valeur="0.20" deb="2002-01-01" fin="2007-12-31"/>
 	  	  <VALUE valeur="0.30" deb="2008-01-01" fin="2010-12-31"/>
 	     </CODE>
   </NODE>  
