@@ -766,6 +766,7 @@ class InputTable(ModelDescription):
     restit_imp= IntCol()
         
     # to remove
+    champm = BoolCol()
     wprm = FloatCol()
     etr = IntCol()     
     coloc = BoolCol()
