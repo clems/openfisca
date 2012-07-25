@@ -56,7 +56,7 @@ class InputTable(ModelDescription):
 
     alr = IntCol() # (f1ao, f1bo, f1co, f1do, f1eo)
     
-    hsup = IntCol()
+    hsup = IntCol()  # f1au
     inv = BoolCol(label = u'invalide')
     alt = BoolCol(label = u'garde alternée')
     cho_ld = BoolCol(label = 'chômeur de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
