@@ -40,10 +40,10 @@
     <NODE desc= "Pensions alimentaires versée" shortname="P. alim. vers." code = "alv" color = "136,120,178"/>
     <NODE desc= "Rentes viagères" shortname="Rentes viag." code= "rto" color = "125,185,86"/>
   </NODE>
-  <NODE desc= "Revenus du patrimoine" shortname="Rev. capital" code = "rev_cap" color= "255,222,48"/>
+  <NODE desc= "Revenus du patrimoine" shortname="Rev. capital" code = "rev_cap" color= "255,222,48"> 
     <NODE desc= "Revenus fonciers" shortname="Rev. fonciers" code='fon' color = "255,245,155"/>
     <NODE desc= "Revenus du capital soumis au barème" shortname="Rev cap bar" code='rev_cap_bar' color = "255,239,103"/>
-    <NODE desc= "Cotisations sociales sur les revenus du capital imposés au barème" shortname="Cotsoc cap bar" code= "cotsoc_bar" color = "243,166,171"/>
+    <NODE desc= "Cotisations sociales sur les revenus du capital imposés au barème" shortname="Cotsoc cap bar" code= "cotsoc_bar" color = "243,166,171">
       <NODE desc= "CSG (revenus du capital au barème)" shortname="CSG cap. bar." code= "csg_cap_bar" color = "243,166,171"/>
       <NODE desc= "Prélèvement social sur les revenus du capital au barème" shortname="Pr. s. cap. bar." code= "prelsoc_cap_bar" color = "243,166,171"/>
       <NODE desc= "CRDS (revenus du capital au barème)" shortname="CRDS cap. bar." code= "crds_cap_bar" color ="229,48,56"/>
@@ -56,6 +56,7 @@
     </NODE>
     <NODE desc= "Prélèvement libératoire sur les revenus du patrimoine" shortname="Prél. libérat." code = "imp_lib" color = "232,79,95"/>
     <NODE desc= "Revenus accessoires" shortname="Rev. accesoires" code='rac' color="247,221,0"/>
+  </NODE>
   </NODE>
   <NODE desc= "Impôt sur le revenu (Landais, Piketty, Saez)" shortname="IR (LPS)" code = "ir_lps" color = "232,79,95"/>
   <NODE desc= "Prestations sociales" shortname="Prest. soc." code= "psoc" color = "255,102,63">
