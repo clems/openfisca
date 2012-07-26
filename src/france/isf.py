@@ -267,9 +267,9 @@ def _bouclier_sumimp(bouclier_imp_gen, restitutions):
     '''
     somme totale des impôts moins restitutions et degrèvements 
     '''
-    return -(bouclier_imp_gen + restitutions)
-
+    return - bouclier_imp_gen +restitutions 
+    
 def _bouclier_fiscal(bouclier_sumimp, bouclier_rev, _P):
     P= _P.bouclier_fiscal
     return max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
-
+    print  max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
