@@ -244,10 +244,10 @@ def _bouclier_rev(rbg, maj_cga, csg_deduc, rvcm_plus_abat, rev_cap_lib, rev_exo,
     
     return revenus - charges
     
-def _bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf_tot, cotsoc_lib, cotsoc_bar, csgsald, csgsali, crdssal, csgchoi, csgchod, csgrstd, crdsrstd, csgrsti): ## ajouter CSG- CRDS
+def _bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf_tot, cotsoc_lib, cotsoc_bar, csgsald, csgsali, crdssal, csgchoi, csgchod, csgrstd, crdsrstd, csgrsti, imp_lib): ## ajouter CSG- CRDS
     ## ajouter Prelèvements sources/ libé 
     ## impôt sur les plus-values immo et cession de fonds de commerce
-    imp1= cotsoc_lib + cotsoc_bar + csgsald + csgchod + crdssal + csgrstd + crdsrstd
+    imp1= cotsoc_lib + cotsoc_bar + csgsald + csgchod + crdssal + csgrstd + crdsrstd + imp_lib
     ''' 
     impôts payés en l'année 'n' au titre des revenus réalisés sur l'année 'n' 
     '''
