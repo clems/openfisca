@@ -56,7 +56,7 @@ class InputTable(ModelDescription):
 
     alr = IntCol() # (f1ao, f1bo, f1co, f1do, f1eo)
     
-    hsup = IntCol()
+    hsup = IntCol()  # f1au
     inv = BoolCol(label = u'invalide')
     alt = BoolCol(label = u'garde alternée')
     cho_ld = BoolCol(label = 'chômeur de longue durée') # (f1ai, f1bi, f1ci, f1di, f1ei)
@@ -629,7 +629,7 @@ class InputTable(ModelDescription):
     reg   = EnumCol()
     pol99 = EnumCol()
     cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
-                         enum = Enum([u"Sans objet",
+                         enum = Enum([u"Non renseignée",
                                       u"Agriculteurs exploitants",
                                       u"Artisans, commerçants, chefs d'entreprise",
                                       u"Cadres supérieurs",
@@ -641,6 +641,7 @@ class InputTable(ModelDescription):
     
     naf16pr = EnumCol(label = u"activité économique de l'établissement de l'emploi principal actuel de la personne de référence",
                       enum = Enum([u"Sans objet",
+                                   u"Non renseigné",
                                    u"Agriculture, sylviculture et pêche",
                                    u"Industries agricoles",
                                    u"Industries des biens de consommation",
@@ -656,7 +657,7 @@ class InputTable(ModelDescription):
                                    u"Services aux entreprises",
                                    u"Services aux particuliers",
                                    u"Education, santé, action sociale",
-                                   u"Administrations"])) # 16 postes + 1 (17 sans objet) 
+                                   u"Administrations"],start=-1)) # 17 postes + 1 (-1: sans objet, 0: nonrenseigné) 
     
     typmen15 = EnumCol(label = u"type de ménage",
                        enum = Enum([u"Personne seule active",
@@ -706,13 +707,13 @@ class InputTable(ModelDescription):
                                  u"CAP, BEP ou autre diplôme de ce niveau",
                                  u"Brevet des collèges",
                                  u"Aucun diplôme ou CEP"],start=1)) 
+    
     act5 = EnumCol(label = u"activité",
-                     enum = Enum(['Bizarre' 
-                                  u"Salarié",
+                     enum = Enum([u"Salarié",
                                   u"Indépendant",
                                   u"Chômeur",
                                   u"Retraité",
-                                  u"Inactif"])) # 5 postes normalement TODO; check=0
+                                  u"Inactif"],start=1)) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
 
 ## ISF ##
@@ -766,6 +767,7 @@ class InputTable(ModelDescription):
     restit_imp= IntCol()
         
     # to remove
+    champm = BoolCol()
     wprm = FloatCol()
     etr = IntCol()     
     coloc = BoolCol()

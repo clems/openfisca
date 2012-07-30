@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-Boll
 # Copyright © 2011 Clément Schaff, Mahdi Ben Jelloul
 
 """
@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from datetime import date
 from core.description import ModelDescription
-from core.columns import Prestation, BoolPresta
+from core.columns import Prestation, BoolPresta, IntPresta
 import france.cotsoc as cs
 import france.irpp as ir
 import france.irpp_charges_deductibles as cd
@@ -422,9 +422,9 @@ class ModelFrance(ModelDescription):
     # Catégories
     ############################################################
     
-    typ_men = Prestation(cm._typ_men, 'men', label = u"Type de ménage")
-    nb_ageq0 = Prestation(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
-    nbinde2 = Prestation(cl._nbinde2, 'men', label = u"Nombre d'individus dans le ménage")
+    typ_men = IntPresta(cm._typ_men, 'men', label = u"Type de ménage")
+    nb_ageq0 = IntPresta(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
+    nbinde2 = IntPresta(cl._nbinde2, 'men', label = u"Nombre d'individus dans le ménage")
 
     ############################################################
     # Totaux
