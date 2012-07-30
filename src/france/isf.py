@@ -217,7 +217,8 @@ def _bouclier_rev(rbg, maj_cga, csg_deduc, rvcm_plus_abat, rev_cap_lib, rev_exo,
     ## revenus distribués? 
     ## A majorer de l'abatt de 40% - montant brut en cas de PFL
     ## pour le calcul de droit à restitution : prendre 0.7*montant_brut_rev_dist_soumis_au_barème
-    
+    print 'rbg'
+    print rbg
     rev_bar = rbg - maj_cga - csg_deduc - deficit_ante
 
 ## AJOUTER : indemnités de fonction percus par les élus- revenus soumis à régimes spéciaux
@@ -244,10 +245,11 @@ def _bouclier_rev(rbg, maj_cga, csg_deduc, rvcm_plus_abat, rev_cap_lib, rev_exo,
     
     return revenus - charges
     
-def _bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf_tot, cotsoc_lib, cotsoc_bar, csgsald, csgsali, crdssal, csgchoi, csgchod, csgrstd, crdsrstd, csgrsti, imp_lib): ## ajouter CSG- CRDS
+def _bouclier_imp_gen (irpp, tax_hab, tax_fonc, isf_tot, cotsoc_lib, cotsoc_bar, csgsald, csgsali, crdssal, csgchoi, csgchod, csgrstd, csgrsti, imp_lib): ## ajouter CSG- CRDS
     ## ajouter Prelèvements sources/ libé 
+    ## ajouter crds rstd
     ## impôt sur les plus-values immo et cession de fonds de commerce
-    imp1= cotsoc_lib + cotsoc_bar + csgsald + csgchod + crdssal + csgrstd + crdsrstd + imp_lib
+    imp1= cotsoc_lib + cotsoc_bar + csgsald + csgchod + crdssal + csgrstd  + imp_lib
     ''' 
     impôts payés en l'année 'n' au titre des revenus réalisés sur l'année 'n' 
     '''
@@ -272,6 +274,11 @@ def _bouclier_sumimp(bouclier_imp_gen, restitutions):
     return - bouclier_imp_gen +restitutions 
     
 def _bouclier_fiscal(bouclier_sumimp, bouclier_rev, _P):
-    P= _P.bouclier_fiscal
+    P = _P.bouclier_fiscal
+    print  'bouclier_sumimp' 
+    print  bouclier_sumimp 
+    print  'bouclier_rev'
+    print - (bouclier_rev*P.taux)
+    print max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
     return max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
-    print  max_(0, bouclier_sumimp - (bouclier_rev*P.taux))
+    
