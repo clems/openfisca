@@ -68,7 +68,7 @@ class InputTable(ModelDescription):
     age = AgesCol(label = u"âge")
     agem = AgesCol(label = u"âge (en mois)")
     
-    zone_apl = EnumCol(label = u"zone apl", default = 2, unit='menage')
+    zone_apl = EnumCol(label = u"zone apl", default = 2, unit= 'menage')
     loyer = IntCol(unit='menage') # Loyer mensuel
     so = EnumCol(label = u"statut d'occupation",
                   enum = Enum([u"Non renseigné",
@@ -137,6 +137,7 @@ class InputTable(ModelDescription):
     f2cg = IntCol(unit= 'foyer')
     f2bh = IntCol(unit= 'foyer')
     f2ca = IntCol(unit= 'foyer')
+    f2aa = IntCol(unit='foyer')
     f2ab = IntCol(unit= 'foyer')
     f2al = IntCol(unit= 'foyer')
     f2am = IntCol(unit= 'foyer')
