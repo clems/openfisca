@@ -68,7 +68,7 @@ def _mhsup(hsup):
     return -hsup
 
 ############################################################################
-## Revenus du captital
+## Revenus du capital
 ############################################################################
 
 # revenus du capital soumis au barème
@@ -80,13 +80,13 @@ def _csg_cap_bar(rev_cap_bar, _P):
 
 def _crds_cap_bar(rev_cap_bar, _P):
     '''
-    Calcule la CRDS sur les revenus du captial soumis au barème
+    Calcule la CRDS sur les revenus du capital soumis au barème
     '''
     return - rev_cap_bar*_P.crds.capital
 
 def _prelsoc_cap_bar(rev_cap_bar, _P):
     '''
-    Calcule le prélèvement social sur les revenus du captial soumis au barème
+    Calcule le prélèvement social sur les revenus du capital soumis au barème
     '''
     P = _P.prelsoc
     if _P.datesim.year < 2006:
@@ -100,19 +100,19 @@ def _prelsoc_cap_bar(rev_cap_bar, _P):
 # revenus du capital soumis au prélèvement libératoire
 def _csg_cap_lib(rev_cap_lib, _P):
     '''
-    Calcule la CSG sur les revenus du captial soumis au prélèvement libératoire
+    Calcule la CSG sur les revenus du capital soumis au prélèvement libératoire
     '''
     return - rev_cap_lib*_P.csg.capital.glob
 
 def _crds_cap_lib(rev_cap_lib, _P):
     '''
-    Calcule la CRDS sur les revenus du captial soumis au prélèvement libératoire
+    Calcule la CRDS sur les revenus du capital soumis au prélèvement libératoire
     '''
     return - rev_cap_lib*_P.crds.capital
 
 def _prelsoc_cap_lib(rev_cap_lib, _P):
     '''
-    Calcule le prélèvement social sur les revenus du captial soumis au prélèvement libératoire
+    Calcule le prélèvement social sur les revenus du capital soumis au prélèvement libératoire
     '''
     P = _P.prelsoc
     if _P.datesim.year < 2006:
@@ -289,7 +289,7 @@ def _csgchod(chobrut, csg_taux_plein, _P):
 
 def _csgchoi(chobrut, csg_taux_plein, _P):
     '''
-    CSG déductible sur les allocations chômage
+    CSG imposable sur les allocations chômage
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.chom, plaf_ss)
@@ -347,7 +347,7 @@ def _csgrstd(rstbrut, csg_taux_plein, _P):
 
 def _csgrsti(rstbrut, csg_taux_plein, _P):
     '''
-    CSG déductible sur les allocations chômage
+    CSG imposable sur les allocations chômage
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     csg = scaleBaremes(_P.csg.retraite, plaf_ss)
