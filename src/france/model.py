@@ -445,7 +445,4 @@ class ModelFrance(ModelDescription):
     mini = Prestation(cm._mini)
     logt = Prestation(cm._logt)
     impo = Prestation(cm._impo)
-    ############################################################
-    # Gestion des variations de législation
-    ############################################################
 
