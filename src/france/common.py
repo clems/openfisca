@@ -150,4 +150,9 @@ def _decile(nivvie, wprm):
     '''
     labels = arange(1,11)
     method = 2
-    return mark_weighted_percentiles(nivvie, labels, wprm, method)
+    decile = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=False)
+#    print values
+#    print len(values)
+#    print decile.min()
+#    print decile.max()
+    return decile

@@ -22,8 +22,9 @@ This file is part of openFisca.
 """
 
 from datetime import date
+from core.utils import Enum
 from core.description import ModelDescription
-from core.columns import Prestation, BoolPresta, IntPresta
+from core.columns import Prestation, BoolPresta, IntPresta, EnumPresta
 import france.cotsoc as cs
 import france.irpp as ir
 import france.irpp_charges_deductibles as cd
@@ -422,9 +423,22 @@ class ModelFrance(ModelDescription):
     # Catégories
     ############################################################
     
-    typ_men = IntPresta(cm._typ_men, 'men', label = u"Type de ménage")
-    nb_ageq0 = IntPresta(cl._nb_ageq0, 'men', label = u"Effectifs des tranches d'âge quiquennal")
-    nbinde2 = IntPresta(cl._nbinde2, 'men', label = u"Nombre d'individus dans le ménage")
+    typ_men = IntPresta(cm._typ_men, unit = 'men', label = u"Type de ménage")
+    nb_ageq0 = IntPresta(cl._nb_ageq0, unit = 'men', label = u"Effectifs des tranches d'âge quiquennal")
+    nbinde2 = IntPresta(cl._nbinde2, unit = 'men', label = u"Nombre d'individus dans le ménage")
+
+    decile = EnumPresta(cm._decile, unit = 'men',
+                        label = u"Décile de niveau de vie",
+                        enum = Enum([u"1er décile",
+                                     u"2nd décile",
+                                     u"3e décile",
+                                     u"4e décile",
+                                     u"5e décile",
+                                     u"6e décile",
+                                     u"7e décile",
+                                     u"8e décile",
+                                     u"9e décile",
+                                     u"10e décile"]))
 
     ############################################################
     # Totaux
