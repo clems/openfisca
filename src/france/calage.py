@@ -110,32 +110,3 @@ def _typmen15(agem, activite, _option = {'agem': ALL_MEN}):
 #51 Autres ménages, 1 actif
 #52 Autres ménages, 2 actifs ou plus
 #53 Autres ménages, tous inactifs
-
-# ddipl
-#1 Diplôme supérieur
-#3 Baccalauréat + 2 ans
-#4 Baccalauréat ou brevet professionnel ou autre diplôme de ce niveau
-#5 CAP, BEP ou autre diplôme de ce niveau
-#6 Brevet des collèges
-#7 Aucun diplôme ou CEP
-
-
-# O non renseigné
-# 1 Agriculture, sylviculture et pêche      
-# 2 Industries agricoles
-# 3 Industries des biens de consommation
-# 4 Industrie automobile
-# 5 Industries des biens d'équipement
-# 6 Industries des biens intermédiaires
-# 7 Energie
-# 8 Construction
-# 9 Commerce et réparations
-# 10 Transports
-# 11 Activités financières
-# 12 Activités immobilières
-# 13 Services aux entreprises
-# 14 Services aux particuliers
-# 15 Education, santé, action sociale
-# 16 Administrations
-
-  

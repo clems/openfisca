@@ -23,7 +23,7 @@ This file is part of openFisca.
 
 from __future__ import division
 from numpy import (round, ceil, floor, maximum as max_, minimum as min_, 
-                   logical_not as not_)
+                   logical_not as not_, arange)
 from france.data import QUIFAM, QUIMEN
 from france.pfam import nb_enf
 
@@ -70,7 +70,10 @@ def _typ_men(isol, af_nbenf):
             
     
 def _revdisp_i(rev_trav, pen, rev_cap, ir_lps, psoc, ppe, impo):
-    '''Revenu disponible - individuel'''
+    '''
+    Revenu disponible
+    'ind'
+    '''
     return rev_trav + pen + rev_cap + ir_lps + psoc + ppe + impo
 
 def _revdisp(revdisp_i, _option = {'revdisp_i': ALL}):
@@ -137,3 +140,19 @@ def _logt(apl, als, alf, alset, crds_lgtm):
 def _impo(irpp):
     '''Impôts directs'''
     return irpp
+
+from core.utils import mark_weighted_percentiles
+
+def _decile(nivvie, wprm):
+    '''
+    Décile de niveau de vie
+    'men'
+    '''
+    labels = arange(1,11)
+    method = 2
+    decile = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=False)
+#    print values
+#    print len(values)
+#    print decile.min()
+#    print decile.max()
+    return decile

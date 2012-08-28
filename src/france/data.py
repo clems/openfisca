@@ -71,433 +71,434 @@ class InputTable(ModelDescription):
     zone_apl = EnumCol(label = u"zone apl", default = 2, unit= 'menage')
     loyer = IntCol(unit='menage') # Loyer mensuel
     so = EnumCol(label = u"statut d'occupation",
-                  enum = Enum([u"Non renseigné",
-                               u"Accédant à la propriété",
-                               u"Propriétaire (non accédant) du logement",
-                               u"Locataire d'un logement HLM",
-                               u"Locataire ou sous-locataire d'un logement loué vide non-HLM",
-                               u"Locataire ou sous-locataire d'un logement loué meublé ou d'une chambre d'hôtel",
-                               u"Logé gratuitement par des parents, des amis ou l'employeur"]), unit='menage')
+                 unit='men',
+                 enum = Enum([u"Non renseigné",
+                              u"Accédant à la propriété",
+                              u"Propriétaire (non accédant) du logement",
+                              u"Locataire d'un logement HLM",
+                              u"Locataire ou sous-locataire d'un logement loué vide non-HLM",
+                              u"Locataire ou sous-locataire d'un logement loué meublé ou d'une chambre d'hôtel",
+                              u"Logé gratuitement par des parents, des amis ou l'employeur"]))
     activite = IntCol()
     boursier = BoolCol()
-    code_postal = IntCol(unit='menage')
+    code_postal = IntCol(unit='men')
     
     statmarit = IntCol(default = 2)
     
-    nbR = IntCol(unit= 'foyer')
-    nbJ = IntCol(unit= 'foyer')
-    nbI = IntCol(unit= 'foyer')
-    nbH = IntCol(unit= 'foyer')
-    nbG = IntCol(unit= 'foyer')
-    nbF = IntCol(unit= 'foyer')
-    nbN = IntCol(unit= 'foyer')
+    nbR = IntCol(unit= 'foy')
+    nbJ = IntCol(unit= 'foy')
+    nbI = IntCol(unit= 'foy')
+    nbH = IntCol(unit= 'foy')
+    nbG = IntCol(unit= 'foy')
+    nbF = IntCol(unit= 'foy')
+    nbN = IntCol(unit= 'foy')
     
-    caseE = BoolCol(unit= 'foyer')
-    caseF = BoolCol(unit= 'foyer')
-    caseG = BoolCol(unit= 'foyer')
-    caseH = IntCol(unit= 'foyer')
-    caseK = BoolCol(unit= 'foyer')
-    caseL = BoolCol(unit= 'foyer')
-    caseN = BoolCol(unit= 'foyer')
-    caseP = BoolCol(unit= 'foyer')
-    caseS = BoolCol(unit= 'foyer')
-    caseT = BoolCol(unit= 'foyer')
-    caseW = BoolCol(unit= 'foyer')
+    caseE = BoolCol(unit= 'foy')
+    caseF = BoolCol(unit= 'foy')
+    caseG = BoolCol(unit= 'foy')
+    caseH = IntCol(unit= 'foy')
+    caseK = BoolCol(unit= 'foy')
+    caseL = BoolCol(unit= 'foy')
+    caseN = BoolCol(unit= 'foy')
+    caseP = BoolCol(unit= 'foy')
+    caseS = BoolCol(unit= 'foy')
+    caseT = BoolCol(unit= 'foy')
+    caseW = BoolCol(unit= 'foy')
     
     # Rentes viagères
-    f1aw = IntCol(unit= 'foyer')
-    f1bw = IntCol(unit= 'foyer')
-    f1cw = IntCol(unit= 'foyer')
-    f1dw = IntCol(unit= 'foyer')
+    f1aw = IntCol(unit= 'foy')
+    f1bw = IntCol(unit= 'foy')
+    f1cw = IntCol(unit= 'foy')
+    f1dw = IntCol(unit= 'foy')
     
-    f1tv = IntCol(unit= 'foyer')
-    f1uv = IntCol(unit= 'foyer')
-    f1tw = IntCol(unit= 'foyer')
-    f1uw = IntCol(unit= 'foyer')
-    f1tx = IntCol(unit= 'foyer')
-    f1ux = IntCol(unit= 'foyer')
+    f1tv = IntCol(unit= 'foy')
+    f1uv = IntCol(unit= 'foy')
+    f1tw = IntCol(unit= 'foy')
+    f1uw = IntCol(unit= 'foy')
+    f1tx = IntCol(unit= 'foy')
+    f1ux = IntCol(unit= 'foy')
     
     # RVCM
     # revenus au prélèvement libératoire
-    f2da = IntCol(unit= 'foyer')
-    f2dh = IntCol(unit= 'foyer')
-    f2ee = IntCol(unit= 'foyer')
+    f2da = IntCol(unit= 'foy')
+    f2dh = IntCol(unit= 'foy')
+    f2ee = IntCol(unit= 'foy')
 
     # revenus ouvrant droit à abattement
-    f2dc = IntCol(unit= 'foyer')
-    f2fu = IntCol(unit= 'foyer')
-    f2ch = IntCol(unit= 'foyer')
+    f2dc = IntCol(unit= 'foy')
+    f2fu = IntCol(unit= 'foy')
+    f2ch = IntCol(unit= 'foy')
     
     # Revenus n'ouvrant pas droit à abattement
-    f2ts = IntCol(unit= 'foyer')
-    f2go = IntCol(unit= 'foyer')
-    f2tr = IntCol(unit= 'foyer')
+    f2ts = IntCol(unit= 'foy')
+    f2go = IntCol(unit= 'foy')
+    f2tr = IntCol(unit= 'foy')
     
     # Autres
-    f2cg = IntCol(unit= 'foyer')
-    f2bh = IntCol(unit= 'foyer')
-    f2ca = IntCol(unit= 'foyer')
-    f2aa = IntCol(unit='foyer')
-    f2ab = IntCol(unit= 'foyer')
-    f2al = IntCol(unit= 'foyer')
-    f2am = IntCol(unit= 'foyer')
-    f2an = IntCol(unit= 'foyer')
+    f2cg = IntCol(unit= 'foy')
+    f2bh = IntCol(unit= 'foy')
+    f2ca = IntCol(unit= 'foy')
+    f2aa = IntCol(unit='foy')
+    f2ab = IntCol(unit= 'foy')
+    f2al = IntCol(unit= 'foy')
+    f2am = IntCol(unit= 'foy')
+    f2an = IntCol(unit= 'foy')
     # non accessible (from previous years)
-    f2gr = IntCol(unit= 'foyer') 
+    f2gr = IntCol(unit= 'foy') 
         
-    f3vc = IntCol(unit= 'foyer')
-    f3vd = IntCol(unit= 'foyer')
-    f3ve = IntCol(unit= 'foyer')
-    f3vf = IntCol(unit= 'foyer')    
+    f3vc = IntCol(unit= 'foy')
+    f3vd = IntCol(unit= 'foy')
+    f3ve = IntCol(unit= 'foy')
+    f3vf = IntCol(unit= 'foy')    
     
-    f3vl = IntCol(unit= 'foyer')
-    f3vi = IntCol(unit= 'foyer')
-    f3vm = IntCol(unit= 'foyer')
+    f3vl = IntCol(unit= 'foy')
+    f3vi = IntCol(unit= 'foy')
+    f3vm = IntCol(unit= 'foy')
     
-    f3vj = IntCol(unit= 'foyer')
-    f3vk = IntCol(unit= 'foyer')
-    f3va = IntCol(unit= 'foyer')
+    f3vj = IntCol(unit= 'foy')
+    f3vk = IntCol(unit= 'foy')
+    f3va = IntCol(unit= 'foy')
     
     # Plus values et gains taxables à 18%
-    f3vg = IntCol(unit= 'foyer')
-    f3vh = IntCol(unit= 'foyer')
-    f3vt = IntCol(unit= 'foyer')
-    f3vu = IntCol(unit= 'foyer')
-    f3vv = IntCol(unit= 'foyer')
+    f3vg = IntCol(unit= 'foy')
+    f3vh = IntCol(unit= 'foy')
+    f3vt = IntCol(unit= 'foy')
+    f3vu = IntCol(unit= 'foy')
+    f3vv = IntCol(unit= 'foy')
 
     # Revenu foncier
-    f4ba = IntCol(unit= 'foyer')
-    f4bb = IntCol(unit= 'foyer')
-    f4bc = IntCol(unit= 'foyer')
-    f4bd = IntCol(unit= 'foyer')
-    f4be = IntCol(unit= 'foyer')
+    f4ba = IntCol(unit= 'foy')
+    f4bb = IntCol(unit= 'foy')
+    f4bc = IntCol(unit= 'foy')
+    f4bd = IntCol(unit= 'foy')
+    f4be = IntCol(unit= 'foy')
     
     # Prime d'assurance loyers impayés
-    f4bf = IntCol(unit= 'foyer')
+    f4bf = IntCol(unit= 'foy')
     
-    f4bl = IntCol(unit= 'foyer')
+    f4bl = IntCol(unit= 'foy')
     
-    f5qm = IntCol(unit= 'foyer')
-    f5rm = IntCol(unit= 'foyer')
+    f5qm = IntCol(unit= 'foy')
+    f5rm = IntCol(unit= 'foy')
     
     # Csg déductible
-    f6de = IntCol(unit= 'foyer')
+    f6de = IntCol(unit= 'foy')
 
     # Pensions alimentaires
-    f6gi = IntCol(unit= 'foyer')
-    f6gj = IntCol(unit= 'foyer')
-    f6el = IntCol(unit= 'foyer')
-    f6em = IntCol(unit= 'foyer')
-    f6gp = IntCol(unit= 'foyer')
-    f6gu = IntCol(unit= 'foyer')
+    f6gi = IntCol(unit= 'foy')
+    f6gj = IntCol(unit= 'foy')
+    f6el = IntCol(unit= 'foy')
+    f6em = IntCol(unit= 'foy')
+    f6gp = IntCol(unit= 'foy')
+    f6gu = IntCol(unit= 'foy')
     
     # Frais d'accueil d'une personne de plus de 75 ans dans le besoin
-    f6eu = IntCol(unit= 'foyer')
-    f6ev = IntCol(unit= 'foyer')
+    f6eu = IntCol(unit= 'foy')
+    f6ev = IntCol(unit= 'foy')
     
     # Déductions diverses
-    f6dd = IntCol(unit= 'foyer')
+    f6dd = IntCol(unit= 'foy')
     
     # Épargne retraite - PERP, PRÉFON, COREM et CGOS
-    f6ps = IntCol(unit= 'foyer')
-    f6rs = IntCol(unit= 'foyer')
-    f6ss = IntCol(unit= 'foyer')
-    f6pt = IntCol(unit= 'foyer')
-    f6rt = IntCol(unit= 'foyer')
-    f6st = IntCol(unit= 'foyer')
-    f6pu = IntCol(unit= 'foyer')
-    f6ru = IntCol(unit= 'foyer')
-    f6su = IntCol(unit= 'foyer')
+    f6ps = IntCol(unit= 'foy')
+    f6rs = IntCol(unit= 'foy')
+    f6ss = IntCol(unit= 'foy')
+    f6pt = IntCol(unit= 'foy')
+    f6rt = IntCol(unit= 'foy')
+    f6st = IntCol(unit= 'foy')
+    f6pu = IntCol(unit= 'foy')
+    f6ru = IntCol(unit= 'foy')
+    f6su = IntCol(unit= 'foy')
     
     # Souscriptions en faveur du cinéma ou de l’audiovisuel
-    f6aa = IntCol(unit= 'foyer')
+    f6aa = IntCol(unit= 'foy')
     
     # Souscriptions au capital des SOFIPÊCHE
-    f6cc = IntCol(unit= 'foyer')
+    f6cc = IntCol(unit= 'foy')
     
     # Investissements DOM-TOM dans le cadre d’une entreprise <= 2005
     # ou Versements sur un compte épargne codéveloppement 
-    f6eh = IntCol(unit= 'foyer')
+    f6eh = IntCol(unit= 'foy')
     
     # Pertes en capital consécutives à la souscription au capital de sociétés 
     # nouvelles ou de sociétés en difficulté
-    f6da = IntCol(unit= 'foyer')
+    f6da = IntCol(unit= 'foy')
     
     
     # Dépenses de grosses réparations effectuées par les nus propriétaires
-    f6cb = IntCol(unit= 'foyer')
-    f6hj = IntCol(unit= 'foyer')
+    f6cb = IntCol(unit= 'foy')
+    f6hj = IntCol(unit= 'foy')
     
     # Sommes à rajouter au revenu imposable
-    f6gh = IntCol(unit= 'foyer')    
+    f6gh = IntCol(unit= 'foy')    
     
     # Deficit Antérieur
-    f6fa = IntCol(unit= 'foyer')
-    f6fb = IntCol(unit= 'foyer')
-    f6fc = IntCol(unit= 'foyer')
-    f6fd = IntCol(unit= 'foyer')
-    f6fe = IntCol(unit= 'foyer')
-    f6fl = IntCol(unit= 'foyer')
+    f6fa = IntCol(unit= 'foy')
+    f6fb = IntCol(unit= 'foy')
+    f6fc = IntCol(unit= 'foy')
+    f6fd = IntCol(unit= 'foy')
+    f6fe = IntCol(unit= 'foy')
+    f6fl = IntCol(unit= 'foy')
     
     # Dons
-    f7ud = IntCol(unit= 'foyer')
-    f7uf = IntCol(unit= 'foyer')
-    f7xs = IntCol(unit= 'foyer')
-    f7xt = IntCol(unit= 'foyer')
-    f7xu = IntCol(unit= 'foyer')
-    f7xw = IntCol(unit= 'foyer')
-    f7xy = IntCol(unit= 'foyer')
+    f7ud = IntCol(unit= 'foy')
+    f7uf = IntCol(unit= 'foy')
+    f7xs = IntCol(unit= 'foy')
+    f7xt = IntCol(unit= 'foy')
+    f7xu = IntCol(unit= 'foy')
+    f7xw = IntCol(unit= 'foy')
+    f7xy = IntCol(unit= 'foy')
     
     # Cotisations syndicales des salariées et pensionnés
-    f7ac = IntCol(unit= 'foyer')
-    f7ae = IntCol(unit= 'foyer')
-    f7ag = IntCol(unit= 'foyer')
+    f7ac = IntCol(unit= 'foy')
+    f7ae = IntCol(unit= 'foy')
+    f7ag = IntCol(unit= 'foy')
 
     # Salarié à domicile
-    f7db = IntCol(unit= 'foyer')
-    f7df = IntCol(unit= 'foyer')
-    f7dq = IntCol(unit= 'foyer')
-    f7dg = BoolCol(unit= 'foyer')
-    f7dl = IntCol(unit= 'foyer')
+    f7db = IntCol(unit= 'foy')
+    f7df = IntCol(unit= 'foy')
+    f7dq = IntCol(unit= 'foy')
+    f7dg = BoolCol(unit= 'foy')
+    f7dl = IntCol(unit= 'foy')
     
     # Intérêt des emprunts contractés pour l'acquisition ou la construction de l'habitation principale
-    f7vy = IntCol(unit= 'foyer')
-    f7vz = IntCol(unit= 'foyer')
-    f7vx = IntCol(unit= 'foyer')
-    f7vw = IntCol(unit= 'foyer')
+    f7vy = IntCol(unit= 'foy')
+    f7vz = IntCol(unit= 'foy')
+    f7vx = IntCol(unit= 'foy')
+    f7vw = IntCol(unit= 'foy')
 
     # Dépenses d'accueil dans un établissement pour personnes âgées dépendantes
-    f7cd = IntCol(unit= 'foyer')
-    f7ce = IntCol(unit= 'foyer')
+    f7cd = IntCol(unit= 'foy')
+    f7ce = IntCol(unit= 'foy')
 
     # Frais de garde des enfants de moins de 6 ans
-    f7ga = IntCol(unit= 'foyer')
-    f7gb = IntCol(unit= 'foyer')
-    f7gc = IntCol(unit= 'foyer')
-    f7ge = IntCol(unit= 'foyer')
-    f7gf = IntCol(unit= 'foyer')
-    f7gg = IntCol(unit= 'foyer')
+    f7ga = IntCol(unit= 'foy')
+    f7gb = IntCol(unit= 'foy')
+    f7gc = IntCol(unit= 'foy')
+    f7ge = IntCol(unit= 'foy')
+    f7gf = IntCol(unit= 'foy')
+    f7gg = IntCol(unit= 'foy')
 
     # Enfants à charge poursuivant leurs études
-    f7ea = IntCol(unit= 'foyer')
-    f7eb = IntCol(unit= 'foyer')
-    f7ec = IntCol(unit= 'foyer')
-    f7ed = IntCol(unit= 'foyer')
-    f7ef = IntCol(unit= 'foyer')
-    f7eg = IntCol(unit= 'foyer')
+    f7ea = IntCol(unit= 'foy')
+    f7eb = IntCol(unit= 'foy')
+    f7ec = IntCol(unit= 'foy')
+    f7ed = IntCol(unit= 'foy')
+    f7ef = IntCol(unit= 'foy')
+    f7eg = IntCol(unit= 'foy')
 
     # Intérêts des prêts étudiants
-    f7td = IntCol(unit= 'foyer')
-    f7vo = IntCol(unit= 'foyer')
-    f7uk = IntCol(unit= 'foyer')
+    f7td = IntCol(unit= 'foy')
+    f7vo = IntCol(unit= 'foy')
+    f7uk = IntCol(unit= 'foy')
     
     # Primes de survies, contrat d'épargne handicap
-    f7gz = IntCol(unit= 'foyer')
+    f7gz = IntCol(unit= 'foy')
     
     # Prestations compensatoires
-    f7wm = IntCol(unit= 'foyer')
-    f7wn = IntCol(unit= 'foyer')
-    f7wo = IntCol(unit= 'foyer')
-    f7wp = IntCol(unit= 'foyer')
+    f7wm = IntCol(unit= 'foy')
+    f7wn = IntCol(unit= 'foy')
+    f7wo = IntCol(unit= 'foy')
+    f7wp = IntCol(unit= 'foy')
     
     # Dépenses en faveur de la qualité environnementale
-    f7we = IntCol(unit= 'foyer')
-    f7wq = IntCol(unit= 'foyer')
-    f7wh = IntCol(unit= 'foyer')
-    f7wk = IntCol(unit= 'foyer')
-    f7wf = IntCol(unit= 'foyer')
+    f7we = IntCol(unit= 'foy')
+    f7wq = IntCol(unit= 'foy')
+    f7wh = IntCol(unit= 'foy')
+    f7wk = IntCol(unit= 'foy')
+    f7wf = IntCol(unit= 'foy')
     
     # Dépenses en faveur de l'aide aux personnes
-    f7wi = IntCol(unit= 'foyer')
-    f7wj = IntCol(unit= 'foyer')
-    f7wl = IntCol(unit= 'foyer')
+    f7wi = IntCol(unit= 'foy')
+    f7wj = IntCol(unit= 'foy')
+    f7wl = IntCol(unit= 'foy')
     
     # Investissements dans les DOM-TOM dans le cadre d'une entrepise
-    f7ur = IntCol(unit= 'foyer')
-    f7oz = IntCol(unit= 'foyer')
-    f7pz = IntCol(unit= 'foyer')
-    f7qz = IntCol(unit= 'foyer')
-    f7rz = IntCol(unit= 'foyer')
-    f7sz = IntCol(unit= 'foyer')
+    f7ur = IntCol(unit= 'foy')
+    f7oz = IntCol(unit= 'foy')
+    f7pz = IntCol(unit= 'foy')
+    f7qz = IntCol(unit= 'foy')
+    f7rz = IntCol(unit= 'foy')
+    f7sz = IntCol(unit= 'foy')
     
     # Aide aux créateurs et repreneurs d'entreprises
-    f7fy = IntCol(unit= 'foyer')
-    f7gy = IntCol(unit= 'foyer')
-    f7jy = IntCol(unit= 'foyer')
-    f7hy = IntCol(unit= 'foyer')
-    f7ky = IntCol(unit= 'foyer')
-    f7iy = IntCol(unit= 'foyer')
-    f7ly = IntCol(unit= 'foyer')
-    f7my = IntCol(unit= 'foyer')
+    f7fy = IntCol(unit= 'foy')
+    f7gy = IntCol(unit= 'foy')
+    f7jy = IntCol(unit= 'foy')
+    f7hy = IntCol(unit= 'foy')
+    f7ky = IntCol(unit= 'foy')
+    f7iy = IntCol(unit= 'foy')
+    f7ly = IntCol(unit= 'foy')
+    f7my = IntCol(unit= 'foy')
 
     # Travaux de restauration immobilière
-    f7ra = IntCol(unit= 'foyer')
-    f7rb = IntCol(unit= 'foyer')
+    f7ra = IntCol(unit= 'foy')
+    f7rb = IntCol(unit= 'foy')
     
     # Assurance-vie
-    f7gw = IntCol(unit= 'foyer')
-    f7gx = IntCol(unit= 'foyer')
+    f7gw = IntCol(unit= 'foy')
+    f7gx = IntCol(unit= 'foy')
     # f7gy = IntCol() existe ailleurs
 
     # Investissements locatifs dans le secteur de touristique            
-    f7xc = IntCol(unit= 'foyer')
-    f7xd = IntCol(unit= 'foyer')
-    f7xe = IntCol(unit= 'foyer')
-    f7xf = IntCol(unit= 'foyer')
-    f7xh = IntCol(unit= 'foyer')
-    f7xi = IntCol(unit= 'foyer')
-    f7xj = IntCol(unit= 'foyer')
-    f7xk = IntCol(unit= 'foyer')
-    f7xl = IntCol(unit= 'foyer')
-    f7xm = IntCol(unit= 'foyer')
-    f7xn = IntCol(unit= 'foyer')
-    f7xo = IntCol(unit= 'foyer')
+    f7xc = IntCol(unit= 'foy')
+    f7xd = IntCol(unit= 'foy')
+    f7xe = IntCol(unit= 'foy')
+    f7xf = IntCol(unit= 'foy')
+    f7xh = IntCol(unit= 'foy')
+    f7xi = IntCol(unit= 'foy')
+    f7xj = IntCol(unit= 'foy')
+    f7xk = IntCol(unit= 'foy')
+    f7xl = IntCol(unit= 'foy')
+    f7xm = IntCol(unit= 'foy')
+    f7xn = IntCol(unit= 'foy')
+    f7xo = IntCol(unit= 'foy')
     
     # Souscriptions au capital des PME
-    f7cf = IntCol(unit= 'foyer')
-    f7cl = IntCol(unit= 'foyer')
-    f7cm = IntCol(unit= 'foyer')
-    f7cn = IntCol(unit= 'foyer')
-    f7cu = IntCol(unit= 'foyer')
+    f7cf = IntCol(unit= 'foy')
+    f7cl = IntCol(unit= 'foy')
+    f7cm = IntCol(unit= 'foy')
+    f7cn = IntCol(unit= 'foy')
+    f7cu = IntCol(unit= 'foy')
 
     # Souscription au capital d’une SOFIPECHE 
-    f7gs = IntCol(unit= 'foyer')
+    f7gs = IntCol(unit= 'foy')
 
     # Investissements OUTRE-MER dans le secteur du logement et autres secteurs d’activité    
-    f7ua = IntCol(unit= 'foyer')
-    f7ub = IntCol(unit= 'foyer')
-    f7uc = IntCol(unit= 'foyer')
-    f7ui = IntCol(unit= 'foyer')
-    f7uj = IntCol(unit= 'foyer')
-    f7qb = IntCol(unit= 'foyer')
-    f7qc = IntCol(unit= 'foyer')
-    f7qd = IntCol(unit= 'foyer')
-    f7ql = IntCol(unit= 'foyer')
-    f7qt = IntCol(unit= 'foyer')
-    f7qm = IntCol(unit= 'foyer')
+    f7ua = IntCol(unit= 'foy')
+    f7ub = IntCol(unit= 'foy')
+    f7uc = IntCol(unit= 'foy')
+    f7ui = IntCol(unit= 'foy')
+    f7uj = IntCol(unit= 'foy')
+    f7qb = IntCol(unit= 'foy')
+    f7qc = IntCol(unit= 'foy')
+    f7qd = IntCol(unit= 'foy')
+    f7ql = IntCol(unit= 'foy')
+    f7qt = IntCol(unit= 'foy')
+    f7qm = IntCol(unit= 'foy')
     
     # Souscription de parts de fonds communs de placement dans l'innovation, 
     # de fonds d'investissement de proximité    
-    f7gq = IntCol(unit= 'foyer')
-    f7fq = IntCol(unit= 'foyer')
-    f7fm = IntCol(unit= 'foyer')
+    f7gq = IntCol(unit= 'foy')
+    f7fq = IntCol(unit= 'foy')
+    f7fm = IntCol(unit= 'foy')
     
     # Souscriptions au capital de SOFICA
-    f7gn = IntCol(unit= 'foyer')
-    f7fn = IntCol(unit= 'foyer')
+    f7gn = IntCol(unit= 'foy')
+    f7fn = IntCol(unit= 'foy')
 
     # Intérèts d'emprunts pour reprises de société
-    f7fh = IntCol(unit= 'foyer')         
+    f7fh = IntCol(unit= 'foy')         
 
     # Frais de comptabilité et d'adhésion à un CGA ou AA         
-    f7ff = IntCol(unit= 'foyer')
-    f7fg = IntCol(unit= 'foyer')
+    f7ff = IntCol(unit= 'foy')
+    f7fg = IntCol(unit= 'foy')
     
     # Travaux de conservation et de restauration d’objets classés monuments historiques
-    f7nz = IntCol(unit= 'foyer')
+    f7nz = IntCol(unit= 'foy')
     
     # Dépenses de protections du patrimoine naturel
-    f7ka = IntCol(unit= 'foyer')
+    f7ka = IntCol(unit= 'foy')
 
     # Intérêts d'emprunts
-    f7wg = IntCol(unit= 'foyer')
+    f7wg = IntCol(unit= 'foy')
     
     # Intérêts des prêts à la consommation (case UH)
-    f7uh = IntCol(unit= 'foyer')
+    f7uh = IntCol(unit= 'foy')
     
     # Investissements forestiers
-    f7un = IntCol(unit= 'foyer')
+    f7un = IntCol(unit= 'foy')
     
     # Intérêts pour paiement différé accordé aux agriculteurs
-    f7um = IntCol(unit= 'foyer')
+    f7um = IntCol(unit= 'foy')
 
     # Investissements locatif neufs : Dispositif Scellier
-    f7hj = IntCol(unit= 'foyer')
-    f7hk = IntCol(unit= 'foyer')
-    f7hn = IntCol(unit= 'foyer')
-    f7ho = IntCol(unit= 'foyer')
-    f7hl = IntCol(unit= 'foyer')
-    f7hm = IntCol(unit= 'foyer')
-    f7hr = IntCol(unit= 'foyer')
-    f7hs = IntCol(unit= 'foyer')
-    f7la = IntCol(unit= 'foyer')
+    f7hj = IntCol(unit= 'foy')
+    f7hk = IntCol(unit= 'foy')
+    f7hn = IntCol(unit= 'foy')
+    f7ho = IntCol(unit= 'foy')
+    f7hl = IntCol(unit= 'foy')
+    f7hm = IntCol(unit= 'foy')
+    f7hr = IntCol(unit= 'foy')
+    f7hs = IntCol(unit= 'foy')
+    f7la = IntCol(unit= 'foy')
 
     # Investissement en vue de la location meublée non professionnelle dans certains établissements ou résidences
-    f7ij = IntCol(unit= 'foyer')
-    f7il = IntCol(unit= 'foyer')
-    f7im = IntCol(unit= 'foyer')
-    f7ik = IntCol(unit= 'foyer')
-    f7is = IntCol(unit= 'foyer')
+    f7ij = IntCol(unit= 'foy')
+    f7il = IntCol(unit= 'foy')
+    f7im = IntCol(unit= 'foy')
+    f7ik = IntCol(unit= 'foy')
+    f7is = IntCol(unit= 'foy')
     
     # Investissements locatifs dans les résidences de tourisme situées dans une zone de 
     # revitalisation rurale
-    f7gt = IntCol(unit= 'foyer')
-    f7xg = IntCol(unit= 'foyer')
-    f7gu = IntCol(unit= 'foyer')
-    f7gv = IntCol(unit= 'foyer')
+    f7gt = IntCol(unit= 'foy')
+    f7xg = IntCol(unit= 'foy')
+    f7gu = IntCol(unit= 'foy')
+    f7gv = IntCol(unit= 'foy')
     
     # Avoir fiscaux et crédits d'impôt     
     # f2ab déjà disponible
-    f8ta = IntCol(unit= 'foyer')
-    f8tb = IntCol(unit= 'foyer')
-    f8tf = IntCol(unit= 'foyer')
-    f8tg = IntCol(unit= 'foyer')
-    f8th = IntCol(unit= 'foyer')
-    f8tc = IntCol(unit= 'foyer')
-    f8td = IntCol(unit= 'foyer')
-    f8te = IntCol(unit= 'foyer')
-    f8to = IntCol(unit= 'foyer')
-    f8tp = IntCol(unit= 'foyer')
-    f8uz = IntCol(unit= 'foyer')
-    f8tz = IntCol(unit= 'foyer')
-    f8wa = IntCol(unit= 'foyer')
-    f8wb = IntCol(unit= 'foyer')
-    f8wc = IntCol(unit= 'foyer')
-    f8wd = IntCol(unit= 'foyer')
-    f8we = IntCol(unit= 'foyer')
-    f8wr = IntCol(unit= 'foyer')
-    f8ws = IntCol(unit= 'foyer')
-    f8wt = IntCol(unit= 'foyer')
-    f8wu = IntCol(unit= 'foyer')
-    f8wv = IntCol(unit= 'foyer')
-    f8wx = IntCol(unit= 'foyer')
-    f8wy = IntCol(unit= 'foyer')
+    f8ta = IntCol(unit= 'foy')
+    f8tb = IntCol(unit= 'foy')
+    f8tf = IntCol(unit= 'foy')
+    f8tg = IntCol(unit= 'foy')
+    f8th = IntCol(unit= 'foy')
+    f8tc = IntCol(unit= 'foy')
+    f8td = IntCol(unit= 'foy')
+    f8te = IntCol(unit= 'foy')
+    f8to = IntCol(unit= 'foy')
+    f8tp = IntCol(unit= 'foy')
+    f8uz = IntCol(unit= 'foy')
+    f8tz = IntCol(unit= 'foy')
+    f8wa = IntCol(unit= 'foy')
+    f8wb = IntCol(unit= 'foy')
+    f8wc = IntCol(unit= 'foy')
+    f8wd = IntCol(unit= 'foy')
+    f8we = IntCol(unit= 'foy')
+    f8wr = IntCol(unit= 'foy')
+    f8ws = IntCol(unit= 'foy')
+    f8wt = IntCol(unit= 'foy')
+    f8wu = IntCol(unit= 'foy')
+    f8wv = IntCol(unit= 'foy')
+    f8wx = IntCol(unit= 'foy')
+    f8wy = IntCol(unit= 'foy')
     
     # Acquisition de biens culturels
-    f7uo = IntCol(unit= 'foyer')
+    f7uo = IntCol(unit= 'foy')
 
     
     # Mécénat d'entreprise    
-    f7us = IntCol(unit= 'foyer')
+    f7us = IntCol(unit= 'foy')
 
     # Crédits d’impôt pour dépenses en faveur de la qualité environnementale
     # f7wf = IntCol() déjà disponible
     # f7wh = IntCol() déjà disponible
     # f7wk = IntCol() déjà disponible
     # f7wq = IntCol() déjà disponible
-    f7sb = IntCol(unit= 'foyer')
-    f7sd = IntCol(unit= 'foyer')
-    f7se = IntCol(unit= 'foyer')
-    f7sh = IntCol(unit= 'foyer')
+    f7sb = IntCol(unit= 'foy')
+    f7sd = IntCol(unit= 'foy')
+    f7se = IntCol(unit= 'foy')
+    f7sh = IntCol(unit= 'foy')
     # f7wg = IntCol() déjà disponible
-    f7sc = IntCol(unit= 'foyer')
+    f7sc = IntCol(unit= 'foy')
     
     # Crédit d'impôt pour dépense d'acquisition ou de transformation d'un véhicule GPL ou mixte
-    f7up = IntCol(unit= 'foyer')
-    f7uq = IntCol(unit= 'foyer')
+    f7up = IntCol(unit= 'foy')
+    f7uq = IntCol(unit= 'foy')
 
     # Crédit d'impôt aide à la mobilité
-    f1ar = IntCol(unit= 'foyer')
-    f1br = IntCol(unit= 'foyer')
-    f1cr = IntCol(unit= 'foyer')
-    f1dr = IntCol(unit= 'foyer')
-    f1er = IntCol(unit= 'foyer')
+    f1ar = IntCol(unit= 'foy')
+    f1br = IntCol(unit= 'foy')
+    f1cr = IntCol(unit= 'foy')
+    f1dr = IntCol(unit= 'foy')
+    f1er = IntCol(unit= 'foy')
 
     # Crédit d’impôt directive « épargne » (case 2BG)
-    f2bg = IntCol(unit= 'foyer')
+    f2bg = IntCol(unit= 'foy')
     
     # Crédit d’impôt représentatif de la taxe additionnelle au droit de bail
-    f4tq = IntCol(unit= 'foyer')
+    f4tq = IntCol(unit= 'foy')
     
 
     # Crédits d’impôt pour dépenses en faveur de l’aide aux personnes
@@ -505,102 +506,102 @@ class InputTable(ModelDescription):
     # f7wi
     # f7wj
     # f7wl
-    f7sf = IntCol(unit= 'foyer')
-    f7si = IntCol(unit= 'foyer')
+    f7sf = IntCol(unit= 'foy')
+    f7si = IntCol(unit= 'foy')
     
     # Frais de garde des enfants à l’extérieur du domicile 
-    f4ga = IntCol(unit= 'foyer')
-    f4gb = IntCol(unit= 'foyer')
-    f4gc = IntCol(unit= 'foyer')
-    f4ge = IntCol(unit= 'foyer')
-    f4gf = IntCol(unit= 'foyer')
-    f4gg = IntCol(unit= 'foyer')
+    f4ga = IntCol(unit= 'foy')
+    f4gb = IntCol(unit= 'foy')
+    f4gc = IntCol(unit= 'foy')
+    f4ge = IntCol(unit= 'foy')
+    f4gf = IntCol(unit= 'foy')
+    f4gg = IntCol(unit= 'foy')
 
     # Auto-entrepreneur : versements d’impôt sur le revenu 
-    f8uy = IntCol(unit= 'foyer')
+    f8uy = IntCol(unit= 'foy')
 
     # Revenus des professions non salariées
-    frag_exon = IntCol(unit= 'foyer') # (f5hn, f5in, f5jn)
-    frag_impo = IntCol(unit= 'foyer') # (f5ho, f5io, f5jo)    
-    arag_exon = IntCol(unit= 'foyer') # (f5hb, f5ib, f5jb)
-    arag_impg = IntCol(unit= 'foyer') # (f5hc, f5ic, f5jc)
-    arag_defi = IntCol(unit= 'foyer') # (f5hf, f5if, f5jf)
-    nrag_exon = IntCol(unit= 'foyer') # (f5hh, f5ih, f5jh)
-    nrag_impg = IntCol(unit= 'foyer') # (f5hi, f5ii, f5ji)
-    nrag_defi = IntCol(unit= 'foyer') # (f5hl, f5il, f5jl)
-    nrag_ajag = IntCol(unit= 'foyer') # (f5hm, f5im, f5jm)
+    frag_exon = IntCol(unit= 'foy') # (f5hn, f5in, f5jn)
+    frag_impo = IntCol(unit= 'foy') # (f5ho, f5io, f5jo)    
+    arag_exon = IntCol(unit= 'foy') # (f5hb, f5ib, f5jb)
+    arag_impg = IntCol(unit= 'foy') # (f5hc, f5ic, f5jc)
+    arag_defi = IntCol(unit= 'foy') # (f5hf, f5if, f5jf)
+    nrag_exon = IntCol(unit= 'foy') # (f5hh, f5ih, f5jh)
+    nrag_impg = IntCol(unit= 'foy') # (f5hi, f5ii, f5ji)
+    nrag_defi = IntCol(unit= 'foy') # (f5hl, f5il, f5jl)
+    nrag_ajag = IntCol(unit= 'foy') # (f5hm, f5im, f5jm)
 
-    mbic_exon = IntCol(unit= 'foyer') # (f5kn, f5ln, f5mn)
-    abic_exon = IntCol(unit= 'foyer') # (f5kb, f5lb, f5mb)
-    nbic_exon = IntCol(unit= 'foyer') # (f5kh, f5lh, f5mh)
-    mbic_impv = IntCol(unit= 'foyer') # (f5ko, f5lo, f5mo)
-    mbic_imps = IntCol(unit= 'foyer') # (f5kp, f5lp, f5mp)
-    abic_impn = IntCol(unit= 'foyer') # (f5kc, f5lc, f5mc)
-    abic_imps = IntCol(unit= 'foyer') # (f5kd, f5ld, f5md)
-    nbic_impn = IntCol(unit= 'foyer') # (f5ki, f5li, f5mi)
-    nbic_imps = IntCol(unit= 'foyer') # (f5kj, f5lj, f5mj)
-    abic_defn = IntCol(unit= 'foyer') # (f5kf, f5lf, f5mf)
-    abic_defs = IntCol(unit= 'foyer') # (f5kg, f5lg, f5mg)
-    nbic_defn = IntCol(unit= 'foyer') # (f5kl, f5ll, f5ml)
-    nbic_defs = IntCol(unit= 'foyer') # (f5km, f5lm, f5mm)
-    nbic_apch = IntCol(unit= 'foyer') # (f5ks, f5ls, f5ms)
+    mbic_exon = IntCol(unit= 'foy') # (f5kn, f5ln, f5mn)
+    abic_exon = IntCol(unit= 'foy') # (f5kb, f5lb, f5mb)
+    nbic_exon = IntCol(unit= 'foy') # (f5kh, f5lh, f5mh)
+    mbic_impv = IntCol(unit= 'foy') # (f5ko, f5lo, f5mo)
+    mbic_imps = IntCol(unit= 'foy') # (f5kp, f5lp, f5mp)
+    abic_impn = IntCol(unit= 'foy') # (f5kc, f5lc, f5mc)
+    abic_imps = IntCol(unit= 'foy') # (f5kd, f5ld, f5md)
+    nbic_impn = IntCol(unit= 'foy') # (f5ki, f5li, f5mi)
+    nbic_imps = IntCol(unit= 'foy') # (f5kj, f5lj, f5mj)
+    abic_defn = IntCol(unit= 'foy') # (f5kf, f5lf, f5mf)
+    abic_defs = IntCol(unit= 'foy') # (f5kg, f5lg, f5mg)
+    nbic_defn = IntCol(unit= 'foy') # (f5kl, f5ll, f5ml)
+    nbic_defs = IntCol(unit= 'foy') # (f5km, f5lm, f5mm)
+    nbic_apch = IntCol(unit= 'foy') # (f5ks, f5ls, f5ms)
 
-    macc_exon = IntCol(unit= 'foyer') # (f5nn, f5on, f5pn)
-    aacc_exon = IntCol(unit= 'foyer') # (f5nb, f5ob, f5pb)
-    nacc_exon = IntCol(unit= 'foyer') # (f5nh, f5oh, f5ph)
-    macc_impv = IntCol(unit= 'foyer') # (f5no, f5oo, f5po)
-    macc_imps = IntCol(unit= 'foyer') # (f5np, f5op, f5pp)
-    aacc_impn = IntCol(unit= 'foyer') # (f5nc, f5oc, f5pc)
-    aacc_imps = IntCol(unit= 'foyer') # (f5nd, f5od, f5pd)
-    aacc_defn = IntCol(unit= 'foyer') # (f5nf, f5of, f5pf)
-    aacc_defs = IntCol(unit= 'foyer') # (f5ng, f5og, f5pg)
-    nacc_impn = IntCol(unit= 'foyer') # (f5ni, f5oi, f5pi)
-    nacc_imps = IntCol(unit= 'foyer') # (f5nj, f5oj, f5pj)
-    nacc_defn = IntCol(unit= 'foyer') # (f5nl, f5ol, f5pl)
-    nacc_defs = IntCol(unit= 'foyer') # (f5nm, f5om, f5pm)
-    mncn_impo = IntCol(unit= 'foyer') # (f5ku, f5lu, f5mu)
-    cncn_bene = IntCol(unit= 'foyer') # (f5sn, f5ns, f5os)
-    cncn_defi = IntCol(unit= 'foyer') # (f5sp, f5nu, f5ou, f5sr)
+    macc_exon = IntCol(unit= 'foy') # (f5nn, f5on, f5pn)
+    aacc_exon = IntCol(unit= 'foy') # (f5nb, f5ob, f5pb)
+    nacc_exon = IntCol(unit= 'foy') # (f5nh, f5oh, f5ph)
+    macc_impv = IntCol(unit= 'foy') # (f5no, f5oo, f5po)
+    macc_imps = IntCol(unit= 'foy') # (f5np, f5op, f5pp)
+    aacc_impn = IntCol(unit= 'foy') # (f5nc, f5oc, f5pc)
+    aacc_imps = IntCol(unit= 'foy') # (f5nd, f5od, f5pd)
+    aacc_defn = IntCol(unit= 'foy') # (f5nf, f5of, f5pf)
+    aacc_defs = IntCol(unit= 'foy') # (f5ng, f5og, f5pg)
+    nacc_impn = IntCol(unit= 'foy') # (f5ni, f5oi, f5pi)
+    nacc_imps = IntCol(unit= 'foy') # (f5nj, f5oj, f5pj)
+    nacc_defn = IntCol(unit= 'foy') # (f5nl, f5ol, f5pl)
+    nacc_defs = IntCol(unit= 'foy') # (f5nm, f5om, f5pm)
+    mncn_impo = IntCol(unit= 'foy') # (f5ku, f5lu, f5mu)
+    cncn_bene = IntCol(unit= 'foy') # (f5sn, f5ns, f5os)
+    cncn_defi = IntCol(unit= 'foy') # (f5sp, f5nu, f5ou, f5sr)
 
-    mbnc_exon = IntCol(unit= 'foyer') # (f5hp, f5ip, f5jp)
-    abnc_exon = IntCol(unit= 'foyer') # (f5qb, f5rb, f5sb)
-    nbnc_exon = IntCol(unit= 'foyer') # (f5qh, f5rh, f5sh)
-    mbnc_impo = IntCol(unit= 'foyer') # (f5hq, f5iq, f5jq)
-    abnc_impo = IntCol(unit= 'foyer') # (f5qc, f5rc, f5sc)
-    abnc_defi = IntCol(unit= 'foyer') # (f5qe, f5re, f5se)
-    nbnc_impo = IntCol(unit= 'foyer') # (f5qi, f5ri, f5si)
-    nbnc_defi = IntCol(unit= 'foyer') # (f5qk, f5rk, f5sk)
+    mbnc_exon = IntCol(unit= 'foy') # (f5hp, f5ip, f5jp)
+    abnc_exon = IntCol(unit= 'foy') # (f5qb, f5rb, f5sb)
+    nbnc_exon = IntCol(unit= 'foy') # (f5qh, f5rh, f5sh)
+    mbnc_impo = IntCol(unit= 'foy') # (f5hq, f5iq, f5jq)
+    abnc_impo = IntCol(unit= 'foy') # (f5qc, f5rc, f5sc)
+    abnc_defi = IntCol(unit= 'foy') # (f5qe, f5re, f5se)
+    nbnc_impo = IntCol(unit= 'foy') # (f5qi, f5ri, f5si)
+    nbnc_defi = IntCol(unit= 'foy') # (f5qk, f5rk, f5sk)
 
-    mbic_mvct = IntCol(unit= 'foyer') # (f5hu)
-    macc_mvct = IntCol(unit= 'foyer') # (f5iu)
-    mncn_mvct = IntCol(unit= 'foyer') # (f5ju)
-    mbnc_mvct = IntCol(unit= 'foyer') # (f5kz)
+    mbic_mvct = IntCol(unit= 'foy') # (f5hu)
+    macc_mvct = IntCol(unit= 'foy') # (f5iu)
+    mncn_mvct = IntCol(unit= 'foy') # (f5ju)
+    mbnc_mvct = IntCol(unit= 'foy') # (f5kz)
 
-    frag_pvct = IntCol(unit= 'foyer') # (f5hw, f5iw, f5jw)
-    mbic_pvct = IntCol(unit= 'foyer') # (f5kx, f5lx, f5mx)
-    macc_pvct = IntCol(unit= 'foyer') # (f5nx, f5ox, f5px)
-    mbnc_pvct = IntCol(unit= 'foyer') # (f5hv, f5iv, f5jv)
-    mncn_pvct = IntCol(unit= 'foyer') # (f5ky, f5ly, f5my)
+    frag_pvct = IntCol(unit= 'foy') # (f5hw, f5iw, f5jw)
+    mbic_pvct = IntCol(unit= 'foy') # (f5kx, f5lx, f5mx)
+    macc_pvct = IntCol(unit= 'foy') # (f5nx, f5ox, f5px)
+    mbnc_pvct = IntCol(unit= 'foy') # (f5hv, f5iv, f5jv)
+    mncn_pvct = IntCol(unit= 'foy') # (f5ky, f5ly, f5my)
 
-    mbic_mvlt = IntCol(unit= 'foyer') # (f5kr, f5lr, f5mr)
-    macc_mvlt = IntCol(unit= 'foyer') # (f5nr, f5or, f5pr)
-    mncn_mvlt = IntCol(unit= 'foyer') # (f5kw, f5lw, f5mw)
-    mbnc_mvlt = IntCol(unit= 'foyer') # (f5hs, f5is, f5js)
+    mbic_mvlt = IntCol(unit= 'foy') # (f5kr, f5lr, f5mr)
+    macc_mvlt = IntCol(unit= 'foy') # (f5nr, f5or, f5pr)
+    mncn_mvlt = IntCol(unit= 'foy') # (f5kw, f5lw, f5mw)
+    mbnc_mvlt = IntCol(unit= 'foy') # (f5hs, f5is, f5js)
 
-    frag_pvce = IntCol(unit= 'foyer') # (f5hx, f5ix, f5jx)
-    arag_pvce = IntCol(unit= 'foyer') # (f5he, f5ie, f5je)
-    nrag_pvce = IntCol(unit= 'foyer') # (f5hk, f5ik, f5jk)
-    mbic_pvce = IntCol(unit= 'foyer') # (f5kq, f5lq, f5mq)
-    abic_pvce = IntCol(unit= 'foyer') # (f5ke, f5le, f5me)
-    nbic_pvce = IntCol(unit= 'foyer') # (f5kk, f5lk, f5mk)
-    macc_pvce = IntCol(unit= 'foyer') # (f5nq, f5oq, f5pq)
-    aacc_pvce = IntCol(unit= 'foyer') # (f5ne, f5oe, f5pe)
-    nacc_pvce = IntCol(unit= 'foyer') # (f5nk, f5ok, f5pk)
-    mncn_pvce = IntCol(unit= 'foyer') # (f5kv, f5lv, f5mv)
-    cncn_pvce = IntCol(unit= 'foyer') # (f5so, f5nt, f5ot)
-    mbnc_pvce = IntCol(unit= 'foyer') # (f5hr, f5ir, f5jr)
-    abnc_pvce = IntCol(unit= 'foyer') # (f5qd, f5rd, f5sd)
-    nbnc_pvce = IntCol(unit= 'foyer') # (f5qj, f5rj, f5sj)
+    frag_pvce = IntCol(unit= 'foy') # (f5hx, f5ix, f5jx)
+    arag_pvce = IntCol(unit= 'foy') # (f5he, f5ie, f5je)
+    nrag_pvce = IntCol(unit= 'foy') # (f5hk, f5ik, f5jk)
+    mbic_pvce = IntCol(unit= 'foy') # (f5kq, f5lq, f5mq)
+    abic_pvce = IntCol(unit= 'foy') # (f5ke, f5le, f5me)
+    nbic_pvce = IntCol(unit= 'foy') # (f5kk, f5lk, f5mk)
+    macc_pvce = IntCol(unit= 'foy') # (f5nq, f5oq, f5pq)
+    aacc_pvce = IntCol(unit= 'foy') # (f5ne, f5oe, f5pe)
+    nacc_pvce = IntCol(unit= 'foy') # (f5nk, f5ok, f5pk)
+    mncn_pvce = IntCol(unit= 'foy') # (f5kv, f5lv, f5mv)
+    cncn_pvce = IntCol(unit= 'foy') # (f5so, f5nt, f5ot)
+    mbnc_pvce = IntCol(unit= 'foy') # (f5hr, f5ir, f5jr)
+    abnc_pvce = IntCol(unit= 'foy') # (f5qd, f5rd, f5sd)
+    nbnc_pvce = IntCol(unit= 'foy') # (f5qj, f5rj, f5sj)
 
 # pfam only
     inactif   = BoolCol(unit='fam')
@@ -614,6 +615,7 @@ class InputTable(ModelDescription):
 
 # zones apl and calibration 
     tu99 = EnumCol(label = u"tranche d'unité urbaine",
+                   unit = 'men',
                    enum=Enum([u'Communes rurales',
                          u'moins de 5 000 habitants',
                          u'5 000 à 9 999 habitants',
@@ -622,12 +624,13 @@ class InputTable(ModelDescription):
                          u'50 000 à 99 999 habitants',
                          u'100 000 à 199 999 habitants',
                          u'200 000 habitants ou plus (sauf agglomération parisienne)',
-                         u'agglomération parisienne']), unit='menage')
+                         u'agglomération parisienne']))
     
-    tau99 = EnumCol(label = u"tranche d'aire urbaine", unit='menage')
-    reg   = EnumCol(unit='menage')
-    pol99 = EnumCol(unit='menage')
+    tau99 = EnumCol(label = u"tranche d'aire urbaine", unit='men')
+    reg   = EnumCol(unit='men')
+    pol99 = EnumCol(unit='men')
     cstotpragr = EnumCol(label = u"catégorie socio_professionelle agrégée de la personne de référence",
+                         unit = 'men',
                          enum = Enum([u"Non renseignée",
                                       u"Agriculteurs exploitants",
                                       u"Artisans, commerçants, chefs d'entreprise",
@@ -639,6 +642,7 @@ class InputTable(ModelDescription):
                                       u"Autres inactifs"]))
     
     naf16pr = EnumCol(label = u"activité économique de l'établissement de l'emploi principal actuel de la personne de référence",
+                      unit = 'men',
                       enum = Enum([u"Sans objet",
                                    u"Non renseigné",
                                    u"Agriculture, sylviculture et pêche",
@@ -659,6 +663,7 @@ class InputTable(ModelDescription):
                                    u"Administrations"],start=-1)) # 17 postes + 1 (-1: sans objet, 0: nonrenseigné) 
     
     typmen15 = EnumCol(label = u"type de ménage",
+                       unit = 'men',
                        enum = Enum([u"Personne seule active",
                                     u"Personne seule inactive",
                                     u"Familles monoparentales, parent actif",
@@ -676,6 +681,7 @@ class InputTable(ModelDescription):
                                     u"Autres ménages, tous inactifs"],start=1))
     
     ageq  = EnumCol(label = u"âge quinquennal de la personne de référence",
+                    unit = 'men',
                     enum = Enum([u"moins de 25 ans",
                                  u"25 à 29 ans",
                                  u"30 à 34 ans",
@@ -692,6 +698,7 @@ class InputTable(ModelDescription):
 
                                  
     nbinde = EnumCol(label = u"taille du ménage",
+                     unit = 'men',
                      enum = Enum([u"Une personne",
                                   u"Deux personnes",
                                   u"Trois personnes",
@@ -700,6 +707,7 @@ class InputTable(ModelDescription):
                                   u"Six personnes et plus"], start=1))
 
     ddipl = EnumCol(label = u"diplôme de la personne de référence",
+                    unit = 'men',
                     enum = Enum([u"Diplôme supérieur",
                                  u"Baccalauréat + 2 ans",
                                  u"Baccalauréat ou brevet professionnel ou autre diplôme de ce niveau",
@@ -718,23 +726,23 @@ class InputTable(ModelDescription):
 ## ISF ##
     
 ## Immeubles bâtis ##
-    b1ab = IntCol(unit= 'foyer') ##  valeur résidence principale avant abattement ##
-    b1ac = IntCol(unit= 'foyer')
+    b1ab = IntCol(unit= 'foy') ##  valeur résidence principale avant abattement ##
+    b1ac = IntCol(unit= 'foy')
 ## non bâtis ##
-    b1bc = IntCol(unit= 'foyer')
-    b1be = IntCol(unit= 'foyer')
-    b1bh = IntCol(unit= 'foyer')
-    b1bk = IntCol(unit= 'foyer') 
+    b1bc = IntCol(unit= 'foy')
+    b1be = IntCol(unit= 'foy')
+    b1bh = IntCol(unit= 'foy')
+    b1bk = IntCol(unit= 'foy') 
 ## droits sociaux- valeurs mobilières-liquidités- autres meubles ##
 
-    b1cl = IntCol(unit= 'foyer')
-    b1cb = IntCol(unit= 'foyer')
-    b1cd = IntCol(unit= 'foyer')
-    b1ce = IntCol(unit= 'foyer')
-    b1cf = IntCol(unit= 'foyer')
-    b1cg = IntCol(unit= 'foyer')
+    b1cl = IntCol(unit= 'foy')
+    b1cb = IntCol(unit= 'foy')
+    b1cd = IntCol(unit= 'foy')
+    b1ce = IntCol(unit= 'foy')
+    b1cf = IntCol(unit= 'foy')
+    b1cg = IntCol(unit= 'foy')
 
-    b1co = IntCol(unit= 'foyer')
+    b1co = IntCol(unit= 'foy')
 
 #    b1ch
 #    b1ci
@@ -743,19 +751,19 @@ class InputTable(ModelDescription):
 
 
 ## passifs et autres réduc ##
-    b2gh= IntCol(unit= 'foyer')
+    b2gh= IntCol(unit= 'foy')
     
 ## réductions ##
-    b2mt = IntCol(unit= 'foyer')
-    b2ne = IntCol(unit= 'foyer')
-    b2mv = IntCol(unit= 'foyer')
-    b2nf = IntCol(unit= 'foyer')
-    b2mx = IntCol(unit= 'foyer')
-    b2na = IntCol(unit= 'foyer')
-    b2nc = IntCol(unit= 'foyer')
+    b2mt = IntCol(unit= 'foy')
+    b2ne = IntCol(unit= 'foy')
+    b2mv = IntCol(unit= 'foy')
+    b2nf = IntCol(unit= 'foy')
+    b2mx = IntCol(unit= 'foy')
+    b2na = IntCol(unit= 'foy')
+    b2nc = IntCol(unit= 'foy')
 
 ##  montant impôt acquitté hors de France ##
-    b4rs = IntCol(unit= 'foyer')
+    b4rs = IntCol(unit= 'foy')
 
 ## BOUCLIER FISCAL ##
 
