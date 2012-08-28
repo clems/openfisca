@@ -379,13 +379,15 @@ def _forf_log(so, rmi_nbp, _P):
     'fam'
     '''
     # calcul du forfait logement annuel si le ménage touche des allocations logements
+    # mais également pour les propriétaires en tant qu'avantage en nature et les hébergés également
+    # donc on le donne à tout le monde
     P = _P.minim
-    loca = (3 <= so)&(5 >= so)
+    # loca = (3 <= so)&(5 >= so)
     FL = P.rmi.forfait_logement
     tx_fl = ((rmi_nbp==1)*FL.taux1 +
              (rmi_nbp==2)*FL.taux2 +
              (rmi_nbp>=3)*FL.taux3 )    
-    return 12*loca*(tx_fl*P.rmi.rmi)
+    return 12*(tx_fl*P.rmi.rmi)  
 
 def _rsa_socle(forf_log, age , nb_par, rmi_nbp, ra_rsa, br_rmi, _P, _option = {'age' : [CHEF, PART]}):
     '''
