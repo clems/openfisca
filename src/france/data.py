@@ -69,8 +69,8 @@ class InputTable(ModelDescription):
     agem = AgesCol(label = u"âge (en mois)")
     
     zone_apl = EnumCol(label = u"zone apl", default = 2, unit= 'menage')
-    loyer = IntCol(unit='menage') # Loyer mensuel
-    so = EnumCol(label = u"statut d'occupation",
+    loyer = IntCol(unit='men') # Loyer mensuel
+    so = EnumCol(label = u"Statut d'occupation",
                  unit='men',
                  enum = Enum([u"Non renseigné",
                               u"Accédant à la propriété",
@@ -79,11 +79,25 @@ class InputTable(ModelDescription):
                               u"Locataire ou sous-locataire d'un logement loué vide non-HLM",
                               u"Locataire ou sous-locataire d'un logement loué meublé ou d'une chambre d'hôtel",
                               u"Logé gratuitement par des parents, des amis ou l'employeur"]))
-    activite = IntCol()
+    
+    activite = EnumCol(label = u'Actvité',
+                       enum = Enum([u'Actif occupé',
+                                    u'Chômeur',
+                                    u'Étudiant, élève', 
+                                    u'Retraité', 
+                                    u'Autre inactif']), default = 4) 
+    
     boursier = BoolCol()
     code_postal = IntCol(unit='men')
     
-    statmarit = IntCol(default = 2)
+    statmarit = EnumCol(label = u"Statut marital",
+                          default = 2,
+                          enum = Enum([u"Marié",
+                                    u"Célibataire",
+                                    u"Divorcé",
+                                    u"Veuf",
+                                    u"Pacsé",
+                                    u"Jeune veuf"],start=1))
     
     nbR = IntCol(unit= 'foy')
     nbJ = IntCol(unit= 'foy')
@@ -662,7 +676,7 @@ class InputTable(ModelDescription):
                                    u"Education, santé, action sociale",
                                    u"Administrations"],start=-1)) # 17 postes + 1 (-1: sans objet, 0: nonrenseigné) 
     
-    typmen15 = EnumCol(label = u"type de ménage",
+    typmen15 = EnumCol(label = u"Type de ménage",
                        unit = 'men',
                        enum = Enum([u"Personne seule active",
                                     u"Personne seule inactive",
@@ -722,6 +736,8 @@ class InputTable(ModelDescription):
                                   u"Retraité",
                                   u"Inactif"],start=1)) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
+
+    cplx = BoolCol(default=False)
 
 ## ISF ##
     

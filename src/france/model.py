@@ -37,8 +37,6 @@ import france.lgtm as lg
 import france.common as cm
 import france.calage as cl
 
-
-
 class ModelFrance(ModelDescription):
     
     mhsup = Prestation(cs._mhsup)
@@ -425,7 +423,30 @@ class ModelFrance(ModelDescription):
     
     typ_men = IntPresta(cm._typ_men, unit = 'men', label = u"Type de ménage")
     nb_ageq0 = IntPresta(cl._nb_ageq0, unit = 'men', label = u"Effectifs des tranches d'âge quiquennal")
-    nbinde2 = IntPresta(cl._nbinde2, unit = 'men', label = u"Nombre d'individus dans le ménage")
+    nbindebis = IntPresta(cl._nbinde, unit = 'men', label = u"Nombre d'individus dans le ménage")
+    
+    
+    act_cpl = IntPresta(cl._act_cpl, unit = 'men', label = u"Nombre d'actifs parmi la personne de référence du méange et son conjoint")
+    cohab   = BoolPresta(cl._cohab, unit = 'men', label = u"Vie en couple")
+    act_enf = IntPresta(cl._act_enf, unit = 'men', label = u"Nombre d'enfants actifs")
+
+    typmen15bis = EnumPresta(cl._typmen15, label = u"Type de ménage",
+                          unit = 'men',
+                          enum = Enum([u"Personne seule active",
+                                       u"Personne seule inactive",
+                                       u"Familles monoparentales, parent actif",
+                                       u"Familles monoparentales, parent inactif et au moins un enfant actif",
+                                        u"Familles monoparentales, tous inactifs",
+                                        u"Couples sans enfant, 1 actif",
+                                        u"Couples sans enfant, 2 actifs",
+                                        u"Couples sans enfant, tous inactifs",
+                                        u"Couples avec enfant, 1 membre du couple actif",
+                                        u"Couples avec enfant, 2 membres du couple actif",
+                                        u"Couples avec enfant, couple inactif et au moins un enfant actif",
+                                        u"Couples avec enfant, tous inactifs",
+                                        u"Autres ménages, 1 actif",
+                                        u"Autres ménages, 2 actifs ou plus",
+                                        u"Autres ménages, tous inactifs"],start=1))
 
     decile = EnumPresta(cm._decile, unit = 'men',
                         label = u"Décile de niveau de vie",
