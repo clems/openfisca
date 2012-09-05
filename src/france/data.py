@@ -675,6 +675,29 @@ class InputTable(ModelDescription):
                                    u"Services aux particuliers",
                                    u"Education, santé, action sociale",
                                    u"Administrations"],start=-1)) # 17 postes + 1 (-1: sans objet, 0: nonrenseigné) 
+
+    nafg17npr = EnumCol(label = u"activité économique de l'établissement de l'emploi principal actuel de la personne de référence ",
+                      unit = 'men',
+                      enum = Enum([u"Sans objet",
+                                   u"Non renseigné",
+                                   u"Agriculture, sylviculture et pêche",
+                                   u"Industries extractives, énergie, eau, gestion des déchets et dépollution",
+                                   u"Fabrication de denrées alimentaires, de boissons et de produits à base de tabac",
+                                   u"Cokéfaction et raffinage",
+                                   u"Fabrication d'équipements électriques, électroniques, informatiques ; fabrication de machines",
+                                   u"Fabrication de matériels de transport",
+                                   u"Fabrication d'autres produits industriels",
+                                   u"Construction",
+                                   u"Commerce ; réparation d'automobiles et de motocycles",
+                                   u"Transports et entreposage",
+                                   u"Hébergement et restauration",
+                                   u"Information et communication",
+                                   u"Activités financières et d'assurance",
+                                   u"Activités immobilières",
+                                   u"Activités scientifiques et techniques ; services administratifs et de soutien",
+                                   u"Administration publique, enseignement, santé humaine et action sociale",
+                                   u"Autres activités de services"],start=-1)) # 17 postes + 1 (-1: sans objet, 0: nonrenseigné)
+    
     
     typmen15 = EnumCol(label = u"Type de ménage",
                        unit = 'men',
@@ -737,7 +760,6 @@ class InputTable(ModelDescription):
                                   u"Inactif"],start=1)) # 5 postes normalement TODO; check=0
     wprm_init = FloatCol()
 
-    cplx = BoolCol(default=False)
 
 ## ISF ##
     

@@ -424,7 +424,7 @@ class ModelSF(ModelDescription):
     typ_men = IntPresta(cm._typ_men, unit = 'men', label = u"Type de ménage")
     nb_ageq0 = IntPresta(cl._nb_ageq0, unit = 'men', label = u"Effectifs des tranches d'âge quiquennal")
     nbindebis = IntPresta(cl._nbinde, unit = 'men', label = u"Nombre d'individus dans le ménage")
-    
+    cplx = BoolPresta(cl._cplx, unit = 'men', label = u"Indicatrice de ménage complexe")
     
     act_cpl = IntPresta(cl._act_cpl, unit = 'men', label = u"Nombre d'actifs parmi la personne de référence du méange et son conjoint")
     cohab   = BoolPresta(cl._cohab, unit = 'men', label = u"Vie en couple")
