@@ -24,12 +24,9 @@ This file is part of openFisca.
 from __future__ import division
 from france.data import CAT
 from numpy import maximum as max_, minimum as min_, logical_not as not_, zeros
-from core.utils import Bareme
-from parametres.paramData import Tree2Object
+from core.utils import Bareme, scaleBaremes, combineBaremes
 
-class Object(object):
-    def __init__(self):
-        object.__init__(self)
+
                 
 # TODO: CHECK la csg déductible en 2006 est case GH
 # TODO:  la revenus soumis aux csg déductible et imposable sont en CG et BH en 2010 
@@ -423,25 +420,3 @@ def taux_exo_fillon(sal_h_b, P):
         return 0 
     return tx_max*min_(1,max_(seuil*smic_h_b/(sal_h_b + 1e-10)-1,0)/(seuil-1))
 
-def combineBaremes(BarColl, name="onsenfout"):
-    baremeTot = Bareme(name=name)
-    baremeTot.addTranche(0,0)
-    for val in BarColl.__dict__.itervalues():
-        if isinstance(val, Bareme):
-            baremeTot.addBareme(val)
-        else: 
-            combineBaremes(val, baremeTot)
-    return baremeTot
-
-def scaleBaremes(BarColl, factor):
-    if isinstance(BarColl, Bareme):
-        return BarColl.multSeuils(factor)
-    out = Object()
-    for key, val in BarColl.__dict__.iteritems():
-        if isinstance(val, Bareme):
-            setattr(out, key, val.multSeuils(factor))
-        elif isinstance(val, Tree2Object):
-            setattr(out, key, scaleBaremes(val, factor))
-        else:
-            setattr(out, key, val)
-    return out

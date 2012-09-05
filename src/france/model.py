@@ -37,7 +37,7 @@ import france.lgtm as lg
 import france.common as cm
 import france.calage as cl
 
-class ModelFrance(ModelDescription):
+class ModelSF(ModelDescription):
     
     mhsup = Prestation(cs._mhsup)
     alv   = Prestation(ir._alv)
