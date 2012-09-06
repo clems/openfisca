@@ -156,3 +156,26 @@ def _decile(nivvie, wprm):
 #    print decile.min()
 #    print decile.max()
     return decile
+
+
+def _pauvre50(nivvie, wprm):
+    '''
+    Indicatrice de pauvreté à 50% du niveau de vie median
+    'men'
+    '''
+    labels = arange(1,3)
+    method = 2
+    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=True) 
+    threshold = .5*values[1]
+    return (nivvie <= threshold)
+
+def _pauvre60(nivvie, wprm):
+    '''
+    Indicatrice de pauvreté à 60% du niveau de vie median
+    'men'
+    '''
+    labels = arange(1,3)
+    method = 2
+    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=True) 
+    threshold = .6*values[1]
+    return (nivvie <= threshold)

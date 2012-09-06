@@ -460,6 +460,18 @@ class ModelSF(ModelDescription):
                                      u"8e décile",
                                      u"9e décile",
                                      u"10e décile"]))
+    
+    pauvre50 = EnumPresta(cm._pauvre50, unit = 'men',
+                        label = u"Pauvreté monétaire au seuil de 50%",
+                        enum = Enum([u"Ménage au dessus du seuil de pauvreté à 50%",
+                                     u"Ménage en dessous du seuil de pauvreté à 50%"]))
+
+    pauvre60 = EnumPresta(cm._pauvre60, unit = 'men',
+                        label = u"Pauvreté monétaire au seuil de 60%",
+                        enum = Enum([u"Ménage au dessus du seuil de pauvreté à 50%",
+                                     u"Ménage en dessous du seuil de pauvreté à 50%"]))
+
+
 
     ############################################################
     # Totaux

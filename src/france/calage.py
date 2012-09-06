@@ -169,6 +169,6 @@ def _typmen15(typmen15, nbindebis, cohab, act_cpl, cplx, act_enf):
             15 * (  ( (act_cpl + act_enf) == 0) )  )     # Autres ménages, tous inactifs
     
     ratio = (( (typmen15!=res)).sum())/((typmen15!=0).sum())
-    # print ratio  2.7 % d'erreurs enfant non nés
+    # print ratio  2.7 % d'erreurs enfant non nés et erreur d'enfants  
     return res
 
