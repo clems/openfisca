@@ -179,3 +179,4 @@ def _pauvre60(nivvie, wprm):
     percentile, values = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=True) 
     threshold = .6*values[1]
     return (nivvie <= threshold)
+
