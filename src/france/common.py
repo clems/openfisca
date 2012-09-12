@@ -143,40 +143,43 @@ def _impo(irpp):
 
 from core.utils import mark_weighted_percentiles
 
-def _decile(nivvie, wprm):
+def _decile(nivvie, champm, wprm):
     '''
     Décile de niveau de vie
     'men'
     '''
     labels = arange(1,11)
     method = 2
-    decile = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=False)
+    decile, values = mark_weighted_percentiles(nivvie, labels, wprm*champm, method, return_quantiles=True)
 #    print values
 #    print len(values)
+#    print (nivvie*champm).min()
+#    print (nivvie*champm).max()
 #    print decile.min()
 #    print decile.max()
-    return decile
+#    print (nivvie*(decile==1)*champm*wprm).sum()/( ((decile==1)*champm*wprm).sum() )
+    return decile*champm
 
 
-def _pauvre50(nivvie, wprm):
+def _pauvre50(nivvie, champm, wprm):
     '''
     Indicatrice de pauvreté à 50% du niveau de vie median
     'men'
     '''
     labels = arange(1,3)
     method = 2
-    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=True) 
+    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm*champm, method, return_quantiles=True) 
     threshold = .5*values[1]
-    return (nivvie <= threshold)
+    return (nivvie <= threshold)*champm 
 
-def _pauvre60(nivvie, wprm):
+def _pauvre60(nivvie, champm, wprm):
     '''
     Indicatrice de pauvreté à 60% du niveau de vie median
     'men'
     '''
     labels = arange(1,3)
     method = 2
-    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm, method, return_quantiles=True) 
+    percentile, values = mark_weighted_percentiles(nivvie, labels, wprm*champm, method, return_quantiles=True) 
     threshold = .6*values[1]
-    return (nivvie <= threshold)
+    return (nivvie <= threshold)*champm
 

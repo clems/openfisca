@@ -450,7 +450,8 @@ class ModelSF(ModelDescription):
 
     decile = EnumPresta(cm._decile, unit = 'men',
                         label = u"Décile de niveau de vie",
-                        enum = Enum([u"1er décile",
+                        enum = Enum([u"Hors champ"
+                                     u"1er décile",
                                      u"2nd décile",
                                      u"3e décile",
                                      u"4e décile",
