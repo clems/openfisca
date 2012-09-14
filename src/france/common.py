@@ -93,6 +93,71 @@ def _nivvie(revdisp, uc):
     '''
     return revdisp/uc
 
+def revnet_i(rev_trav, pen, rev_cap):
+    '''
+    Revenu net individuel
+    'ind'
+    '''
+    # TODO rajouter les cotisations contributives veillesse et chômage
+    return rev_trav + pen + rev_cap
+
+def _revnet(revnet_i, _option = {'revnet_i': ALL}):
+    '''
+    Revenu net du ménage
+    'ind'
+    '''
+    r = 0
+    for rev in revnet_i.itervalues():
+        r += rev
+    return r
+
+def _nivvie_net(revnet, uc):
+    '''
+    Niveau de vie net du ménage
+    'men'
+    '''
+    return revnet/uc
+
+
+def _revini_i(rev_trav, pen, rev_cap):
+    '''
+    Revenu initial individuel
+    'ind'
+    '''
+    # TODO rajouter les cotisations contributives veillesse et chômage
+    return rev_trav + pen + rev_cap
+
+def _revini(revini_i, _option = {'revini_i': ALL}):
+    '''
+    Revenu net du ménage
+    'ind'
+    '''
+    r = 0
+    for rev in revnet_i.itervalues():
+        r += rev
+    return r
+
+def _revprim_i(rev_trav, rev_cap):
+    '''
+    Revenu initial individuel
+    'ind'
+    '''
+    # TODO rajouter toutes les cotisations voir Rapport Chancole Lalanne
+    return rev_trav + rev_cap
+
+def _revprim(revprim_i, _option = {'revprim_i': ALL}):
+    '''
+    Revenu net du ménage
+    'ind'
+    '''
+    r = 0
+    for rev in revprim_i.itervalues():
+        r += rev
+    return r
+
+
+
+
 def _rev_trav(sal_net, rag, ric, rnc):
     '''Revenu du travail'''
     return sal_net + rag + ric + rnc

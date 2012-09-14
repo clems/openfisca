@@ -183,6 +183,10 @@ def _cotpat(salbrut, hsup, type_sal, _P):
         del pat.fonc.__dict__[var]
     del pat.commun
 
+    print pat.cadre.cet.option
+    for x in pat.cadre.__dict__:
+        print x 
+
     n = len(salbrut)
     cotpat = zeros(n)
     for categ in CAT:
@@ -191,6 +195,34 @@ def _cotpat(salbrut, hsup, type_sal, _P):
             temp = - (iscat*bar.calc(salbrut))
             cotpat += temp
     return cotpat
+
+
+def _cotpat_contrib(salbrut, hsup, type_sal, _P):
+    '''
+    Cotisation sociales patronales
+    '''
+    plaf_ss = 12*_P.cotsoc.gen.plaf_ss
+    pat = scaleBaremes(_P.cotsoc.pat, plaf_ss)
+    pat.noncadre.__dict__.update(pat.commun.__dict__)
+    pat.cadre.__dict__.update(pat.commun.__dict__)
+    pat.fonc.__dict__.update(pat.commun.__dict__)
+    for var in ["apprentissage", "apprentissage2", "vieillesseplaf", "vieillessedeplaf", "formprof", "chomfg", "construction","assedic"]:
+        del pat.fonc.__dict__[var]
+    del pat.commun
+
+    print pat.cadre 
+
+    n = len(salbrut)
+    cotpat = zeros(n)
+    for categ in CAT:
+        iscat = (type_sal == categ[1])
+        for bar in getattr(pat,categ[0]).__dict__.itervalues():
+            temp = - (iscat*bar.calc(salbrut))
+            cotpat += temp
+    return cotpat
+
+
+
 
 def _cotsal(salbrut, hsup, type_sal, _P):
     '''
