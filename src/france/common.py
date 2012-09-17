@@ -93,13 +93,12 @@ def _nivvie(revdisp, uc):
     '''
     return revdisp/uc
 
-def revnet_i(rev_trav, pen, rev_cap):
+def _revnet_i(rev_trav, pen, rev_cap):
     '''
     Revenu net individuel
     'ind'
     '''
-    # TODO rajouter les cotisations contributives veillesse et chômage
-    return rev_trav + pen + rev_cap
+    return rev_trav + pen + rev_cap 
 
 def _revnet(revnet_i, _option = {'revnet_i': ALL}):
     '''
@@ -119,31 +118,39 @@ def _nivvie_net(revnet, uc):
     return revnet/uc
 
 
-def _revini_i(rev_trav, pen, rev_cap):
+def _revini_i(rev_trav, pen, rev_cap, cotpat_contrib, cotsal_contrib):
     '''
     Revenu initial individuel
     'ind'
     '''
-    # TODO rajouter les cotisations contributives veillesse et chômage
-    return rev_trav + pen + rev_cap
+    return rev_trav + pen + rev_cap - cotpat_contrib - cotsal_contrib
 
 def _revini(revini_i, _option = {'revini_i': ALL}):
     '''
-    Revenu net du ménage
+    Revenu initial du ménage
     'ind'
     '''
     r = 0
-    for rev in revnet_i.itervalues():
+    for rev in revini_i.itervalues():
         r += rev
     return r
 
-def _revprim_i(rev_trav, rev_cap):
+def _nivvie_ini(revini, uc):
+    '''
+    Niveau de vie initial du ménage
+    'men'
+    '''
+    return revini/uc
+
+
+
+
+def _revprim_i(rev_trav, rev_cap, cotpat, cotsal):
     '''
     Revenu initial individuel
     'ind'
     '''
-    # TODO rajouter toutes les cotisations voir Rapport Chancole Lalanne
-    return rev_trav + rev_cap
+    return rev_trav + rev_cap - cotpat - cotsal
 
 def _revprim(revprim_i, _option = {'revprim_i': ALL}):
     '''
@@ -154,8 +161,6 @@ def _revprim(revprim_i, _option = {'revprim_i': ALL}):
     for rev in revprim_i.itervalues():
         r += rev
     return r
-
-
 
 
 def _rev_trav(sal_net, rag, ric, rnc):

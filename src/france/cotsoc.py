@@ -170,29 +170,6 @@ def _salbrut(sali, hsup, type_sal, _defaultP):
     
     return salbrut + hsup
 
-def _cotpat(salbrut, hsup, type_sal, _P):
-    '''
-    Cotisation sociales patronales
-    '''
-    plaf_ss = 12*_P.cotsoc.gen.plaf_ss
-    pat = scaleBaremes(_P.cotsoc.pat, plaf_ss)
-    pat.noncadre.__dict__.update(pat.commun.__dict__)
-    pat.cadre.__dict__.update(pat.commun.__dict__)
-    pat.fonc.__dict__.update(pat.commun.__dict__)
-    for var in ["apprentissage", "apprentissage2", "vieillesseplaf", "vieillessedeplaf", "formprof", "chomfg", "construction","assedic"]:
-        del pat.fonc.__dict__[var]
-    del pat.commun
-
-    n = len(salbrut)
-    cotpat = zeros(n)
-    for categ in CAT:
-        iscat = (type_sal == categ[1])
-        for bar in getattr(pat,categ[0]).__dict__.itervalues():
-            temp = - (iscat*bar.calc(salbrut))
-            cotpat += temp
-    return cotpat
-
-
 def _cotpat_contrib(salbrut, hsup, type_sal, _P):
     '''
     Cotisation sociales patronales contributives
@@ -219,7 +196,7 @@ def _cotpat_contrib(salbrut, hsup, type_sal, _P):
 
 def _cotpat_noncontrib(salbrut, hsup, type_sal, _P):
     '''
-    Cotisation sociales patronales contributives
+    Cotisation sociales patronales non contributives
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     pat = scaleBaremes(_P.cotsoc.pat, plaf_ss)
@@ -236,37 +213,21 @@ def _cotpat_noncontrib(salbrut, hsup, type_sal, _P):
         iscat = (type_sal == categ[1])
         for bar in getattr(pat,categ[0]).__dict__.itervalues():
             is_noncontrib = (bar.option == "noncontrib")
-            if is_noncontrib:
-                print bar
             temp = - (iscat*bar.calc(salbrut))*is_noncontrib
             cotpat += temp
     return cotpat
 
 
-def _cotsal(salbrut, hsup, type_sal, _P):
+def _cotpat(cotpat_contrib, cotpat_noncontrib):
     '''
-    Cotisations sociales salariales
+    Cotisations sociales patronales
     '''
-    plaf_ss = 12*_P.cotsoc.gen.plaf_ss
-    sal = scaleBaremes(_P.cotsoc.sal, plaf_ss)
-    sal.noncadre.__dict__.update(sal.commun.__dict__)
-    sal.cadre.__dict__.update(sal.commun.__dict__)
-    del sal.commun
-    
-    n = len(salbrut)
-    cotsal = zeros(n)
-    for categ in CAT:
-        iscat = (type_sal == categ[1])
-        for bar in getattr(sal,categ[0]).__dict__.itervalues():
-            temp = - (iscat*bar.calc(salbrut-hsup))
-            cotsal += temp
-    return cotsal
-
+    return cotpat_contrib + cotpat_noncontrib
 
 
 def _cotsal_contrib(salbrut, hsup, type_sal, _P):
     '''
-    Cotisations sociales salariales
+    Cotisations sociales salariales contributives
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     sal = scaleBaremes(_P.cotsoc.sal, plaf_ss)
@@ -286,7 +247,7 @@ def _cotsal_contrib(salbrut, hsup, type_sal, _P):
 
 def _cotsal_noncontrib(salbrut, hsup, type_sal, _P):
     '''
-    Cotisations sociales salariales
+    Cotisations sociales salariales non-contributives
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     sal = scaleBaremes(_P.cotsoc.sal, plaf_ss)
@@ -303,6 +264,13 @@ def _cotsal_noncontrib(salbrut, hsup, type_sal, _P):
             temp = - (iscat*bar.calc(salbrut-hsup))*is_noncontrib
             cotsal += temp
     return cotsal
+
+def _cotsal(cotsal_contrib, cotsal_noncontrib):
+    '''
+    Cotisations sociales salariales
+    '''
+    return cotsal_contrib + cotsal_noncontrib
+
 
 
 def _csgsald(salbrut, hsup, _P):

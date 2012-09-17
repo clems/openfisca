@@ -48,9 +48,17 @@ class ModelSF(ModelDescription):
     # Salaires
     salbrut = Prestation(cs._salbrut)
     sal_h_b = Prestation(cs._sal_h_b)
+    
+    cotpat_contrib = Prestation(cs._cotpat_contrib)
+    cotpat_noncontrib = Prestation(cs._cotpat_noncontrib)
     cotpat  = Prestation(cs._cotpat)
+    
     alleg_fillon = Prestation(cs._alleg_fillon)
+
+    cotsal_contrib = Prestation(cs._cotsal_contrib)
+    cotsal_noncontrib = Prestation(cs._cotsal_noncontrib)
     cotsal  = Prestation(cs._cotsal)
+
     csgsald = Prestation(cs._csgsald)
     csgsali = Prestation(cs._csgsali)
     crdssal = Prestation(cs._crdssal)
@@ -481,7 +489,18 @@ class ModelSF(ModelDescription):
     revdisp_i = Prestation(cm._revdisp_i, label = u"Revenu disponible individuel")
     revdisp = Prestation(cm._revdisp, 'men', label = u"Revenu disponible du ménage")
     nivvie = Prestation(cm._nivvie, 'men', label = u"Niveau de vie du ménage")
-    rev_trav = Prestation(cm._rev_trav)
+        
+    revnet_i = Prestation(cm._revnet_i, label = u"Revenu net individuel")
+    revnet   = Prestation(cm._revnet, 'men', label = u"Revenu net du ménage")
+    nivvie_net = Prestation(cm._nivvie_net, 'men', label = u"Niveau de vie net du ménage")
+
+    revini_i = Prestation(cm._revini_i, label = u"Revenu initial individuel")
+    revini   = Prestation(cm._revini, 'men', label = u"Revenu initial du ménage")
+    nivvie_ini = Prestation(cm._nivvie_ini, 'men', label = u"Niveau de vie initial du ménage")
+
+        
+    
+    rev_trav = Prestation(cm._rev_trav)    
     pen = Prestation(cm._pen)
     chonet = Prestation(cm._chonet)
     rstnet = Prestation(cm._rstnet)

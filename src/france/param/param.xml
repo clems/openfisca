@@ -6,6 +6,7 @@
 	  <ASSIETTE>
 	    <VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>	
 	    <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	    <VALUE valeur=".9825" deb="2011-01-01" fin="2012-12-31"/>
 	  </ASSIETTE>
 	  <SEUIL>
 	    <VALUE valeur="0" deb="2001-01-01" fin="2011-12-31"/>
@@ -867,7 +868,7 @@
 	</BAREME>           
       </NODE>
       <NODE description="Fonctionnaires" code="fonc" >
-	<BAREME description="Pension civile (assiette=TI + NBI)" code="pension" option="contrib">
+	<BAREME description="Retenue pour pension civile (assie	tte=TI + NBI)" code="pension" option="contrib">
 	  <TRANCHE code="tranche0">	            
 	    <SEUIL>
 	      <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
