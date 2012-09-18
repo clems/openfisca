@@ -457,7 +457,7 @@ class ModelSF(ModelDescription):
                                         u"Autres ménages, tous inactifs"],start=1))
 
     decile = EnumPresta(cm._decile, unit = 'men',
-                        label = u"Décile de niveau de vie",
+                        label = u"Décile de niveau de vie disponible",
                         enum = Enum([u"Hors champ"
                                      u"1er décile",
                                      u"2nd décile",
@@ -469,6 +469,21 @@ class ModelSF(ModelDescription):
                                      u"8e décile",
                                      u"9e décile",
                                      u"10e décile"]))
+    
+    decile_net = EnumPresta(cm._decile_net, unit = 'men',
+                        label = u"Décile de niveau de vie net",
+                        enum = Enum([u"Hors champ"
+                                     u"1er décile",
+                                     u"2nd décile",
+                                     u"3e décile",
+                                     u"4e décile",
+                                     u"5e décile",
+                                     u"6e décile",
+                                     u"7e décile",
+                                     u"8e décile",
+                                     u"9e décile",
+                                     u"10e décile"]))
+    
     
     pauvre50 = EnumPresta(cm._pauvre50, unit = 'men',
                         label = u"Pauvreté monétaire au seuil de 50%",
@@ -498,8 +513,6 @@ class ModelSF(ModelDescription):
     revini   = Prestation(cm._revini, 'men', label = u"Revenu initial du ménage")
     nivvie_ini = Prestation(cm._nivvie_ini, 'men', label = u"Niveau de vie initial du ménage")
 
-        
-    
     rev_trav = Prestation(cm._rev_trav)    
     pen = Prestation(cm._pen)
     chonet = Prestation(cm._chonet)
@@ -508,8 +521,10 @@ class ModelSF(ModelDescription):
     cotsoc_lib = Prestation(cm._cotsoc_lib)
     rev_cap = Prestation(cm._rev_cap)
     psoc = Prestation(cm._psoc)
-    pfam = Prestation(cm._pfam)
+    pfam = Prestation(cm._pfam, label=u"Prestations familiales")
     mini = Prestation(cm._mini)
-    logt = Prestation(cm._logt)
-    impo = Prestation(cm._impo)
-
+    logt = Prestation(cm._logt, label=u"Allocation logment")
+    impo = Prestation(cm._impo, label=u"Impôt sur le revenu")
+    crds = Prestation(cm._crds, label=u"Contribution au remboursement de la dette sociale")
+    csg  = Prestation(cm._csg, label=u"Contribution sociale généraisée")
+    cotsoc_noncontrib = Prestation(cm._cotsoc_noncontrib, label=u"Cotisations sociales non contributives")

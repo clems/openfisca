@@ -193,7 +193,6 @@ def _cotpat_contrib(salbrut, hsup, type_sal, _P):
             cotpat += temp
     return cotpat
 
-
 def _cotpat_noncontrib(salbrut, hsup, type_sal, _P):
     '''
     Cotisation sociales patronales non contributives
@@ -272,7 +271,6 @@ def _cotsal(cotsal_contrib, cotsal_noncontrib):
     return cotsal_contrib + cotsal_noncontrib
 
 
-
 def _csgsald(salbrut, hsup, _P):
     '''
     CSG deductible sur les salaires
@@ -296,7 +294,6 @@ def _crdssal(salbrut, hsup, _P):
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     crds = scaleBaremes(_P.crds.act, plaf_ss)
     return - crds.calc(salbrut - hsup)
-
 
 def _sal_h_b(salbrut):
     '''

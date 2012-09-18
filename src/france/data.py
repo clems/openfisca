@@ -87,6 +87,60 @@ class InputTable(ModelDescription):
                                     u'Retraité', 
                                     u'Autre inactif']), default = 4) 
     
+    titc = EnumCol(label = u"Statut, pour les agents de l'Etat des collectivités locales, ou des hôpitaux",
+                    enum = Enum([u"Sans objet ou non renseigné",
+                                u"Elève fonctionnaire ou stagiaire",
+                                u"Agent titulaire",
+                                u"Contractuel"]))
+    statut = EnumCol(label = u"Statut détaillé mis en cohérence avec la profession",
+                    enum = Enum([u"Sans objet",
+                                u"Indépendants",
+                                u"Employeurs",
+                                u"Aides familiaux",
+                                u"Intérimaires",
+                                u"Apprentis",
+                                u"CDD (hors Etat, coll.loc.), hors contrats aides",
+                                u"Stagiaires et contrats aides (hors Etat, coll.loc.)",
+                                u"Autres contrats (hors Etat, coll.loc.)",
+                                u"CDD (Etat, coll.loc.), hors contrats aides",
+                                u"Stagiaires et contrats aides (Etat, coll.loc.)",
+                                u"Autres contrats (Etat, coll.loc.)",
+                                ]))
+
+    txtppb = EnumCol(label = u"Taux du temps partiel",
+                enum = Enum([u"Sans objet",
+                            u"Moins d'un mi-temps (50%)",
+                            u"Mi-temps (50%)",
+                            u"Entre 50 et 80%",
+                            u"80%",
+                            u"Plus de 80%"]))
+
+
+    nbsala = EnumCol(label = u"Nombre de salariés dans l'établissement de l'emploi actuel",
+                    enum = Enum([u"Sans objet",
+                                u"Aucun salarié",
+                                u"1 à 4 salariés",
+                                u"5 à 9 salariés",
+                                u"10 à 19 salariés",
+                                u"20 à 49 salariés",
+                                u"50 à 199 salariés",
+                                u"200 à 499 salariés",
+                                u"500 à 999 salariés",
+                                u"1000 salariés ou plus",
+                                u"Ne sait pas",
+                                ]))
+
+    chpub = EnumCol(label = u"Nature de l'employeur principal",
+                enum = Enum([u"Sans objet",
+                            u"Etat",
+                            u"Collectivités locales, HLM",
+                            u"Hôpitaux publics",
+                            u"Particulier",
+                            u"Entreprise publique (La Poste, EDF-GDF, etc.)",
+                            u"Entreprise privée, association"
+                            ]))
+    
+    
     boursier = BoolCol()
     code_postal = IntCol(unit='men')
     
