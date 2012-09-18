@@ -196,26 +196,53 @@ def _psoc(pfam, mini, logt):
     return pfam + mini + logt
 
 def _pfam(af, cf, ars, aeeh, paje, asf, crds_pfam):
-    ''' Prestations familiales '''
+    '''
+    Prestations familiales
+    '''
     return af + cf + ars + aeeh + paje + asf + crds_pfam
 
 def _mini(aspa, aah, caah, asi, rsa, aefa, api, ass):
-    ''' Minima sociaux '''
+    '''
+    Minima sociaux
+    '''
     return aspa + aah + caah + asi + rsa + aefa + api + ass
 
 def _logt(apl, als, alf, alset, crds_lgtm):
-    ''' Prestations logement '''
+    '''
+    Prestations logement
+    '''
     return apl + als + alf + alset + crds_lgtm
 
 def _impo(irpp):
-    '''Impôts directs'''
+    '''
+    Impôts directs
+    '''
     return irpp
+
+def _crds(crdssal, crdsrst, crdscho, crds_cap_bar, crds_cap_lib, crds_pfam, crds_lgtm):
+    '''
+    Contribution au remboursemetn de la dette sociale
+    '''
+    return crdssal + crdsrst + crdscho + crds_cap_bar + crds_cap_lib + crds_pfam + crds_lgtm
+    
+def _csg(csgsali, csgsald, csgchoi, csgchod, csgrsti, csg_cap_lib, csg_cap_bar):
+    '''
+    Contribution sociale généralisée
+    '''
+    return csgsali + csgsald + csgchoi + csgchod + csgrsti + csg_cap_lib
+
+
+def _cotsoc_noncontrib(cotpat_noncontrib, cotsal_noncontrib, prelsoc_cap_lib, prelsoc_cap_bar):
+    '''
+    Cotisations sociales non contributives
+    '''
+    return cotpat_noncontrib + cotsal_noncontrib + prelsoc_cap_lib + prelsoc_cap_bar
 
 from core.utils import mark_weighted_percentiles
 
 def _decile(nivvie, champm, wprm):
     '''
-    Décile de niveau de vie
+    Décile de niveau de vie disponible
     'men'
     '''
     labels = arange(1,11)
@@ -229,6 +256,17 @@ def _decile(nivvie, champm, wprm):
 #    print decile.max()
 #    print (nivvie*(decile==1)*champm*wprm).sum()/( ((decile==1)*champm*wprm).sum() )
     return decile*champm
+
+def _decile_net(nivvie_net, champm, wprm):
+    '''
+    Décile de niveau de vie net
+    'men'
+    '''
+    labels = arange(1,11)
+    method = 2
+    decile, values = mark_weighted_percentiles(nivvie_net, labels, wprm*champm, method, return_quantiles=True)
+    return decile*champm
+
 
 
 def _pauvre50(nivvie, champm, wprm):
