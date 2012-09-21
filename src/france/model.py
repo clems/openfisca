@@ -46,6 +46,7 @@ class ModelSF(ModelDescription):
     ############################################################
     
     # Salaires
+    type_sal = EnumPresta(cs._type_sal)
     salbrut = Prestation(cs._salbrut)
     sal_h_b = Prestation(cs._sal_h_b)
     

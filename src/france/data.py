@@ -28,14 +28,14 @@ from core.utils import Enum
 QUIFOY = Enum(['vous', 'conj', 'pac1','pac2','pac3','pac4','pac5','pac6','pac7','pac8','pac9'])
 QUIFAM = Enum(['chef', 'part', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
 QUIMEN = Enum(['pref', 'cref', 'enf1','enf2','enf3','enf4','enf5','enf6','enf7','enf8','enf9'])
-CAT    = Enum(['noncadre', 'cadre', 'fonc'])
+CAT    = Enum(['noncadre', 'cadre', 'etat_t', 'colloc_t', 'contract']) 
 
 
 class InputTable(ModelDescription):
     '''
     Socio-economic data
-    Donnée d'entrée de la simulation à fournir à partir d'une enquète ou 
-    à générer avec un générateur de cas type
+    Données d'entrée de la simulation à fournir à partir d'une enquête ou 
+    générée par le  générateur de cas type
     '''
     noi = IntCol()
 
@@ -46,8 +46,6 @@ class InputTable(ModelDescription):
     quimen  = EnumCol(QUIMEN)
     quifoy  = EnumCol(QUIFOY)
     quifam  = EnumCol(QUIFAM)
-    
-    type_sal = EnumCol(CAT)
     
     sali = IntCol() #(f1aj, f1bj, f1cj, f1dj, f1ej)
     choi = IntCol() # (f1ap, f1bp, f1cp, f1dp, f1ep)
@@ -139,6 +137,8 @@ class InputTable(ModelDescription):
                             u"Entreprise publique (La Poste, EDF-GDF, etc.)",
                             u"Entreprise privée, association"
                             ]))
+    
+    cadre = BoolCol(label = u"Cadre")
     
     
     boursier = BoolCol()

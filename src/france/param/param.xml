@@ -368,7 +368,7 @@
 	    </TAUX>
     	  </TRANCHE>
     	</BAREME>    
-    	<BAREME description="Vieillesse (régime de base de la retraite)" code="vieillesse" option="contrib">
+    	<BAREME description="Vieillesse (régime de base de la retraite CNAV)" code="vieillesse" option="contrib">
     	  <TRANCHE code="tranche0">	            
 	    <SEUIL>
     	      <VALUE valeur="0" deb="1993-07-01" fin="2011-12-31"/>
@@ -387,15 +387,15 @@
 	    </TAUX>
     	  </TRANCHE>
     	</BAREME>
-	<BAREME description="Vieillesse déplafonnée (assurance veuvage)	" code="veuvage" option="contrib">
+     	<BAREME description="Vieillesse déplafonnée (ancienne assurance veuvage trasférée à la CNAV en 2004)" code="vieillessedeplaf" option="contrib">
     	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2004-07-01" fin="2011-12-31"/>
+	        <SEUIL>
+	          <VALUE valeur="0" deb="2004-07-01" fin="2012-12-31"/>
     	    </SEUIL>
-	    <TAUX>
-	      <VALUE valeur=".001" deb="2004-07-01" fin="2011-12-31"/>
+	        <TAUX>
+	          <VALUE valeur=".001" deb="2012-12-31" fin="2004-06-30"/>
     	    </TAUX>
-	  </TRANCHE>
+	      </TRANCHE>
     	</BAREME>
 	<BAREME description="Chômage-emploi ASSEDIC" code="assedic" option="contrib">
 	  <TRANCHE code="tranche0">	            
@@ -867,48 +867,152 @@
 	  </TRANCHE>
 	</BAREME>           
       </NODE>
-      <NODE description="Fonctionnaires" code="fonc" >
-	<BAREME description="Retenue pour pension civile (assie	tte=TI + NBI)" code="pension" option="contrib">
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
-	    </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.1055" deb="2020-01-01" fin="2020-12-31"/>
-	      <VALUE valeur="0.1028" deb="2019-01-01" fin="2019-12-31"/>
-	      <VALUE valeur="0.1001" deb="2018-01-01" fin="2018-12-31"/>
-  	      <VALUE valeur="0.0974" deb="2017-01-01" fin="2017-12-31"/>	            
-	      <VALUE valeur="0.0947" deb="2016-01-01" fin="2016-12-31"/>
-	      <VALUE valeur="0.0920" deb="2015-01-01" fin="2015-12-31"/>
-	      <VALUE valeur="0.0893" deb="2014-01-01" fin="2014-12-31"/>
-	      <VALUE valeur="0.0866" deb="2013-01-01" fin="2013-12-31"/>
-  	      <VALUE valeur="0.0839" deb="2012-01-01" fin="2012-12-31"/>
-	      <VALUE valeur="0.0812" deb="2011-01-01" fin="2011-12-31"/>
-	      <VALUE valeur="0.0785" deb="2003-01-01" fin="2010-12-31"/>
-	    </TAUX>
-	  </TRANCHE>
-	</BAREME>
-	<BAREME description="Contribution exceptionelle de solidarité (intégrer un seuil plafond)" code="solidarite" option="noncontrib">
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
-	    </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.01" deb="2002-01-01" fin="2011-12-31"/>      
-	    </TAUX>
-	  </TRANCHE>
-	</BAREME>
-    <BAREME description="Régime additionnel de retraite (RAFP, totalité sauf TI et NBI, min 20% TI )" code="pension" option="contrib">
-      <TRANCHE code="tranche0">
-	    <SEUIL>
-          <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
-	    </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.05" deb="2005-01-01" fin="2011-12-31"/>
-	    </TAUX>
-      </TRANCHE>
-    </BAREME>        
-    </NODE> 
+      <NODE description="Spécifiques à la fonction publique" code="fonc" >
+      	<NODE description="Commune à toutes les fonctions publiques" code="commun" >
+      	  <BAREME description="Contribution exceptionelle de solidarité (seuil d'assujetissment variable)" code="solidarite" option="noncontrib">
+	        <TRANCHE code="tranche0">	            
+	          <SEUIL>
+	            <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
+	    	  </SEUIL>
+	          <TAUX>²
+	            <VALUE valeur="0.01" deb="2002-01-01" fin="2011-12-31"/>      
+	          </TAUX>
+	        </TRANCHE>
+	        <TRANCHE code="tranche0">	            
+	          <SEUIL>
+	            <VALUE valeur="4" deb="2003-01-01" fin="2020-12-31"/>
+	    	  </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0" deb="2002-01-01" fin="2011-12-31"/>      
+	          </TAUX>
+	        </TRANCHE>
+	      </BAREME>
+	      <CODE description="Valeur annuelle point de FP" code="pt_ind" format="float">
+            <VALUE valeur="55.5635" deb="2010-07-01" fin="2012-12-31" />
+            <VALUE valeur="55.2871" deb="2009-10-01" fin="2010-06-30" />
+            <VALUE valeur="55.1217" deb="2009-07-01" fin="2009-09-30" />
+    	    <VALUE valeur="54.8475" deb="2008-10-01" fin="2009-06-30" />
+      	    <VALUE valeur="54.6834" deb="2008-03-01" fin="2008-09-30" />
+       	    <VALUE valeur="54.4113" deb="2007-02-01" fin="2008-02-28" />
+       	    <VALUE valeur="53.9795" deb="2006-07-01" fin="2006-12-31" />
+       	    <VALUE valeur="53.7110" deb="2005-11-01" fin="2006-06-30" />
+       	    <VALUE valeur="53.2847" deb="2005-07-01" fin="2005-10-31" />
+       	    <VALUE valeur="53.0196" deb="2005-02-01" fin="2005-06-30" />
+            <VALUE valeur="52.7558" deb="2004-01-01" fin="2005-01-31" />
+            <VALUE valeur="52.4930" deb="2002-12-01" fin="2003-12-31" />
+            <VALUE valeur="52.1284" deb="2002-03-01" fin="2002-11-30" />
+            <VALUE valeur="51.8174" deb="2002-01-01" fin="2002-02-28" />          
+          </CODE>
+          <CODE description="Indice majoré de référence" code="ind_maj_ref" format="integer">
+            <VALUE valeur="302" deb="2012-01-01" fin="2012-12-31" />
+            <VALUE valeur="295" deb="2009-10-01" fin="2010-06-30" />
+            <VALUE valeur="292" deb="2009-07-01" fin="2009-09-30" />
+    	    <VALUE valeur="290" deb="2008-10-01" fin="2009-06-30" />
+      	    <VALUE valeur="289" deb="2008-03-01" fin="2008-09-30" />
+       	    <VALUE valeur="288" deb="2007-02-01" fin="2008-02-28" />
+       	    <VALUE valeur="286" deb="2006-07-01" fin="2006-12-31" />
+       	    <VALUE valeur="285" deb="2005-11-01" fin="2006-06-30" />          
+          </CODE>
+      	</NODE>
+	    <NODE description="Etat" code="etat" >
+		  <BAREME description="Retenue pour pension civile (assiette=TI + NBI)" code="pension" option="contrib">
+	  	    <TRANCHE code="tranche0">	            
+	          <SEUIL>
+	            <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
+	    	  </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.1055" deb="2020-01-01" fin="2020-12-31"/>
+	      		<VALUE valeur="0.1028" deb="2019-01-01" fin="2019-12-31"/>
+	      		<VALUE valeur="0.1001" deb="2018-01-01" fin="2018-12-31"/>
+   	  	        <VALUE valeur="0.0974" deb="2017-01-01" fin="2017-12-31"/>	            
+		        <VALUE valeur="0.0947" deb="2016-01-01" fin="2016-12-31"/>
+		        <VALUE valeur="0.0920" deb="2015-01-01" fin="2015-12-31"/>
+		        <VALUE valeur="0.0893" deb="2014-01-01" fin="2014-12-31"/>
+		        <VALUE valeur="0.0866" deb="2013-01-01" fin="2013-12-31"/>
+	  	        <VALUE valeur="0.0839" deb="2012-01-01" fin="2012-12-31"/>
+		        <VALUE valeur="0.0812" deb="2011-01-01" fin="2011-12-31"/>
+		        <VALUE valeur="0.0785" deb="2003-01-01" fin="2010-12-31"/>
+	          </TAUX>
+	        </TRANCHE>
+	      </BAREME>
+	      <BAREME description="Régime additionnel de retraite (RAFP, totalité sauf TI et NBI, min 20% TI )" code="rafp" option="contrib">
+		    <TRANCHE code="tranche0">
+              <SEUIL>
+		        <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
+			  </SEUIL>
+			  <TAUX>
+			      <VALUE valeur="0.05" deb="2005-01-01" fin="2011-12-31"/>
+			  </TAUX>
+		    </TRANCHE>
+		  </BAREME>
+		</NODE>
+		<NODE description="Collectivités locales - Fonction publique hospitalière" code="colloc" >
+		  <BAREME description="Retraites des agents des collectivités locales (taux hors NBI)" code="cnracl1" option="noncontrib">
+		    <TRANCHE code="tranche0">
+			  <SEUIL>
+			    <VALUE valeur="0" deb="1984-01-01" fin="2011-12-31"/>
+			  </SEUIL>
+			  <TAUX>
+			      <VALUE valeur="0.0839" deb="2012-01-01" fin="2012-12-31"/>
+			      <VALUE valeur="0.0812" deb="2005-01-01" fin="2011-12-31"/>
+			      <VALUE valeur="0.0785" deb="1991-02-01" fin="2004-12-31"/>
+			  </TAUX>
+		    </TRANCHE>
+		  </BAREME>
+		  <BAREME description="Retraites des agents des collectivités locales (taux NBI)" code="cnracl2" option="noncontrib">
+		    <TRANCHE code="tranche0">
+			  <SEUIL>
+			    <VALUE valeur="0" deb="1984-01-01" fin="2011-12-31"/>
+			  </SEUIL>
+			  <TAUX>
+			      <VALUE valeur="0.0839" deb="2012-01-01" fin="2012-12-31"/>
+			      <VALUE valeur="0.0812" deb="2011-02-21" fin="2011-12-31"/>
+			      <VALUE valeur="0.0785" deb="1991-02-01" fin="2011-02-20"/>
+			  </TAUX>
+		    </TRANCHE>
+		  </BAREME>		          
+        </NODE>
+        <NODE description="Agents non titualaires" code="contract" >      	  	
+          <BAREME description="IRCANTEC" code="ircantec" option="contrib">
+            <TRANCHE code="tranche0">
+	          <ASSIETTE>
+			    <VALUE valeur="1.25" deb="1992-01-01" fin="2012-12-31"/>
+			    <VALUE valeur="1.20" deb="1991-04-01" fin="1991-12-31"/>
+			    <VALUE valeur="1.09" deb="1989-01-01" fin="2012-03-31"/>
+	  		  </ASSIETTE>
+	          <SEUIL>
+                <VALUE valeur="0" deb="1992-01-01" fin="2012-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0188" deb="2012-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.0182" deb="2011-01-01" fin="2011-12-31"/>
+	            <VALUE valeur="0.0180" deb="1989-01-01" fin="2010-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+        	<TRANCHE code="tranche1">
+        	  <ASSIETTE>
+			    <VALUE valeur="1.25" deb="1992-01-01" fin="2012-12-31"/>
+	  		  </ASSIETTE>
+	          <SEUIL>
+                <VALUE valeur="1" deb="1992-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0488" deb="2012-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.0480" deb="2011-01-01" fin="2011-12-31"/>
+	            <VALUE valeur="0.0476" deb="1989-01-01" fin="2010-12-31"/>	          </TAUX>
+            </TRANCHE>
+            <TRANCHE code="tranche2">
+	          <SEUIL>
+                <VALUE valeur="8" deb="1992-01-01" fin="2012-12-31"/>
+                <VALUE valeur="4.75" deb="1971-01-01" fin="1991-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0" deb="1992-01-01" fin="2012-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>                
+        </NODE>        
+      </NODE> 
     </NODE>
     <NODE description="Patronales" code="pat" >
       <NODE description="Communes aux cadres et non cadres" code="commun" >
@@ -922,7 +1026,7 @@
 	    </TAUX>
           </TRANCHE>
         </BAREME>
-	<BAREME description="Dépendance - Contribution solidarité autonomie" code="dependance" option="noncontrib">
+	<BAREME description="Contribution solidarité autonomie (dépendance)" code="csa" option="noncontrib">
           <TRANCHE code="tranche0">	            
 	    <SEUIL>
 	      <VALUE valeur="0" deb="2004-07-01" fin="2011-12-31"/>
@@ -951,7 +1055,7 @@
 	    </TAUX>
           </TRANCHE>
         </BAREME>  
-        <BAREME description="Vieillesse déplafonnée" code="vieillessedeplaf" option="noncontrib">
+        <BAREME description="Vieillesse déplafonnée" code="vieillessedeplaf" option="contrib">
           <TRANCHE code="tranche0">
 	    <SEUIL>
 	      <VALUE valeur="0" deb="1993-07-01" fin="2011-12-31"/>
@@ -971,7 +1075,6 @@
 	    </TAUX>
           </TRANCHE>
         </BAREME>
-
         <BAREME description="Fonds national action logement (FNAL, tout employeur)" code="fnal1" option="noncontrib">
           <TRANCHE code="tranche0">	            
 	    <SEUIL>
@@ -1079,7 +1182,7 @@
 	    </TAUX>
           </TRANCHE>
         </BAREME>
-        <BAREME description="Contribution additionnelle au développement de l'apprentissage" code="apprentissage2" option="noncontrib">
+        <BAREME description="Contribution additionnelle au développement de l'apprentissage" code="apprentissage2" option="contrib">
           <TRANCHE code="tranche0">
 	    <SEUIL>
 	      <VALUE valeur="0" deb="2004-01-01" fin="2011-12-31"/>
@@ -1091,7 +1194,7 @@
 	    </TAUX>
           </TRANCHE>
         </BAREME>	
-        <BAREME description="Formation professionelle (plus de 20 salariés)" taille="plusde20" code="formprof" option="noncontrib">
+        <BAREME description="Formation professionelle (plus de 20 salariés)" taille="plusde20" code="formprof" option="contrib">
           <TRANCHE code="tranche0">
 	    <SEUIL>
 	      <VALUE valeur="0" deb="1993-07-01" fin="2011-12-31"/>
@@ -1315,17 +1418,144 @@
     	  </TRANCHE>
         </BAREME>
       </NODE>
-      <NODE description="Spécifiques aux fonctionnaires" code="fonc" >
-        <BAREME description="Régime additionnel de retraite (RAFP, totalité sauf TI et NBI, min 20% TI )" code="pension" option="contrib">
-          <TRANCHE code="tranche0">
-	    <SEUIL>
-              <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
-	    </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.05" deb="2005-01-01" fin="2011-12-31"/>
-	    </TAUX>
-          </TRANCHE>
-        </BAREME>        
+      <NODE description="Spécifiques à la fonction publique" code="fonc" >
+        <NODE description="Etat" code="etat" >      	  	
+          <BAREME description="Maladie" code="maladie" option="noncontrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1984-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.097" deb="1984-01-01" fin="2011-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Pensions civiles (TI et NBI)" code="pension" option="contrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.6859" deb="2012-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.6539" deb="2011-01-01" fin="2011-12-31"/>	      
+	            <VALUE valeur="0.6214" deb="2010-01-01" fin="2010-12-31"/>
+	            <VALUE valeur="0.4014" deb="2009-12-01" fin="2009-12-31"/>
+	            <VALUE valeur="0.6014" deb="2009-01-01" fin="2009-11-30"/>	            	      
+				<VALUE valeur="0.5571" deb="2008-01-01" fin="2008-12-31"/>
+				<VALUE valeur="0.5074" deb="2007-01-01" fin="2007-12-31"/>
+				<VALUE valeur="0.4990" deb="2006-01-01" fin="2006-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Régime additionnel de retraite (RAFP, totalité sauf TI et NBI, min 20% TI )" code="rafp" option="contrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.05" deb="2005-01-01" fin="2011-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Allocations temporaires d'invalidité (ATI)" code="ati" option="noncontrib">
+	        <TRANCHE code="tranche0">	            
+	          <SEUIL>
+	            <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
+	    	  </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0033" deb="2010-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.0032" deb="2009-01-01" fin="2009-12-31"/>
+	            <VALUE valeur="0.0031" deb="2007-01-01" fin="2008-12-31"/>
+	            <VALUE valeur="0.0030" deb="2006-01-01" fin="2006-12-31"/>	            	            	                  
+	          </TAUX>
+	        </TRANCHE>
+	      </BAREME>        
+        </NODE>        
+        <NODE description="Collectivités locales - Fonction publique hospitalière" code="colloc" >      	  	
+          <BAREME description="Maladie" code="maladie" option="noncontrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1984-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.115" deb="1984-01-01" fin="2011-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Retraites des agents des collectivités locales" code="cnracl" option="contrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1984-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	          	<VALUE valeur="0.2730" deb="2005-01-01" fin="2012-12-31"/>
+	          	<VALUE valeur="0.2690" deb="2004-01-01" fin="2004-12-31"/>
+	            <VALUE valeur="0.2650" deb="2003-01-01" fin="2003-12-31"/>
+	            <VALUE valeur="0.2610" deb="2001-01-01" fin="2002-12-31"/>
+	            <VALUE valeur="0.2560" deb="2000-01-01" fin="2000-12-31"/>
+	            <VALUE valeur="0.2510" deb="1995-01-01" fin="199-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Régime additionnel de retraite (RAFP, totalité sauf TI et NBI, min 20% TI )" code="rafp" option="contrib">
+            <TRANCHE code="tranche0">
+	          <SEUIL>
+                <VALUE valeur="0" deb="1993-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.05" deb="2005-01-01" fin="2011-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>
+          <BAREME description="Allocations temporaires d'invalidité (hors NBI)" code="atiacl" option="noncontrib">
+	        <TRANCHE code="tranche0">	            
+	          <SEUIL>
+	            <VALUE valeur="0" deb="2003-01-01" fin="2020-12-31"/>
+	    	  </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.005" deb="1982-01-01" fin="2012-12-31"/>	            	            	                  
+	          </TAUX>
+	        </TRANCHE>
+	      </BAREME>
+        </NODE>
+		<NODE description="Agents non titualaires" code="contract" >      	  	
+          <BAREME description="IRCANTEC" code="ircantec" option="contrib">
+            <TRANCHE code="tranche0">
+	          <ASSIETTE>
+			    <VALUE valeur="1.25" deb="1992-01-01" fin="2012-12-31"/>
+	  		  </ASSIETTE>
+	          <SEUIL>
+                <VALUE valeur="0" deb="1992-01-01" fin="2012-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0282" deb="2012-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.0273" deb="2011-01-01" fin="2011-12-31"/>
+	            <VALUE valeur="0.0270" deb="1992-01-01" fin="2010-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+        	<TRANCHE code="tranche1">
+        	  <ASSIETTE>
+			    <VALUE valeur="1.25" deb="1992-01-01" fin="2012-12-31"/>
+	  		  </ASSIETTE>
+	          <SEUIL>
+                <VALUE valeur="1" deb="1992-01-01" fin="2011-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0936" deb="2012-01-01" fin="2012-12-31"/>
+	            <VALUE valeur="0.0928" deb="2011-01-01" fin="2011-12-31"/>
+	            <VALUE valeur="0.0924" deb="1992-01-01" fin="2010-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+            <TRANCHE code="tranche2">
+	          <SEUIL>
+                <VALUE valeur="8" deb="1992-01-01" fin="2012-12-31"/>
+	          </SEUIL>
+	          <TAUX>
+	            <VALUE valeur="0.0" deb="1992-01-01" fin="2012-12-31"/>
+	          </TAUX>
+            </TRANCHE>
+          </BAREME>                
+        </NODE>
       </NODE>
     </NODE>
     <NODE description="Exonération sur les bas salaires" code="exo_fillon">
