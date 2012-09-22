@@ -3,82 +3,169 @@
     <NODE description="Revenus d'activité" code="act" >
       <BAREME description="CSG déductible" code="deduc">
         <TRANCHE code="tranche0">	            
-	  <ASSIETTE>
-	    <VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>	
-	    <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	    <VALUE valeur=".9825" deb="2011-01-01" fin="2012-12-31"/>
-	  </ASSIETTE>
-	  <SEUIL>
-	    <VALUE valeur="0" deb="2001-01-01" fin="2011-12-31"/>
-	  </SEUIL>
-	  <TAUX>
-	    <VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
-	  </TAUX>
-	</TRANCHE>
-	<TRANCHE code="tranche1">	            
-	  <ASSIETTE>
-	    <VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>		
-	    <VALUE valeur=".97" deb="2005-01-01" fin="2010-12-31"/>	
-	    <VALUE valeur="1" deb="2011-01-01" fin="2011-12-31"/>
-	  </ASSIETTE>
-	  <SEUIL>
-	    <VALUE valeur="4" deb="2001-01-01" fin="2011-12-31"/>
-	  </SEUIL>
-	  <TAUX>
-	    <VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
-	  </TAUX>
-	</TRANCHE>
+		  <ASSIETTE>
+	    	<VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>	
+	    	<VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	    	<VALUE valeur=".9825" deb="2011-01-01" fin="2012-12-31"/>
+	  	  </ASSIETTE>
+	  	  <SEUIL>
+	    	<VALUE valeur="0" deb="2001-01-01" fin="2011-12-31"/>
+	  	  </SEUIL>
+	  	  <TAUX>
+	    	<VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
+	  	  </TAUX>
+		</TRANCHE>
+		<TRANCHE code="tranche1">	            
+	  	  <ASSIETTE>
+	    	<VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>		
+	    	<VALUE valeur=".97" deb="2005-01-01" fin="2010-12-31"/>	
+	    	<VALUE valeur="1" deb="2011-01-01" fin="2011-12-31"/>
+	  	  </ASSIETTE>
+	  	  <SEUIL>
+	        <VALUE valeur="4" deb="2001-01-01" fin="2011-12-31"/>
+	      </SEUIL>
+	  	  <TAUX>
+	       <VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
+	      </TAUX>
+	    </TRANCHE>
       </BAREME>
       <BAREME description="CSG imposable" code="impos" >
-	<TRANCHE code="tranche0">	            
-	  <ASSIETTE>
-	    <VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>		
-	    <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	  </ASSIETTE>
-	  <SEUIL>
-	    <VALUE valeur="0" deb="2005-01-01" fin="2011-12-31"/>
-	  </SEUIL>
-	  <TAUX>
-	    <VALUE valeur=".024" deb="2005-01-01" fin="2011-12-31"/>
-	  </TAUX>
-	</TRANCHE>
-	<TRANCHE code="tranche1">	            
-	  <ASSIETTE>
-	    <VALUE valeur="1" deb="2011-01-01" fin="2011-12-31"/>
-	    <VALUE valeur=".97" deb="2005-01-01" fin="2010-12-31"/>
-	    <VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>			
-	  </ASSIETTE>
-	  <SEUIL>
-	    <VALUE valeur="4" deb="2003-01-01" fin="2011-12-31"/>
-	  </SEUIL>
-	  <TAUX>
-	    <VALUE valeur=".024" deb="2003-01-01" fin="2011-12-31"/>
-	  </TAUX>
-	</TRANCHE>
+		<TRANCHE code="tranche0">	            
+	  	  <ASSIETTE>
+	    	<VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>		
+	    	<VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	      </ASSIETTE>
+	      <SEUIL>
+	        <VALUE valeur="0" deb="2005-01-01" fin="2011-12-31"/>
+	  	  </SEUIL>
+	  	  <TAUX>
+	    	<VALUE valeur=".024" deb="2005-01-01" fin="2011-12-31"/>
+	  		</TAUX>
+		</TRANCHE>
+		<TRANCHE code="tranche1">	            
+	  	  <ASSIETTE>
+	    	<VALUE valeur="1" deb="2011-01-01" fin="2011-12-31"/>
+	    	<VALUE valeur=".97" deb="2005-01-01" fin="2010-12-31"/>
+	    	<VALUE valeur=".95" deb="2000-01-01" fin="2004-12-31"/>			
+	  	  </ASSIETTE>
+	  	  <SEUIL>
+	    	<VALUE valeur="4" deb="2003-01-01" fin="2011-12-31"/>
+	  	  </SEUIL>
+	  	  <TAUX>
+	        <VALUE valeur=".024" deb="2003-01-01" fin="2011-12-31"/>
+	  	  </TAUX>
+		</TRANCHE>
       </BAREME>
     </NODE>
-    <NODE description="Retraites et pensions d'invalidité" code="retraite" >
+    <NODE description="Accesoires du salaire (intéressement etc)" code="int" >
+      <BAREME description="CSG déductible" code="deduc">
+        <TRANCHE code="tranche0">
+	  	  <SEUIL>
+	    	<VALUE valeur="0" deb="2001-01-01" fin="2011-12-31"/>
+	  	  </SEUIL>
+	  	  <TAUX>
+	    	<VALUE valeur=".051" deb="2001-01-01" fin="2011-12-31"/>
+	  	  </TAUX>
+		</TRANCHE>
+      </BAREME>
+      <BAREME description="CSG imposable" code="impos" >
+		<TRANCHE code="tranche0">	            
+	      <SEUIL>
+	        <VALUE valeur="0" deb="2005-01-01" fin="2011-12-31"/>
+	  	  </SEUIL>
+	  	  <TAUX>
+	    	<VALUE valeur=".024" deb="2005-01-01" fin="2011-12-31"/>
+	  		</TAUX>
+		</TRANCHE>
+      </BAREME>
+    </NODE>
+    <NODE description="Allocations chômage" code="chom" >
       <NODE description="Taux réduit" code="reduit" >
-	<BAREME description="CSG déductible" code="deduc" >
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	    <BAREME description="CSG déductible" code="deduc">
+	      <TRANCHE code="tranche0">	            
+	        <SEUIL>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
             </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.038" deb="2003-01-01" fin="2011-12-31"/>
-	    </TAUX>
+            <ASSIETTE>
+	          <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	          <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
+	        </ASSIETTE>
+	        <TAUX>
+	          <VALUE valeur="0.038" deb="2003-01-01" fin="2011-12-31"/>
+	        </TAUX>
           </TRANCHE>
-	</BAREME>
-	<BAREME description="CSG non déductible" code="impos" >
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	    </BAREME>
+	    <BAREME description="CSG non déductible" code="impos">
+	      <TRANCHE code="tranche0">	            
+	        <SEUIL>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
             </SEUIL>
-	    <TAUX>
-	      <VALUE valeur="0.0" deb="2003-01-01" fin="2011-12-31"/>
-	    </TAUX>
+            <ASSIETTE>
+	          <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	          <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
+	        </ASSIETTE>
+	        <TAUX>
+	          <VALUE valeur="0.0" deb="2003-01-01" fin="2011-12-31"/>
+	        </TAUX>
           </TRANCHE>
-	</BAREME>
+     	</BAREME>
+      </NODE>	
+      <NODE description="Taux plein" code="plein" >  
+	    <BAREME description="CSG déductible" code="deduc" >
+	      <TRANCHE code="tranche0">
+	        <ASSIETTE>
+	          <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	          <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
+	        </ASSIETTE>
+            <SEUIL>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+            </SEUIL>
+	        <TAUX>
+	          <VALUE valeur=".038" deb="2003-01-01" fin="2011-12-31"/>
+            </TAUX>
+	      </TRANCHE>
+	    </BAREME>   		
+	    <BAREME description="CSG non déductible" code="impos" >
+	      <TRANCHE code="tranche0">
+	        <ASSIETTE>
+	          <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
+	          <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		         
+	        </ASSIETTE>
+            <SEUIL>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+            </SEUIL>
+	        <TAUX>
+	          <VALUE valeur=".024" deb="2003-01-01" fin="2011-12-31"/>
+            </TAUX>
+	      </TRANCHE>
+	    </BAREME>   		
+      </NODE>
+      <CODE description="Revenu minimum imposable (en multiple du smic annuel brut)" code="min_exo">
+	    <VALUE valeur="1" deb="2002-01-01" fin="2011-12-31" />
+      </CODE> 
+    </NODE>
+    <NODE description="Pensions de retraites et d'invalidité" code="retraite" >
+      <NODE description="Taux réduit" code="reduit" >
+	    <BAREME description="CSG déductible" code="deduc" >
+	      <TRANCHE code="tranche0">	            
+	        <SEUIL>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+            </SEUIL>
+	        <TAUX>
+	          <VALUE valeur="0.038" deb="2003-01-01" fin="2011-12-31"/>
+	        </TAUX>
+          </TRANCHE>
+	    </BAREME>
+	    <BAREME description="CSG non déductible" code="impos" >
+	      <TRANCHE code="tranche0">	            
+	    	<SEUIL>
+	      	  <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+            </SEUIL>
+	    	<TAUX>
+	      	  <VALUE valeur="0.0" deb="2003-01-01" fin="2011-12-31"/>
+	    	</TAUX>
+          </TRANCHE>
+	    </BAREME>
       </NODE>	
       <NODE description="Taux plein" code="plein" >  
 	<BAREME description="CSG déductible" code="deduc" >
@@ -103,70 +190,77 @@
 	</BAREME>   		
       </NODE>	
     </NODE>
-    <NODE description="Chômage et préretraites" code="chom" >
+    <NODE description="Allocations de préretraite" code="preretraite" >
       <NODE description="Taux réduit" code="reduit" >
-	<BAREME description="CSG déductible" code="deduc">
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	    <BAREME description="CSG déductible" code="deduc" >
+	      <TRANCHE code="tranche0">	            
+	        <SEUIL>
+	          <VALUE valeur="0" deb="1997-01-01" fin="2011-12-31"/>
             </SEUIL>
-            <ASSIETTE>
-	      <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	      <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
-	    </ASSIETTE>
-	    <TAUX>
-	      <VALUE valeur="0.038" deb="2003-01-01" fin="2011-12-31"/>
-	    </TAUX>
+	        <TAUX>
+	          <VALUE valeur="0.038" deb="2008-01-01" fin="2011-12-31"/>
+	          <VALUE valeur="0.0" deb="1997-01-01" fin="2007-12-31"/>
+	        </TAUX>
           </TRANCHE>
-	</BAREME>
-	<BAREME description="CSG non déductible" code="impos">
-	  <TRANCHE code="tranche0">	            
-	    <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	    </BAREME>
+	    <BAREME description="CSG non déductible" code="impos" >
+	      <TRANCHE code="tranche0">	            
+	    	<SEUIL>
+	      	  <VALUE valeur="0" deb="1997-01-01" fin="2011-12-31"/>
             </SEUIL>
-            <ASSIETTE>
-	      <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	      <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
-	    </ASSIETTE>
-	    <TAUX>
-	      <VALUE valeur="0.0" deb="2003-01-01" fin="2011-12-31"/>
-	    </TAUX>
+	    	<TAUX>
+	      	  <VALUE valeur="0.0" deb="1997-01-01" fin="2011-12-31"/>
+	    	</TAUX>
           </TRANCHE>
-	</BAREME>
+	    </BAREME>
       </NODE>	
       <NODE description="Taux plein" code="plein" >  
-	<BAREME description="CSG déductible" code="deduc" >
-	  <TRANCHE code="tranche0">
-	    <ASSIETTE>
-	      <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	      <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		
-	    </ASSIETTE>
+	    <BAREME description="CSG déductible" code="deduc" >
+	      <TRANCHE code="tranche0">
             <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	          <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
             </SEUIL>
-	    <TAUX>
-	      <VALUE valeur=".038" deb="2003-01-01" fin="2011-12-31"/>
+	    	<TAUX>
+	          <VALUE valeur=".042" deb="2005-01-01" fin="2011-12-31"/>
+	          <VALUE valeur=".038" deb="1998-01-01" fin="2004-12-31"/>
+	          <VALUE valeur=".042" deb="1997-01-01" fin="1997-12-31"/>
             </TAUX>
-	  </TRANCHE>
-	</BAREME>   		
-	<BAREME description="CSG non déductible" code="impos" >
-	  <TRANCHE code="tranche0">
-	    <ASSIETTE>
-	      <VALUE valeur=".97" deb="2005-01-01" fin="2011-12-31"/>
-	      <VALUE valeur=".95" deb="2003-01-01" fin="2004-12-31"/>		         
-	    </ASSIETTE>
+	      </TRANCHE>
+	    </BAREME>   		
+	    <BAREME description="CSG non déductible" code="impos" >
+	      <TRANCHE code="tranche0">
             <SEUIL>
-	      <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
+	      	  <VALUE valeur="0" deb="2003-01-01" fin="2011-12-31"/>
             </SEUIL>
-	    <TAUX>
-	      <VALUE valeur=".024" deb="2003-01-01" fin="2011-12-31"/>
+	    	<TAUX>
+	    	  <VALUE valeur=".033" deb="2008-01-01" fin="2012-12-31"/>
+	      	  <VALUE valeur=".024" deb="1998-01-01" fin="2007-12-31"/>
             </TAUX>
-	  </TRANCHE>
-	</BAREME>   		
+	  	  </TRANCHE>
+		</BAREME>   		
       </NODE>
-      <CODE description="Revenu minimum imposable (en multiple du smic annuel brut)" code="min_exo">
-	<VALUE valeur="1" deb="2002-01-01" fin="2011-12-31" />
-      </CODE> 
+    </NODE>
+    <NODE description="Indemnités journalières" code="indemn" >
+	    <BAREME description="CSG déductible" code="deduc" >
+	      <TRANCHE code="tranche0">
+            <SEUIL>
+	          <VALUE valeur="0" deb="1997-01-01" fin="2012-12-31"/>
+            </SEUIL>
+	    	<TAUX>
+	          <VALUE valeur=".038" deb="1997-01-01" fin="2012-12-31"/>
+            </TAUX>
+	      </TRANCHE>
+	    </BAREME>   		
+	    <BAREME description="CSG non déductible" code="impos" >
+	      <TRANCHE code="tranche0">
+            <SEUIL>
+	      	  <VALUE valeur="0" deb="1997-01-01" fin="2011-12-31"/>
+            </SEUIL>
+	    	<TAUX>
+	      	  <VALUE valeur=".024" deb="1998-01-01" fin="2012-12-31"/>
+            </TAUX>
+	  	  </TRANCHE>
+		</BAREME>   		    
     </NODE>
     <NODE description="Revenus du capital" code="capital" >
       <CODE description="Seuil de non recouvrement" code="nonimp" format="integer">

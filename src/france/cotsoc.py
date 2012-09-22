@@ -429,18 +429,12 @@ def exo_csg_chom(choi, _P):
     '''
     Indicatrice d'exonération de la CSG sur les revenus du chômage
     '''
-    nbh_travaillees = 39
-    cho_seuil_exo = _P.csg.chom.min_exo*nbh_travaillees*_P.cotsoc.gen.smic_h_b
-    return (choi <= cho_seuil_exo)
+    # TODO on néglige la csg imposable ...
+    nbh_travail = 151.67 # depuis 2001
+    cho_seuil_exo = _P.csg.chom.min_exo*nbh_travail*_P.cotsoc.gen.smic_h_b
+    return (choi <= 12*cho_seuil_exo) # annuel
     
-    # TODO: exonération de csg si la csg porte le montant de l'allocation chômage en dessous du SMIC
-#crdscho = isnotexo*crdscho TODO !!!
-#
-#chobrut = isnotexo*chobrut + not_(isnotexo)*cho
-#table.setIndiv('chobrut', chobrut)
-#table.setIndiv('cho', chobrut + isnotexo*csgchod)
 
-    
 
 def _chobrut(choi, csg_taux_plein, _P):
     '''
@@ -456,7 +450,7 @@ def _chobrut(choi, csg_taux_plein, _P):
  
     return chobrut
 
-def _csgchod(chobrut, csg_taux_plein, _P):
+def _csgchod(chobrut, choi, csg_taux_plein, _P):
     '''
     CSG déductible sur les allocations chômage
     '''
@@ -465,9 +459,12 @@ def _csgchod(chobrut, csg_taux_plein, _P):
     taux_plein = csg['plein']['deduc'].calc(chobrut)
     taux_reduit = csg['reduit']['deduc'].calc(chobrut)
     csgchod = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
-    return - csgchod
+    
+    isexo = exo_csg_chom(choi, _P)
 
-def _csgchoi(chobrut, csg_taux_plein, _P):
+    return - not_(isexo)*csgchod
+
+def _csgchoi(chobrut, choi, csg_taux_plein, _P):
     '''
     CSG imposable sur les allocations chômage
     '''
@@ -476,35 +473,29 @@ def _csgchoi(chobrut, csg_taux_plein, _P):
     taux_plein = csg['plein']['impos'].calc(chobrut)
     taux_reduit = csg['reduit']['impos'].calc(chobrut)
     csgchoi = csg_taux_plein*taux_plein + not_(csg_taux_plein)*taux_reduit
-    return - csgchoi
+    
+    isexo = exo_csg_chom(choi, _P)
+    
+    return - not_(isexo)*csgchoi
 
-def _crdscho(chobrut, _P):
+def _crdscho(chobrut, choi, _P):
     '''
     CRDS sur les allocations chômage
     '''
     plaf_ss = 12*_P.cotsoc.gen.plaf_ss
     crds = scaleBaremes(_P.crds.act, plaf_ss)
-    return - crds.calc(chobrut)
-
-def _cho(chobrut, csgchod, _P):
-    '''
-    '''
-    nbh_travaillees = 39 # TODO Check
-    cho_seuil_exo = _P.csg.chom.min_exo*nbh_travaillees*_P.cotsoc.gen.smic_h_b
     
-    return chobrut + csgchod
+    isexo = exo_csg_chom(choi, _P)
+    
+    return - not_(isexo)*crds.calc(chobrut)
 
-# TODO: exonération de csg si la csg porte le montant de l'allocation chômage en dessous du SMIC
-# 
-#isnotexo = cho > cho_seuil_exo                 
-#
-#csgchod = isnotexo*csgchod
-#csgchoi = isnotexo*csgchoi
-#crdscho = isnotexo*crdscho
-#
-#chobrut = isnotexo*chobrut + not_(isnotexo)*cho
-#table.setIndiv('chobrut', chobrut)
-#table.setIndiv('cho', chobrut + isnotexo*csgchod)
+def _cho(chobrut, csgchod, choi, _P):
+    '''
+    
+    '''
+    isexo = exo_csg_chom(choi, _P)
+    return chobrut + not_(isexo)*csgchod
+
 
 ############################################################################
 ## Pensions
