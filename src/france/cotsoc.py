@@ -313,8 +313,8 @@ def build_sal(_P):
 #    print 'sal colloc'
 #    print sal['colloc_t'].keys()
     
-    print 'sal contract'
-    print sal['contract'].keys()
+#    print 'sal contract'
+#    print sal['contract'].keys()
     
     
     return sal

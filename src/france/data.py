@@ -21,6 +21,7 @@ This file is part of openFisca.
     along with openFisca.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+
 from core.description import ModelDescription
 from core.columns import IntCol, EnumCol, BoolCol, AgesCol, FloatCol
 from core.utils import Enum
